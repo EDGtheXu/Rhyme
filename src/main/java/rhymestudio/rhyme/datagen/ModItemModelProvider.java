@@ -29,6 +29,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         ALL.add(IconItems.QUALITY_ITEMS);
         ALL.add(ArmorItems.ARMORS);
         ALL.add(PlantItems.PLANTS);
+        ALL.add(ToolItems.TOOLS);
         ALL.forEach(registry -> registry.getEntries().forEach(item -> {
             String path = item.getId().getPath().toLowerCase();
             try {

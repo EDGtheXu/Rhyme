@@ -18,14 +18,11 @@ public class PlantShovel extends Item {
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if(!level.isClientSide){
-            EntityHitResult result = getEyeTraceHitResult(player,5);
-            if(result != null){
-                AbstractPlant plant = (AbstractPlant) result.getEntity();
-                plant.playSound(ModSounds.SHOVEL.get());
-
-                plant.discard();
-            }
+        EntityHitResult result = getEyeTraceHitResult(player,5);
+        if(result != null){
+            AbstractPlant plant = (AbstractPlant) result.getEntity();
+            player.playSound(ModSounds.SHOVEL.get());
+            plant.discard();
         }
         return super.use(level, player, usedHand);
     }
