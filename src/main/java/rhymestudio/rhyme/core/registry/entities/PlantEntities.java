@@ -59,7 +59,7 @@ public class PlantEntities {
 
     //      tip 大嘴花类
     public static final DeferredHolder<EntityType<?>, EntityType<Chomper>> CHOMPER = registerPlants("chomper",(type,level)->
-            new Chomper(type,level, 100,200,NORMAL_PEA_PLANT.get()),1.1F,2.1F);
+            new Chomper(type,level, 20 * 15,200,NORMAL_PEA_PLANT.get()),1.1F,2.1F);
 
 
     public static <T extends AbstractPlant> DeferredHolder<EntityType<?>, EntityType<T>> registerPlants(String name, EntityType.EntityFactory<T> entityFactory) {
