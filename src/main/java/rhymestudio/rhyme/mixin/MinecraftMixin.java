@@ -17,7 +17,7 @@ public abstract  class MinecraftMixin {
     @Inject(method = "getSituationalMusic", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/MusicManager;isPlayingMusic(Lnet/minecraft/sounds/Music;)Z"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void getCustomMusic(CallbackInfoReturnable<Music> cir, Music music, Holder<Biome> holder) {
         if(music==null){
-            cir.setReturnValue(new Music(ModSounds.GRASS_WALK,300,3000,true));
+            cir.setReturnValue(new Music(ModSounds.BGM,300,3000,true));
             cir.cancel();
         }
     }

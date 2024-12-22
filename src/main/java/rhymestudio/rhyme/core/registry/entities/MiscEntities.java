@@ -8,7 +8,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.core.entity.BaseProj;
-import rhymestudio.rhyme.core.entity.SunItemEntity;
+import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.entity.misc.HelmetEntity;
 import rhymestudio.rhyme.core.entity.misc.ModelPartEntity;
 import rhymestudio.rhyme.core.entity.proj.LineProj;
@@ -32,15 +32,15 @@ public class MiscEntities {
     // tip 弹幕
         // tip 直线
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> PEA_PROJ = registerMisc("pea_proj",(e, l)->
-            new LineProj(e,l, BaseProj.TextureLib.PEA).setHitSound(ModSounds.PROJ_HIT),0.25F,0.25F);
+            new LineProj(e,l, BaseProj.TextureLib.PEA).setHitSound(ModSounds.SPLAT),0.25F,0.25F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> ICE_PEA_PROJ = registerMisc("snow_pea_proj",(e,l)->
             new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> PUFF_SHROOM_PROJ = registerMisc("puff_shroom_proj",(e,l)->
-            new LineProj(e,l,BaseProj.TextureLib.PUFF_SHROOM_BULLET).setHitSound(ModSounds.PROJ_HIT),0.15F,0.15F);
+            new LineProj(e,l,BaseProj.TextureLib.PUFF_SHROOM_BULLET).setHitSound(ModSounds.SPLAT),0.15F,0.15F);
 
         // tip 投掷
     public static final DeferredHolder<EntityType<?>, EntityType<ThrowableProj>> CABBAGE_PROJ = registerMisc("cabbage_proj",(e, l)->
-            new ThrowableProj(e,l,ThrowableProj.TextureLib.CABBAGE_TEXTURE).setHitSound(ModSounds.PROJ_HIT),0.5F,0.5F);
+            new ThrowableProj(e,l,ThrowableProj.TextureLib.CABBAGE_TEXTURE).setHitSound(ModSounds.SPLAT),0.5F,0.5F);
 
 
     // tip 阳光

@@ -1,8 +1,17 @@
 package rhymestudio.rhyme.utils;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,6 +41,24 @@ public class Computer {
         if(have < count) return false;
         consumeInventoryItemCount(player, item, count);
         return true;
+    }
+
+    public static EntityHitResult getEyeTraceHitResult(Player player, double distance){
+        AABB aabb = player.getBoundingBox().inflate(distance);
+        Vec3 from = player.getEyePosition();
+        Vec3 to = player.getEyePosition().add(player.getLookAngle().scale(distance));
+        return ProjectileUtil.getEntityHitResult(player.level(), player, from, to, aabb, e-> e instanceof AbstractPlant, 0.1F);
+    }
+
+    public static void playSound(Entity entity, DeferredHolder<SoundEvent,SoundEvent> sound, float volume, BlockPos pos){
+        entity.level().playSound(entity,pos,sound.get(),SoundSource.AMBIENT,volume,1F);
+
+    }
+    public static void playSound(Entity entity, DeferredHolder<SoundEvent,SoundEvent> sound, float volume){
+        playSound(entity, sound, volume, entity.blockPosition().above());
+    }
+    public static void playSound(Entity entity, DeferredHolder<SoundEvent,SoundEvent> sound){
+        playSound(entity, sound, 1F);
     }
 
 }

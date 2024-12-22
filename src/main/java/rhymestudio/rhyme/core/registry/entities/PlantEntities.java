@@ -9,6 +9,7 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.animation.plantAnimations.*;
 import rhymestudio.rhyme.core.entity.plants.*;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.registry.ModSounds;
 
 import static rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks.*;
 import static rhymestudio.rhyme.core.entity.plants.prefabs.PresetBuilders.*;
@@ -26,15 +27,15 @@ public class PlantEntities {
     //      tip 豌豆类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PEA = registerPlants("pea_shooter",(type, level)->
             new Pea(type,level, PeaAnimation.idle,PeaAnimation.shoot,
-                    PEA_SHOOT, NORMAL_PEA_PLANT.get()));
+                    builder().setAttack(PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()));
 
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> SNOW_PEA = registerPlants("snow_pea_shooter",(type, level)->
             new Pea(type,level, IcePeaAnimation.idle_normal, IcePeaAnimation.shoot,
-                    SNOW_PEA_SHOOT, NORMAL_PEA_PLANT.get()));
+                    builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()));
 
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> DOUBLE_PEA = registerPlants("double_pea_shooter",(type,level)->
             new Pea(type,level, DoublePeaAnimation.idle_normal,DoublePeaAnimation.shoot,
-                    DOUBLE_PEA_SHOOT, NORMAL_PEA_PLANT.get()));
+                    builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get()));
 
     //      tip 坚果类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> WALL_NUT = registerPlants("wall_nut",(type, level)->
@@ -44,17 +45,17 @@ public class PlantEntities {
     //      tip 土豆雷类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> POTATO_MINE = registerPlants("potato_mine",(type,level)->
             new PotatoMine(type,level, PotatoMineAnimation.idle, PotatoMineAnimation.up, PotatoMineAnimation.idle_on, PotatoMineAnimation.bomb,
-                    15 * 20,2,EXPLORE_PLANT.apply(50)),1f,0.5f);
+                    15 * 20,1,EXPLORE_PLANT.apply(1800)),1f,0.5f);
 
     //      tip 蘑菇类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PUFF_SHROOM = registerPlants("puff_shroom",(type, level)->
             new PuffShroom(type,level, PuffShroomAnimation.sleeping, PuffShroomAnimation.idle, PuffShroomAnimation.attack ,
-                    SPORE_SHOOT, NORMAL_PEA_PLANT.get()),0.5f,0.5f);
+                    builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), NORMAL_PEA_PLANT.get()),0.5f,0.5f);
 
     //      tip 投手类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> CABBAGE_PULT = registerPlants("cabbage_pult",(type,level)->
             new Pea(type,level, CabbageAnimation.idle, CabbageAnimation.attack,
-                    THROWN_PEA_SHOOT, NORMAL_PEA_PLANT.get().setAttackDamage(10)));
+                    builder().setAttack(THROWN_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAttackDamage(10)));
 
     //      tip 大嘴花类
     public static final DeferredHolder<EntityType<?>, EntityType<Chomper>> CHOMPER = registerPlants("chomper",(type,level)->

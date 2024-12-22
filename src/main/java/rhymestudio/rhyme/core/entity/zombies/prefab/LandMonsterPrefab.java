@@ -12,6 +12,7 @@ import rhymestudio.rhyme.client.animation.zombieAnimations.NormalZombieAnimation
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.goals.JumpOverBlockGoal;
+import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.function.Supplier;
 
@@ -23,6 +24,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
             ()->new LandMonsterPrefab(35,2,4,30,0.5f,0.1f).getPrefab()
                     .setStepHeight(2.4f)
                     .setJumpStrength(0.5f)
+                    .setAmbientSound(ModSounds.GROAN)
                     .addTarget((t,e)->{
                         t.addGoal(1,new HurtByTargetGoal(e));
                         t.addGoal(2, new NearestAttackableTargetGoal<>(e, AbstractPlant.class,false, LivingEntity::canBeSeenAsEnemy));

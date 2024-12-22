@@ -1,9 +1,7 @@
 {
     "type": "rhyme:sun_creator",
     "ingredients": [
-        {
-            "item": "rhyme:material/sun_item"
-        },
+
         {
             "type": "rhyme:amount_ingredient",
             "ingredient": {

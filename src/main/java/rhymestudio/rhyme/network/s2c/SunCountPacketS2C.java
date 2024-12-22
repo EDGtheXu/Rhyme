@@ -13,7 +13,7 @@ import rhymestudio.rhyme.core.registry.ModAttachments;
 
 public record SunCountPacketS2C(int count) implements CustomPacketPayload {
     public int count() {
-        return Math.min(9999,count);
+        return count;
     }
     public static final Type<SunCountPacketS2C> TYPE = new Type<>(Rhyme.space("sun_count_packet_s2c"));
     public static final StreamCodec<ByteBuf, SunCountPacketS2C> STREAM_CODEC = StreamCodec.composite(

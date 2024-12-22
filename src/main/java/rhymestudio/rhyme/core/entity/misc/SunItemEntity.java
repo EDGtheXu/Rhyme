@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.core.entity;
+package rhymestudio.rhyme.core.entity.misc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
@@ -114,12 +115,17 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
         if(this.tickCount<20)return;
         if (entity instanceof ServerPlayer serverplayer) {
             if (entity.takeXpDelay == 0) {
-                int c = serverplayer.getData(ModAttachments.PLAYER_STORAGE).sunCount + this.getItem().getCount();
-                PacketDistributor.sendToPlayer(serverplayer, new SunCountPacketS2C(c));
+                var data = serverplayer.getData(ModAttachments.PLAYER_STORAGE);
+                data.sunCount += this.getItem().getCount() * 25;
+                data.sunCount = Math.min(data.sunCount, 2000);
+                PacketDistributor.sendToPlayer(serverplayer, new SunCountPacketS2C(data.sunCount));
 
             }
         }
-        if(touchTick>tickCount) touchTick = tickCount;
+        if(touchTick>tickCount){
+            playSound(ModSounds.POINTS.get());
+            touchTick = tickCount;
+        }
     }
 
     public static void summon(ServerLevel serverLevel) {

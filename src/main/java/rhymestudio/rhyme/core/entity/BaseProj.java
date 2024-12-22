@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.particle.options.BrokenProjOptions;
 import rhymestudio.rhyme.core.registry.ModEffects;
-import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.mixinauxiliary.ILivingEntity;
 
@@ -52,7 +51,9 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     public void setTexture(ResourceLocation texture){this.texture = texture;}
     public ResourceLocation getTexture(){return texture;}
     public abstract int waveDur();
-
+    public boolean shouldBeSaved(){
+        return false;
+    }
     public void doAABBHurt(){
         //包围盒检测造成伤害
         var entities=level().getEntities(this,this.getBoundingBox());
@@ -60,16 +61,11 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
 
             for (var e:entities) {
                 if(canHitEntity(e)) {
-                    if(e instanceof LivingEntity) {
-                        onHitEntity(new EntityHitResult(e, new Vec3(0,0,0)));
+                    if(e instanceof LivingEntity living) {
+                        doHurt(living);
                         //doKnockBack(living);
-                        penetration--;
-                        if(penetration <= 0) {
-                            discard();
-                            return;
-                        }
+
                     }
-                    break;
                 }
             }
         }
@@ -123,30 +119,10 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     }
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
-
         Entity hurter = pResult.getEntity();
-        Entity entity = this.getOwner();
-
-        if(effect!= null && hurter != entity && hurter instanceof LivingEntity living){
-            if(effect.getEffect().is(ModEffects.FROZEN_EFFECT.getId())){
-                ((ILivingEntity) hurter).rhyme$setFrozenTime(effect.getDuration());
-
-            }
-            living.addEffect(effect);
-        }
-        if(hitSound != null) level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.MUSIC, 1.0f, 1.0f);
-
-
-//        level().playSound(this,this.blockPosition(), ModSounds.PROJ_HIT.get(), SoundSource.MUSIC, 1.0f, 1.0f);
-
-        hurter.hurt(this.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
+        if(hurter instanceof LivingEntity living) doHurt(living);
         Vec3 pos = hurter.position();
 
-//            ((ServerLevel) level()).sendParticles(ParticleTypes.BUBBLE_POP,
-//                    pos.x,
-//                    pos.y+1,
-//                    pos.z,
-//                    20, 0.2, 0, 0.2, 0.1F);
         if(this.level() instanceof ServerLevel serverlevel)
             serverlevel.sendParticles(new BrokenProjOptions(this.texture.getPath()),
                     pos.x,
@@ -155,6 +131,22 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
                     20, 0.2, 0, 0.2, 0.1F);
 
         super.onHitEntity(pResult);
+        penetration--;
+        if(penetration <= 0) {
+            discard();
+        }
+    }
+
+    protected void doHurt(LivingEntity hurter){
+        Entity entity = this.getOwner();
+        if(effect!= null && hurter != entity && hurter instanceof LivingEntity living){
+            if(effect.getEffect().is(ModEffects.FROZEN_EFFECT.getId())){
+                ((ILivingEntity) hurter).rhyme$setFrozenTime(effect.getDuration());
+            }
+            living.addEffect(effect);
+        }
+        if(hitSound != null) level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
+        hurter.hurt(this.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
     }
 
 

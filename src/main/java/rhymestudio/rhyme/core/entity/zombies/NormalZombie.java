@@ -3,6 +3,7 @@ package rhymestudio.rhyme.core.entity.zombies;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Monster;
@@ -12,6 +13,7 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.entity.misc.HelmetEntity;
 import rhymestudio.rhyme.core.entity.misc.ModelPartEntity;
+import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 import rhymestudio.rhyme.core.registry.items.ArmorItems;
@@ -66,7 +68,6 @@ public class NormalZombie extends AbstractMonster {
                 this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
 
             }
-        Rhyme.LOGGER.info("hurt"+isDropArm);
             if(this.getHealth() - amount < healthToDropArm && !isDropArm){
                 isDropArm = true;
                 this.entityData.set(DATA_DROP_ARM, true);
@@ -90,6 +91,17 @@ public class NormalZombie extends AbstractMonster {
 
         return super.hurt(source, amount);
     }
+
+    @Override
+    public SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        if(this.getItemBySlot(EquipmentSlot.HEAD).is(ArmorItems.CONE_HELMET)){
+            return ModSounds.PLASTIC_HIT.get();
+        }else if(this.getItemBySlot(EquipmentSlot.HEAD).is(ArmorItems.IRON_BUCKET_HELMET)){
+            return ModSounds.SHIELD_HIT.get();
+        }
+        return super.getHurtSound(damageSourceIn);
+    }
+
     public void tick(){
         super.tick();
         if(this.getHealth() < healthToDropHead && tickCount % 40 == 0){
@@ -99,9 +111,7 @@ public class NormalZombie extends AbstractMonster {
             }else{
                 this.hurt(damageSources().generic(), 1);
             }
-
         }
-
     }
 
 }

@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.client.animation.plantAnimations.SunflowerAnimation;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.SunItemEntity;
+import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
@@ -14,11 +14,6 @@ public class SunFlower extends AbstractPlant {
 
     public SunFlower(Level level, Builder builder) {
         super(PlantEntities.SUN_FLOWER.get(), level,builder);
-    }
-
-    @Override
-    protected void cafeDefineAnimations() {
-        super.cafeDefineAnimations();
         this.animState.addAnimation("idle_on", SunflowerAnimation.idle,1);
         this.animState.addAnimation("sun", SunflowerAnimation.sun,1);
     }

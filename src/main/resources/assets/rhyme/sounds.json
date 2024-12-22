@@ -1,5 +1,5 @@
 {
-  "proj_hit": {
+  "splat": {
     "sounds": [
       "rhyme:splat",
       "rhyme:splat2",
@@ -15,5 +15,71 @@
     "sounds": [
       "rhyme:grass_walk"
     ]
+  },
+  "plant": {
+    "sounds": [
+      "rhyme:plant",
+      "rhyme:plant2"
+    ]
+  },
+  "buzzer": {
+    "sounds": [
+      "rhyme:buzzer"
+    ]
+  },
+  "chomp": {
+    "sounds": [
+      "rhyme:chomp",
+      "rhyme:chomp2"
+
+    ]
+  },
+  "dirt_rise": {
+    "sounds": [
+      "rhyme:dirt_rise"
+    ]
+  },
+  "groan": {
+    "sounds": [
+      "rhyme:groan",
+      "rhyme:groan2",
+      "rhyme:groan3",
+      "rhyme:groan4",
+      "rhyme:groan5",
+      "rhyme:groan6"
+    ]
+  },
+  "gulp": {
+    "sounds": [
+      "rhyme:gulp"
+    ]
+  },
+  "plastic_hit": {
+    "sounds": [
+      "rhyme:plastichit",
+      "rhyme:plastichit2"
+    ]
+  },
+  "points": {
+    "sounds": [
+      "rhyme:points"
+    ]
+  },
+  "potato_mine": {
+    "sounds": [
+      "rhyme:potato_mine"
+    ]
+  },
+  "puff": {
+    "sounds": [
+      "rhyme:puff"
+    ]
+  },
+  "shield_hit": {
+    "sounds": [
+      "rhyme:shieldhit",
+      "rhyme:shieldhit2"
+    ]
   }
+
 }

@@ -1,20 +1,12 @@
 package rhymestudio.rhyme.client.render.entity.misc;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ExperienceOrbRenderer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ExperienceOrb;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.client.model.GeoNormalModel;
-import rhymestudio.rhyme.client.render.GeoNormalRenderer;
-import rhymestudio.rhyme.core.entity.SunItemEntity;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
+import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class SunRenderer extends GeoEntityRenderer<SunItemEntity> {

@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PotatoMine extends AbstractPlant {
 
     private int readyTime;
-    private float explosionRadius;
+    private final float explosionRadius;
 
     public PotatoMine(EntityType<? extends AbstractPlant> type, Level level,
                       AnimationDefinition idle,
@@ -68,7 +69,7 @@ public class PotatoMine extends AbstractPlant {
     @Override
     public void addSkills() {
         super.addSkills();
-        CircleSkill idle = new CircleSkill( "idle",  readyTime, 0);
+        CircleSkill idle = new CircleSkill( "idle", readyTime, 0);
         CircleSkill up = new CircleSkill( "up",  29, 0);
         CircleSkill on = new CircleSkill( "idle_on",  999999999, 0)
                 .onTick(a-> {
@@ -102,6 +103,7 @@ public class PotatoMine extends AbstractPlant {
         CircleSkill boom = new CircleSkill( "bomb",  999999999, 20)
                 .onTick(a-> {
                     if(skills.canTrigger()){
+                        playSound(ModSounds.POTATO_MINE.get());
                         this.discard();
                         this.explode();
                     }

@@ -3,6 +3,7 @@ package rhymestudio.rhyme.core.entity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -19,8 +20,8 @@ import org.joml.Vector3f;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 import rhymestudio.rhyme.core.entity.ai.CircleSkills;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
-
-import java.util.function.Consumer;
+import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
+import rhymestudio.rhyme.core.registry.ModSounds;
 
 public abstract class AbstractPlant extends Mob implements ICafeMob{
 
@@ -35,12 +36,9 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         this.owner = player;
     }
 
-    protected void cafeDefineAnimations(){
-        if(builder.defineAnim!=null) builder.defineAnim.accept(this);
-    }
 
     protected void addSkills(){
-        if(builder.defineSkill!=null) builder.defineSkill.accept(this);
+
     }
 
     public <T extends AbstractPlant> AbstractPlant(EntityType<T> tEntityType, Level level,Builder builder) {
@@ -55,10 +53,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     }
 
     public void onAddedToLevel(){
-        this.cafeDefineAnimations();
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.health);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.attackDamage);
-
         addSkills();
         animState.playAnim(skills.getCurSkill(),tickCount);
         if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
@@ -83,9 +79,6 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
                 return (getTarget()==null || !getTarget().isAlive())&& super.canUse();
             }
         });
-
-
-        ;
         //this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Slime.class, true));
     }
 
@@ -95,6 +88,19 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
             return false;
         }
         return super.hurt(source, damage);
+    }
+
+    public void die(DamageSource damageSource) {
+        playSound(ModSounds.GULP.get());
+        super.die(damageSource);
+    }
+
+    @Override
+    public SoundEvent getHurtSound(DamageSource source) {
+        if(source.getEntity() instanceof NormalZombie ){
+            return ModSounds.CHOMP.get();
+        }
+        return super.getHurtSound(source);
     }
 
     @Override
@@ -144,7 +150,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     }
 
     public boolean ignoreExplosion(Explosion e){
-        return !(e.getIndirectSourceEntity() instanceof AbstractPlant);
+//        return true;
+        return e.getIndirectSourceEntity() instanceof AbstractPlant || super.ignoreExplosion(e);
     }
 
 
@@ -166,6 +173,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         //默认参数（豌豆）
         public  int health = 20;
         public  float animSpeed = 1;
+        public float projSpeed = 1;
         private boolean shouldRotHead = true;
 
         public  int attackTriggerTick = 20;
@@ -173,12 +181,11 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
         public int attackInternalTick = 60;
         public  int attackDamage = 1;
-        public  float projSpeed = 0.5f;
 
-        public Consumer<AbstractPlant> defineAnim;
-        public Consumer<AbstractPlant> defineSkill;
-
-
+        public Builder setProjSpeed(float projSpeed) {
+            this.projSpeed = projSpeed;
+            return this;
+        }
         public Builder setAnimSpeed(int speed) {
             this.animSpeed = speed;
             return this;
@@ -188,10 +195,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
             this.health = health;
             return this;
         }
-        public Builder setProjSpeed(int speed) {
-            this.projSpeed = speed;
-            return this;
-        }
+
 
         public Builder setAttackDamage(int damage) {
             this.attackDamage = damage;
@@ -212,15 +216,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
             this.attackAnimTick = attackAnimTick;
             return this;
         }
-        public Builder setDefineAnim(Consumer<AbstractPlant> defineAnim) {
-            this.defineAnim = defineAnim;
-            return this;
-        }
 
-        public Builder setDefineSkill(Consumer<AbstractPlant> defineSkill) {
-            this.defineSkill = defineSkill;
-            return this;
-        }
         public Builder setNoRotHead() {
             this.shouldRotHead = false;
             return this;

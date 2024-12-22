@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,14 +23,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
-import rhymestudio.rhyme.core.registry.items.MaterialItems;
-import rhymestudio.rhyme.utils.Computer;
+import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.List;
+
+import static rhymestudio.rhyme.utils.Computer.playSound;
 
 public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem {
     public DeferredHolder<EntityType<?>, EntityType<T>> entityType;
@@ -42,7 +43,8 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (!level.isClientSide()) {
+
+//        if (!level.isClientSide()) {
 
             ItemStack itemstack = player.getItemInHand(hand);
 
@@ -60,8 +62,8 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
             if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
                 itemstack.shrink(1);
             return InteractionResultHolder.success(itemstack);
-        }
-        return super.use(level, player, hand);
+//        }
+//        return super.use(level, player, hand);
     }
 
     public boolean summon(Player player, Level level,ItemStack stack){
@@ -81,6 +83,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(Rhyme.space("card_health_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(Rhyme.space("card_attack_damage_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         level.addFreshEntity(entity);
+        entity.playSound(ModSounds.PLANT.get());
         entity.setHealth(entity.getMaxHealth());
 //        CardQualityComponent.tryUpLevel(stack);
         return true;

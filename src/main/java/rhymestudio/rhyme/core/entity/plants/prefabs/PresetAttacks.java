@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity.plants.prefabs;
 
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -15,7 +16,39 @@ import java.util.TimerTask;
 import java.util.function.BiConsumer;
 
 public class PresetAttacks {
+    public final BiConsumer<AbstractPlant, LivingEntity> attack;
+    public DeferredHolder<SoundEvent, SoundEvent> sound;
+    public int shootCount = 1;
 
+    public PresetAttacks(BiConsumer<AbstractPlant, LivingEntity> attack, DeferredHolder<SoundEvent, SoundEvent> sound, int shootCount) {
+        this.attack = attack;
+        this.sound = sound;
+        this.shootCount = shootCount;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+    public static class Builder {
+        private BiConsumer<AbstractPlant, LivingEntity> attack;
+        private DeferredHolder<SoundEvent, SoundEvent> sound;
+        private int shootCount = 1;
+        public Builder setShootCount(int shootCount) {
+            this.shootCount = shootCount;
+            return this;
+        }
+        public Builder setAttack(BiConsumer<AbstractPlant, LivingEntity> attack) {
+            this.attack = attack;
+            return this;
+        }
+        public Builder setSound(DeferredHolder<SoundEvent, SoundEvent> sound) {
+            this.sound = sound;
+            return this;
+        }
+        public PresetAttacks build() {
+            return new PresetAttacks(attack, sound, shootCount);
+        }
+    }
     /**
      * 直线弹幕
      */
@@ -41,12 +74,7 @@ public class PresetAttacks {
     //双豌豆
     public static final BiConsumer<AbstractPlant, LivingEntity> DOUBLE_PEA_SHOOT = (me, tar) -> {
         PEA_SHOOT.accept(me, tar);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                PEA_SHOOT.accept(me, tar);
-            }
-        }, 300);
+
     };
 
     //小喷菇
