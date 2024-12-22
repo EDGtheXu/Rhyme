@@ -113,19 +113,17 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
 
     public void playerTouch(Player entity) {
         if(this.tickCount<20)return;
-        if (entity instanceof ServerPlayer serverplayer) {
+        if (entity instanceof ServerPlayer serverplayer && touchTick>tickCount) {
             if (entity.takeXpDelay == 0) {
                 var data = serverplayer.getData(ModAttachments.PLAYER_STORAGE);
                 data.sunCount += this.getItem().getCount() * 25;
                 data.sunCount = Math.min(data.sunCount, 2000);
                 PacketDistributor.sendToPlayer(serverplayer, new SunCountPacketS2C(data.sunCount));
-
+                playSound(ModSounds.POINTS.get());
+                touchTick = tickCount;
             }
         }
-        if(touchTick>tickCount){
-            playSound(ModSounds.POINTS.get());
-            touchTick = tickCount;
-        }
+
     }
 
     public static void summon(ServerLevel serverLevel) {
