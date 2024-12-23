@@ -23,7 +23,17 @@ public class PlantShovel extends Item {
             AbstractPlant plant = (AbstractPlant) result.getEntity();
             player.playSound(ModSounds.SHOVEL.get());
             plant.discard();
+
+
         }
+//        ItemStack it = player.getItemInHand(InteractionHand.OFF_HAND);
+//        var a = ItemStack.CODEC.encodeStart(JavaOps.INSTANCE,it).result().get();
+//        System.out.println(a);
+//        var b = ItemStack.CODEC.decode(JavaOps.INSTANCE,a).result().get().getFirst();
+//        player.drop(b,true);
+//        JsonElement jsonObject = JsonParser.parseString(ICodec.getGson().toJson(a));
+
+
         return super.use(level, player, usedHand);
     }
 }

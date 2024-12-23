@@ -1,12 +1,18 @@
 package rhymestudio.rhyme;
 
+import com.google.gson.Gson;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
+
+import rhymestudio.rhyme.config.Codec.*;
+import rhymestudio.rhyme.config.MainConfig;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.datagen.biome.ModBiomes;
 import rhymestudio.rhyme.datagen.recipe.ModRecipes;
@@ -42,6 +48,20 @@ public class Rhyme {
         ModAttachments.TYPES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
+        modContainer.registerConfig(ModConfig.Type.COMMON,Config.SPEC);
+
+        MainConfig.cfg.load();
+        CodecRegister.registerCodecs();
+
+        Gson gson = ICodec.getGson();
+
+        Price price = new Price(10, ItemStack.EMPTY);
+        String json = gson.toJson(price, Price.class);
+        LOGGER.info(json);
+
+        Price price2 = gson.fromJson(json, Price.class);
+        LOGGER.info(price2.toString());
+
     }
 
 }
