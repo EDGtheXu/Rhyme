@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.datagen.recipe;
+package rhymestudio.rhyme.core.recipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;

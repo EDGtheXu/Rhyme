@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import rhymestudio.rhyme.datagen.recipe.AbstractAmountRecipe;
+import rhymestudio.rhyme.core.recipe.AbstractAmountRecipe;
 
 public class AmountResultSlot extends Slot {
     protected final CraftingContainer crafting;

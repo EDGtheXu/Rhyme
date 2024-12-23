@@ -15,10 +15,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.registries.DeferredItem;
-import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.config.Codec.ICodec;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.core.registry.items.PlantItems;
+import rhymestudio.rhyme.core.recipe.AmountIngredient;
+import rhymestudio.rhyme.core.registry.ModRecipes;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -36,18 +37,18 @@ public class SunCreatorRecipeProvider implements DataProvider {
         this.output = output;
     }
     void run(){
+
         //向日葵
         gen(PlantItems.SUN_FLOWER)
                 .add(MaterialItems.GENERAL_SEED)
                 .add(MaterialItems.PLANT_GENE)
                 .add(MaterialItems.SOLID_SUN,3).build();
 
-
         //豌豆
         gen(PlantItems.PEA_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
                 .add(MaterialItems.PLANT_GENE)
-                .add(MaterialItems.PLANT_GENE,6).build();
+                .add(MaterialItems.PEA_GENE,6).build();
 
         gen(PlantItems.SNOW_PEA_ITEM)
                 .add(PlantItems.PEA_ITEM)
@@ -57,7 +58,7 @@ public class SunCreatorRecipeProvider implements DataProvider {
         gen(PlantItems.REPEATER_ITEM)
                 .add(PlantItems.PEA_ITEM)
                 .add(MaterialItems.PLANT_GENE)
-                .add(MaterialItems.PLANT_GENE,6).build();
+                .add(MaterialItems.PEA_GENE,6).build();
 
         //土豆
         gen(PlantItems.POTATO_MINE_ITEM)
@@ -87,21 +88,12 @@ public class SunCreatorRecipeProvider implements DataProvider {
     }
     @Override
     public CompletableFuture<?> run(CachedOutput cachedOutput) {
-
-        // example recipe for sun creator
-//        genRecipe(
-//            PlantItems.REPEATER_ITEM::toStack,
-//            List.of(
-//                    new AmountIngredient( Ingredient.of(MaterialItems.SOLID_SUN.toStack()),5),
-//                    new AmountIngredient( Ingredient.of(MaterialItems.PLANT_GENE.toStack()),1)
-//            ), cachedOutput);
         run();
         jsons.forEach(pair -> {
             var obj = pair.first;
             var result = pair.second;
             futures.add(DataProvider.saveStable(cachedOutput,obj, getPath(result.getItemHolder().getKey().location())));
         });
-
         return CompletableFuture.allOf( futures.toArray(CompletableFuture[]::new));
     }
     protected Path getPath(ResourceLocation loc) {

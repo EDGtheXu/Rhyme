@@ -16,10 +16,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.block.SunCreaterBlock;
 import rhymestudio.rhyme.core.registry.ModAttachments;
-import rhymestudio.rhyme.datagen.recipe.AbstractAmountRecipe;
-import rhymestudio.rhyme.datagen.recipe.SunCreatorRecipe;
+import rhymestudio.rhyme.core.recipe.AbstractAmountRecipe;
+import rhymestudio.rhyme.core.recipe.SunCreatorRecipe;
 import rhymestudio.rhyme.core.registry.ModBlocks;
-import rhymestudio.rhyme.datagen.recipe.ModRecipes;
+import rhymestudio.rhyme.core.registry.ModRecipes;
 import rhymestudio.rhyme.core.registry.ModMenus;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 

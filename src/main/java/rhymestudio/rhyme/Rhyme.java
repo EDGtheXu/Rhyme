@@ -15,7 +15,7 @@ import rhymestudio.rhyme.config.Codec.*;
 import rhymestudio.rhyme.config.MainConfig;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.datagen.biome.ModBiomes;
-import rhymestudio.rhyme.datagen.recipe.ModRecipes;
+import rhymestudio.rhyme.core.registry.ModRecipes;
 import rhymestudio.rhyme.core.registry.*;
 
 import java.util.ArrayList;
