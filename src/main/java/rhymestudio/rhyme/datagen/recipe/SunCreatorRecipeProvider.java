@@ -31,8 +31,8 @@ import static rhymestudio.rhyme.Rhyme.MODID;
 
 public class SunCreatorRecipeProvider implements DataProvider {
     private final PackOutput output;
-    private List<Pair<JsonObject,ItemStack>> jsons = new ArrayList<>();
-    private List<CompletableFuture<?>> futures = new ArrayList<>();
+    private final List<Pair<JsonObject,ItemStack>> jsons = new ArrayList<>();
+    private final List<CompletableFuture<?>> futures = new ArrayList<>();
     public SunCreatorRecipeProvider(PackOutput output) {
         this.output = output;
     }

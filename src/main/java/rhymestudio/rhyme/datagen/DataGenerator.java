@@ -48,13 +48,14 @@ public class DataGenerator {
         generator.addProvider(server, new ModItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server,new ModRecipeProvider(output,lookup));
         generator.addProvider(server, ModLootTableProvider.getProvider(output, lookup));
+        generator.addProvider(server, new SunCreatorRecipeProvider(output));
 
         boolean client = event.includeClient();
         generator.addProvider(client, new ModChineseProvider(output));
         generator.addProvider(client, new ModEnglishProvider(output));
         generator.addProvider(client, new ModItemModelProvider(output, helper));
 
-        generator.addProvider(client, new SunCreatorRecipeProvider(output));
+
 
     }
 
