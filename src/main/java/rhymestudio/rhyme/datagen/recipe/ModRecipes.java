@@ -16,6 +16,7 @@ import static rhymestudio.rhyme.Rhyme.MODID;
 public final class ModRecipes {
     public static final String SUN_CREATOR_ID = "sun_creator";
     public static final String AMOUNT_INGREDIENT_ID = "amount_ingredient";
+
     public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);

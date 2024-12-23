@@ -3,6 +3,7 @@ package rhymestudio.rhyme.datagen.recipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -11,6 +12,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     protected final ItemStack result;
@@ -28,17 +32,37 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(@NotNull RecipeInput pContainer, @NotNull Level pLevel) {
-        found:
-        for (Ingredient ingredient : ingredients) {
-            for (int index = 0; index < pContainer.size(); index++) {
-                ItemStack itemStack = pContainer.getItem(index);
-                if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
-                    continue found;
-                }
+        // 创建一个 Map 来存储 pContainer 中每种物品的数量
+        Map<Item, Integer> ingredientCount = new HashMap<>();
+
+        for (int index = 0; index < pContainer.size(); index++) {
+            ItemStack itemStack = pContainer.getItem(index);
+            if (!itemStack.isEmpty()) {
+                ingredientCount.put(itemStack.getItem(), ingredientCount.getOrDefault(itemStack.getItem(), 0) + itemStack.getCount());
             }
-            return false;
         }
-        return true;
+
+        // 创建一个 Map 来存储 ingredients 所需的物品数量
+        Map<Item, Integer> requiredCount = new HashMap<>();
+
+        for (Ingredient ingredient : ingredients) {
+            ItemStack[] items = ingredient.getItems();
+            for (ItemStack item : items) {
+                requiredCount.put(item.getItem(), requiredCount.getOrDefault(item.getItem(), 0) + item.getCount());
+            }
+        }
+        // 比较可用数量和所需数量
+        for (Map.Entry<Item, Integer> entry : requiredCount.entrySet()) {
+            Item requiredItem = entry.getKey();
+            int requiredAmount = entry.getValue();
+            int availableAmount = ingredientCount.getOrDefault(requiredItem, 0);
+
+            if (availableAmount < requiredAmount) {
+                return false; // 如果可用数量小于所需数量，则返回 false
+            }
+        }
+
+        return true; // 所有成分都满足条件
     }
 
     @Override
