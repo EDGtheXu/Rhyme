@@ -3,40 +3,30 @@ package rhymestudio.rhyme.datagen.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.ibm.icu.impl.Pair;
 import com.mojang.serialization.JavaOps;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.registries.DeferredItem;
-import rhymestudio.rhyme.config.Codec.ICodec;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.core.registry.items.PlantItems;
 import rhymestudio.rhyme.core.recipe.AmountIngredient;
 import rhymestudio.rhyme.core.registry.ModRecipes;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
 
-public class SunCreatorRecipeProvider implements DataProvider {
-    private final PackOutput output;
-    private final List<Pair<JsonObject,ItemStack>> jsons = new ArrayList<>();
-    private final List<CompletableFuture<?>> futures = new ArrayList<>();
+public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
     public SunCreatorRecipeProvider(PackOutput output) {
-        this.output = output;
+        super(output);
     }
-    void run(){
+
+    protected void run(){
 
         //向日葵
         gen(PlantItems.SUN_FLOWER)
@@ -78,6 +68,7 @@ public class SunCreatorRecipeProvider implements DataProvider {
                 .add(MaterialItems.PLANT_GENE)
                 .add(MaterialItems.NUT_GENE,4).build();
 
+
         //卷心菜
         gen(PlantItems.CABBAGE_PULT_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
@@ -86,48 +77,29 @@ public class SunCreatorRecipeProvider implements DataProvider {
 
 
     }
-    @Override
-    public CompletableFuture<?> run(CachedOutput cachedOutput) {
-        run();
-        jsons.forEach(pair -> {
-            var obj = pair.first;
-            var result = pair.second;
-            futures.add(DataProvider.saveStable(cachedOutput,obj, getPath(result.getItemHolder().getKey().location())));
-        });
-        return CompletableFuture.allOf( futures.toArray(CompletableFuture[]::new));
+
+    protected String pathSuffix(){
+        return "_sun_creator";
     }
-    protected Path getPath(ResourceLocation loc) {
-        return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve("recipe").resolve(loc.getPath() + "_gen_creator.json");
-    }
+
     @Override
     public String getName() {
         return "Sun Creator Recipe Provider: "+ MODID;
     }
 
-    public void genRecipe(Supplier<ItemStack> result, List<AmountIngredient> ingredients){
+    public void genRecipe(Supplier<ItemStack> result, List<AmountIngredient> ingredients,String suffix){
         JsonObject obj = new JsonObject();
+
         obj.addProperty("type",MODID + ":" + ModRecipes.SUN_CREATOR_ID);
 
         JsonArray arr = new JsonArray();
-        for(AmountIngredient i : ingredients){
-            JsonElement ingres;
-            if(i.amount() > 1){
-                var ing = AmountIngredient.CODEC.encoder().encodeStart(JavaOps.INSTANCE, i).result().get();
-                ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
-                ingres.getAsJsonObject().addProperty("type",MODID + ":" + ModRecipes.AMOUNT_INGREDIENT_ID);
-            }else if(i.amount() == 1){
-                var ing = Ingredient.CODEC.encodeStart(JavaOps.INSTANCE, i.ingredient()).result().get();
-                ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
-            }else continue;
-            arr.add(ingres);
-        }
+        ingredients.forEach(i -> arr.add(amountIngredientJson(i)));
         obj.add("ingredients", arr);
 
-        var a = ItemStack.CODEC.encodeStart(JavaOps.INSTANCE,result.get()).result().get();
-        JsonElement resit = JsonParser.parseString(ICodec.getGson().toJson(a));
+        JsonElement resit = parseCodec(ItemStack.CODEC.encodeStart(JavaOps.INSTANCE,result.get()));
         obj.add("result",resit);
 
-        jsons.add(Pair.of(obj,result.get()));
+        addJson(obj,result.get(),suffix);
 //        futures.add(DataProvider.saveStable(cachedOutput,obj, getPath(result.get().getItemHolder().getKey().location())));
     }
 
@@ -167,7 +139,10 @@ public class SunCreatorRecipeProvider implements DataProvider {
         }
 
         public void build(){
-            genRecipe(result,ingredients);
+            build("");
+        }
+        public void build(String suffix){
+            genRecipe(result,ingredients,suffix);
         }
     }
 }

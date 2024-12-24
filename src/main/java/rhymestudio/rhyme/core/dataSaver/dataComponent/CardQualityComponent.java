@@ -45,6 +45,8 @@ public record CardQualityComponent(int level,int color, ResourceLocation source)
 
     public CardQualityComponent decreaseLevel() {return _levels.get(level > 0 ? level - 1 : 0);}
 
+    public static CardQualityComponent of(int level) {return _levels.get(level);}
+
     public Item getQualityItem() {return BuiltInRegistries.ITEM.get(source);}
     public int getQualityColor() {;return color;}
 

@@ -12,6 +12,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.client.render.gui.CardUpLevelScreen;
 import rhymestudio.rhyme.client.render.gui.SunCreatorScreen;
 import rhymestudio.rhyme.client.model.ModelUtils;
 import rhymestudio.rhyme.client.render.post.PostUtil;
@@ -58,5 +59,6 @@ public class ModClientEvent {
     @SubscribeEvent
     public static void registerMenuScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.SUN_CREATOR_MENU.get(), SunCreatorScreen::new);
+        event.register(ModMenus.CARD_UP_LEVEL_MENU.get(), CardUpLevelScreen::new);
     }
 }
