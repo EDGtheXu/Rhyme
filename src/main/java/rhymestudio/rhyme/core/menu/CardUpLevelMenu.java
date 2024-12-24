@@ -143,7 +143,7 @@ public class CardUpLevelMenu extends ItemCombinerMenu {
 
     private OptionalInt findSlotToQuickMoveTo(ItemStack stack) {
         return this.recipes.stream().flatMapToInt((p_300800_) -> {
-            return findSlotMatchingIngredient((SmithingRecipe)p_300800_.value(), stack).stream();
+            return findSlotMatchingIngredient(p_300800_.value(), stack).stream();
         }).filter((p_294045_) -> {
             return !this.getSlot(p_294045_).hasItem();
         }).findFirst();
