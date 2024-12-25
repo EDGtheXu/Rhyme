@@ -1,16 +1,12 @@
 package rhymestudio.rhyme.core.item;
 
-import com.google.common.collect.HashMultimap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +19,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
@@ -30,40 +28,39 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.List;
 
-import static rhymestudio.rhyme.utils.Computer.playSound;
-
 public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem {
     public DeferredHolder<EntityType<?>, EntityType<T>> entityType;
 
     public int consume;
+    public int cd = 5*20;
     public AbstractCardItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume){
         super(properties);
         this.entityType = entityType;
         this.consume = consume;
     }
 
+    public AbstractCardItem<T> setCd(int cd){
+        this.cd = cd*20;
+        return this;
+    }
+
+
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-
-//        if (!level.isClientSide()) {
-
-            ItemStack itemstack = player.getItemInHand(hand);
-
-            if(!player.canBeSeenAsEnemy()){ // 创造
-                summon(player, level, itemstack);
-                return InteractionResultHolder.success(itemstack);
-            }
+        ItemStack itemstack = player.getItemInHand(hand);
+        if(!player.canBeSeenAsEnemy()){ // 创造
+            summon(player, level, itemstack);
+            return InteractionResultHolder.success(itemstack);
+        }
 //            if(!Computer.tryCombineInventoryItem(player, MaterialItems.SUN_ITEM.get(), consume)){
 //                return InteractionResultHolder.fail(itemstack);
 //            }
-            var flag = player.getData(ModAttachments.PLAYER_STORAGE).consumeSun(consume);
-            if(!flag) return InteractionResultHolder.fail(itemstack);
-            if(!summon(player, level, itemstack)) return InteractionResultHolder.fail(itemstack);
-            itemstack.setDamageValue(itemstack.getDamageValue() + 1);
-            if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
-                itemstack.shrink(1);
-            return InteractionResultHolder.success(itemstack);
-//        }
-//        return super.use(level, player, hand);
+        var flag = player.getData(ModAttachments.PLAYER_STORAGE).consumeSun(consume);
+        if(!flag) return InteractionResultHolder.fail(itemstack);
+        if(!summon(player, level, itemstack)) return InteractionResultHolder.fail(itemstack);
+        itemstack.setDamageValue(itemstack.getDamageValue() + 1);
+        if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
+            itemstack.shrink(1);
+        return InteractionResultHolder.success(itemstack);
     }
 
     public boolean summon(Player player, Level level,ItemStack stack){
@@ -79,13 +76,12 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         entity.setOwner(player);
         entity.setPos(new Vec3(pos.getX() + 0.5+player.getRandom().nextFloat()*0.1f, pos.getY(), pos.getZ() + 0.5+player.getRandom().nextFloat()*0.1f));
         int lvl = stack.getComponents().get(ModDataComponentTypes.CARD_QUALITY.get()).level();
-        HashMultimap<Holder<Attribute>, AttributeModifier> hashmultimap = HashMultimap.create();
         entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(Rhyme.space("card_health_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(Rhyme.space("card_attack_damage_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         level.addFreshEntity(entity);
         entity.playSound(ModSounds.PLANT.get());
         entity.setHealth(entity.getMaxHealth());
-//        CardQualityComponent.tryUpLevel(stack);
+        player.getCooldowns().addCooldown(stack.getItem(), this.cd);
         return true;
     }
 
@@ -99,4 +95,38 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         tooltipComponents.add(Component.translatable("plantcard.tooltip.consumed_sun").append(": "+this.consume).withColor(0xffff00));
     }
 
+    public static <T extends AbstractPlant> Builder<T> builder(DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume){
+        return new Builder<>(entityType, consume);
+    }
+
+    public static class Builder<T extends AbstractPlant> {
+        private final Properties properties = new Properties();
+        private final DeferredHolder<EntityType<?>, EntityType<T>> entityType;
+        private final int consume;
+        private int cd = 5;
+        private int durability = 10;
+
+        public Builder(DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume){
+            this.entityType = entityType;
+            this.consume = consume;
+            properties.component(ModDataComponentTypes.CARD_QUALITY.get(), CardQualityComponent.COPPER);
+        }
+        public Builder<T> cd(int cd){
+            this.cd = cd;
+            return this;
+        }
+        public Builder<T> rarity(ModRarity rarity){
+            properties.component(ModDataComponentTypes.MOD_RARITY.get(), rarity);
+            return this;
+        }
+        public Builder<T> durability(int durability){
+            this.durability = durability;
+            return this;
+        }
+        public AbstractCardItem<T> build(){
+            return new AbstractCardItem<>(properties.durability(durability), entityType, consume).setCd(cd);
+        }
+
+
+    }
 }

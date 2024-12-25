@@ -58,10 +58,10 @@ public class ModRarity implements DataComponentType<ModRarity> {
             Style.Serializer.TRUSTED_STREAM_CODEC, ModRarity::getStyle,
             ModRarity::new
     );
-    private ColorAnimation animation;
+    private final ColorAnimation animation;
 
-    private String name;
-    private Style style;
+    private final String name;
+    private final Style style;
 
 
     public ModRarity(String name, int color) {
