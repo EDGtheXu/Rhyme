@@ -8,6 +8,8 @@ import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
+import static rhymestudio.rhyme.Rhyme.add_zh_en;
+
 public class MaterialItems {
     public static final DeferredRegister.Items MATERIALS = DeferredRegister.createItems(Rhyme.MODID);
 
@@ -32,7 +34,7 @@ public class MaterialItems {
 
     public static DeferredItem<Item> register(String en, String zh, ModRarity rarity) {
         DeferredItem<Item> item =  MATERIALS.register("material/"+en, () -> new CustomRarityItem(new Item.Properties().component(ModDataComponentTypes.MOD_RARITY,rarity)));
-        Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
+        add_zh_en(item, zh);
         return item;
     }
     public static DeferredItem<Item> register(String en, String zh) {

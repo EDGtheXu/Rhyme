@@ -20,6 +20,8 @@ import rhymestudio.rhyme.core.block.SunCreaterBlock;
 
 import java.util.function.Supplier;
 
+import static rhymestudio.rhyme.Rhyme.add_zh_en;
+
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Rhyme.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Rhyme.MODID);
@@ -50,7 +52,7 @@ public class ModBlocks {
     public static <T extends Block>Supplier<T> register(String name,String zh,Supplier<T> blockSupplier) {
         DeferredBlock<T> block =  BLOCKS.register(name, blockSupplier);
         DeferredItem<Item> item = BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
-        Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
+        add_zh_en(item, zh);
         return block ;
     }
 }

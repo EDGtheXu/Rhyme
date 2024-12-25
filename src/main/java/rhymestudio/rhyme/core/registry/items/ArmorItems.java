@@ -19,6 +19,8 @@ import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
 import java.util.function.Function;
 
+import static rhymestudio.rhyme.Rhyme.add_zh_en;
+
 public class ArmorItems {
     public static final DeferredRegister.Items ARMORS = DeferredRegister.createItems(Rhyme.MODID);
 
@@ -36,13 +38,13 @@ public class ArmorItems {
 
     public static DeferredItem<Item> register(String en, String zh, Holder<ArmorMaterial> material, ArmorItem.Type type, int durability, ModRarity rarity, Function<ItemAttributeModifiers.Builder,ItemAttributeModifiers.Builder> modify) {
         DeferredItem<Item> item =  ARMORS.register("armor/"+en, () -> new NormalArmorItem(material,type,new Item.Properties().stacksTo(1).durability(durability).component(ModDataComponentTypes.MOD_RARITY,rarity).component(DataComponents.ATTRIBUTE_MODIFIERS,modify.apply(ItemAttributeModifiers.builder().add(Attributes.ARMOR,new AttributeModifier(Rhyme.space("tier_armor"),material.value().getDefense(type),AttributeModifier.Operation.ADD_VALUE),EquipmentSlotGroup.HEAD)).build())));
-        Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
+        add_zh_en(item, zh);
         return item;
     }
     public static DeferredItem<Item> register(String en, String zh, Holder<ArmorMaterial> material,ArmorItem.Type type, int durability, ModRarity rarity) {
         DeferredItem<Item> item =  ARMORS.register("armor/"+en, () -> new NormalArmorItem(material,type,new Item.Properties().stacksTo(1).durability(durability).component(ModDataComponentTypes.MOD_RARITY,rarity)
         ));
-        Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
+        add_zh_en(item, zh);
         return item;
     }
     public static DeferredItem<Item> register(String en, String zh, Holder<ArmorMaterial> material,ArmorItem.Type type, int durability) {

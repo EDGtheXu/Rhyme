@@ -82,6 +82,10 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         entity.playSound(ModSounds.PLANT.get());
         entity.setHealth(entity.getMaxHealth());
         player.getCooldowns().addCooldown(stack.getItem(), this.cd);
+        if(level.isClientSide){
+            var data = stack.get(ModDataComponentTypes.CARD_QUALITY.get());
+            player.sendSystemMessage(Component.translatable("plantcard.summon_success").append(Component.translatable("entity.rhyme."+ entityType.getId().getPath()).withColor(data.color())));
+        }
         return true;
     }
 

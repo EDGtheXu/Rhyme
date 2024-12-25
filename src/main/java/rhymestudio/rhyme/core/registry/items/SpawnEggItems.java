@@ -12,6 +12,8 @@ import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 
+import static rhymestudio.rhyme.Rhyme.add_zh_en;
+
 public class SpawnEggItems{
 
     public static final DeferredRegister.Items EGGS = DeferredRegister.createItems(Rhyme.MODID);
@@ -25,7 +27,7 @@ public class SpawnEggItems{
 
     public static <T extends Mob>DeferredItem<Item> register(String en, String zh, DeferredHolder<EntityType<?>,EntityType<T>> entityType, int color1, int color2 , ModRarity rarity) {
         DeferredItem<Item> item =  EGGS .register("egg/"+en, () -> new DeferredSpawnEggItem(entityType,color1,color2,new Item.Properties().component(ModDataComponentTypes.MOD_RARITY,rarity)));
-        Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
+        add_zh_en(item, zh);
         return item;
     }
     public static <T extends Mob>DeferredItem<Item> register(String en, String zh,DeferredHolder<EntityType<?>,EntityType<T>> entityType,int color1,int color2) {

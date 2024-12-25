@@ -12,6 +12,7 @@ import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 
 import java.util.function.Supplier;
 
+import static rhymestudio.rhyme.Rhyme.add_zh_en;
 import static rhymestudio.rhyme.core.item.AbstractCardItem.builder;
 
 public class PlantItems {
@@ -40,11 +41,10 @@ public class PlantItems {
     /**
      * @param en id
      * @param zh 中文名
-     * @return
      */
     public static  <T extends AbstractPlant> DeferredItem<Item> registerPlant(String en, String zh, Supplier<AbstractCardItem<T>> supplier) {
         DeferredItem<Item> item =  PLANTS.register("plant_card/"+en, supplier);
-        Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
+        add_zh_en(item, zh);
         return item;
     }
 

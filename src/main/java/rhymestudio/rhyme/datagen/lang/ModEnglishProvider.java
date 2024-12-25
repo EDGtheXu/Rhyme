@@ -3,9 +3,6 @@ package rhymestudio.rhyme.datagen.lang;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.registry.ModBlocks;
-import rhymestudio.rhyme.core.registry.items.MaterialItems;
-import rhymestudio.rhyme.core.registry.items.PlantItems;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -16,7 +13,7 @@ public class ModEnglishProvider extends LanguageProvider {
     public ModEnglishProvider(PackOutput output) {
         super(output, Rhyme.MODID, "en_us");
     }
-    private static String toTitleCase(String raw) {
+    public static String toTitleCase(String raw) {
         return Arrays.stream(raw.split("_"))
                 .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
@@ -40,10 +37,11 @@ public class ModEnglishProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_4","emerald");
 
 
-
-        PlantItems.PLANTS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
-        MaterialItems.MATERIALS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
-        ModBlocks.BLOCK_ITEMS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+        Rhyme.englishProviders.forEach(a->a.accept(this));
+//        PlantItems.PLANTS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+//        MaterialItems.MATERIALS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+//        ModBlocks.BLOCK_ITEMS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+//
     }
 
 }

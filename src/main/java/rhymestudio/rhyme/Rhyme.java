@@ -4,11 +4,16 @@ import com.google.gson.Gson;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.slf4j.Logger;
 
 import rhymestudio.rhyme.config.Codec.*;
@@ -17,10 +22,13 @@ import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.datagen.biome.ModBiomes;
 import rhymestudio.rhyme.core.registry.ModRecipes;
 import rhymestudio.rhyme.core.registry.*;
+import rhymestudio.rhyme.datagen.lang.ModEnglishProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static rhymestudio.rhyme.datagen.lang.ModEnglishProvider.toTitleCase;
 
 @Mod(Rhyme.MODID)
 public class Rhyme {
@@ -29,7 +37,15 @@ public class Rhyme {
     public static ResourceLocation space(String path){return ResourceLocation.fromNamespaceAndPath(MODID, path);}
 
     public static List<Consumer<ModChineseProvider>> chineseProviders = new ArrayList<>();
-
+    public static List<Consumer<ModEnglishProvider>> englishProviders = new ArrayList<>();
+    public static void add_zh_en(DeferredItem<Item> item, String zh){
+        Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
+        Rhyme.englishProviders.add((c)->c.add(item.get(),toTitleCase(item.getId().getPath())));
+    }
+    public static <T extends Entity> void add_zh_en(DeferredHolder<EntityType<?>,EntityType<T>> e, String zh){
+        Rhyme.chineseProviders.add((c)->c.add(e.get(),zh));
+        Rhyme.englishProviders.add((c)->c.add(e.get(),toTitleCase(e.getId().getPath())));
+    }
     public Rhyme(IEventBus modEventBus, ModContainer modContainer) {
         ModItems.registerItems(modEventBus);
         ModEntities.registerEntities(modEventBus);

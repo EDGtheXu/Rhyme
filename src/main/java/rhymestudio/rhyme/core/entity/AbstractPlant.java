@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -43,7 +44,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     public <T extends AbstractPlant> AbstractPlant(EntityType<T> tEntityType, Level level,Builder builder) {
         super(tEntityType, level);
-        this.namePath = getName().getString().split("\\.")[2];
+        this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
         this.builder = builder;
     }
 
