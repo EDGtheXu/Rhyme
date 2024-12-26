@@ -27,6 +27,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_2","黄金");
         add("plantcard.tooltip.card_quality.card_quality_3","钻石");
         add("plantcard.tooltip.card_quality.card_quality_4","翡翠");
+        add("plantcard.summon_success","你种植了 ");
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 

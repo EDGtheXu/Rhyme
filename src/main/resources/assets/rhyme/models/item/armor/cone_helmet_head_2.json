@@ -1,0 +1,7 @@
+{
+	"parent": "rhyme:item/armor/cone_helmet_base",
+	"textures": {
+		"0": "rhyme:item/armor/cone_helmet_head_2",
+		"particle": "rhyme:item/armor/cone_helmet_head_2"
+	}
+}

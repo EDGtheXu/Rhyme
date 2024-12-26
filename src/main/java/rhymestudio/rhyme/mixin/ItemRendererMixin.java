@@ -37,11 +37,24 @@ public abstract class ItemRendererMixin {
 
     @Inject(method = "renderStatic(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/level/Level;III)V", at = @At("HEAD"),cancellable = true)
     private void renderStaticMixin(LivingEntity entity, ItemStack itemStack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource bufferSource, Level level, int combinedLight, int combinedOverlay, int seed, CallbackInfo ci) {
-
         Item item = itemStack.getItem();
         if(HEAD_MODEL_ITEMS.containsKey(item)){
             if(displayContext == ItemDisplayContext.HEAD) {
-                ResourceLocation location = HEAD_MODEL_ITEMS.get(item);
+                ResourceLocation location;
+                if(entity != null && entity.isAlive()){
+                    float additionHp = entity.getMaxHealth() - 35;
+                    float percentage = (entity.getMaxHealth() - entity.getHealth()) / additionHp;
+                    if(percentage > 0.66f){
+                        location = HEAD_MODEL_ITEMS.get(item).get(2);
+                    }else if(percentage > 0.33f){
+                        location = HEAD_MODEL_ITEMS.get(item).get(1);
+                    }else{
+                        location = HEAD_MODEL_ITEMS.get(item).getFirst();
+                    }
+                }else{
+                    location =HEAD_MODEL_ITEMS.get(item).getLast();
+                }
+
                 BakedModel bakedmodel = itemModelShaper.getModelManager().getModel(ModelResourceLocation.standalone(location));
                 if(bakedmodel!=itemModelShaper.getModelManager().getMissingModel()) {
                     this.render(itemStack, displayContext, leftHand, poseStack, bufferSource, combinedLight, combinedOverlay, bakedmodel);

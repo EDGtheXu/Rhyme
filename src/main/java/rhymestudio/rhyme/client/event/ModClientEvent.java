@@ -19,6 +19,8 @@ import rhymestudio.rhyme.client.render.post.PostUtil;
 import rhymestudio.rhyme.core.registry.ModMenus;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static rhymestudio.rhyme.client.model.ModelUtils.HEAD_MODEL_ITEMS;
 
@@ -37,20 +39,28 @@ public class ModClientEvent {
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
 
         BuiltInRegistries.ITEM.forEach(item->{
-            ResourceLocation location = ModelUtils.getHeadModelResourceLocation(item);
             ResourceManager provider = Minecraft.getInstance().getResourceManager();
             try{
                 ResourceLocation location1 = BuiltInRegistries.ITEM.getKey(item);
-                String name =  "models/item/" + location1.getPath() + "_head.json";
-                location1 = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), name);
-                provider.getResourceOrThrow(location1);
+                for(int i=1;i<=3;i++){
+                    String name = new StringBuilder("models/item/").append(location1.getPath()).append("_head").append(i>1?"_"+i:"").append(".json").toString();
+                    ResourceLocation location = ModelUtils.getHeadModelResourceLocation(item, i);
+                    ResourceLocation location2 = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), name);
+                    provider.getResourceOrThrow(location2);
+                    var modelResourceLocation = ModelResourceLocation.standalone(location);
+                    event.register(modelResourceLocation);
+                    if(HEAD_MODEL_ITEMS.get(item)==null){
+                        List<ResourceLocation> list = new ArrayList<>();
+                        list.add(location);
+                        HEAD_MODEL_ITEMS.put(item, list);
+                    }else{
+                        HEAD_MODEL_ITEMS.get(item).add(location);
+                    }
 
-                var modelResourceLocation = ModelResourceLocation.standalone(location);
+                }
 
-                event.register(modelResourceLocation);
-                HEAD_MODEL_ITEMS.put(item, location);
             } catch (FileNotFoundException e) {
-//                System.out.println("not exist");
+                System.out.println("not exist");
             }
 
         });

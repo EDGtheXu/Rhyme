@@ -28,8 +28,9 @@ public class ArmorLayerMixinUtil {
             poseStack.translate(0, 0 , head.z*0.2);
             poseStack.translate(0,0.35+head.y*0.01 , 0);
 
+//            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.HEAD,packedLight,OverlayTexture.NO_OVERLAY,poseStack,bufferSource,livingEntity.level(),0);
 
-            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.HEAD,packedLight,OverlayTexture.NO_OVERLAY,poseStack,bufferSource,livingEntity.level(),0);
+            Minecraft.getInstance().getItemRenderer().renderStatic(livingEntity,stack, ItemDisplayContext.HEAD,false,poseStack,bufferSource,livingEntity.level(),packedLight,OverlayTexture.NO_OVERLAY,0);
         }
         poseStack.popPose();
     }

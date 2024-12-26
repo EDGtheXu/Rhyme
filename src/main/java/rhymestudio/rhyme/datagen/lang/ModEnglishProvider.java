@@ -35,6 +35,7 @@ public class ModEnglishProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_2","gold");
         add("plantcard.tooltip.card_quality.card_quality_3","diamond");
         add("plantcard.tooltip.card_quality.card_quality_4","emerald");
+        add("plantcard.summon_success","you plant one ");
 
 
         Rhyme.englishProviders.forEach(a->a.accept(this));
