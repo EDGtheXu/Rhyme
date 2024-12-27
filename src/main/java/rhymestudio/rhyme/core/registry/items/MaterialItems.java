@@ -21,12 +21,25 @@ public class MaterialItems {
     public static final DeferredItem<Item> SNOW_GENE =register("snow_gene","寒冷基因",ModRarity.BLUE);
     public static final DeferredItem<Item> NUT_GENE =register("nut_gene","坚果基因", ModRarity.YELLOW);
     public static final DeferredItem<Item> POTATO_GENE =register("potato_gene","土豆基因", ModRarity.YELLOW);
-    public static final DeferredItem<Item> SPORE_GENE =register("spore_gene","孢子基因", ModRarity.PURPLE);
+    public static final DeferredItem<Item> MUSHROOM_GENE =register("mushroom_gene","蘑菇基因", ModRarity.PURPLE);
     public static final DeferredItem<Item> CABBAGE_GENE =register("cabbage_gene","卷心菜基因", ModRarity.GREEN);
-//    public static final DeferredItem<Item> ANGER_GENE =register("anger_gene","易怒基因",ModRarity.RED);
-//    public static final DeferredItem<Item> STRONG_GENE =register("strong_gene","壮力基因", ModRarity.ORANGE);
+    public static final DeferredItem<Item> ANGER_GENE =register("anger_gene","易怒基因",ModRarity.RED);
+    public static final DeferredItem<Item> STRONG_GENE =register("strong_gene","壮力基因", ModRarity.ORANGE);
 
+    //从戴夫购买
+    public static final DeferredItem<Item> PEA = register("pea", "豌豆", ModRarity.GREEN);
 
+    //从戴夫购买
+    public static final DeferredItem<Item> NUT = register("nut", "坚果", ModRarity.ORANGE);
+
+    //从戴夫购买
+    public static final DeferredItem<Item> CABBAGE = register("cabbage", "卷心菜", ModRarity.GREEN);
+
+    //从戴夫购买
+    public static final DeferredItem<Item> CHILI = register("chili", "辣椒", ModRarity.RED);
+
+    //肌肉，戴夫概率掉落
+    public static  final DeferredItem<Item> MUSCLE = register("muscle", "肌肉", ModRarity.ORANGE);
 
 
 

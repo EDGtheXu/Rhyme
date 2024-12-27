@@ -10,10 +10,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.registries.DeferredItem;
-import rhymestudio.rhyme.core.registry.items.MaterialItems;
-import rhymestudio.rhyme.core.registry.items.PlantItems;
 import rhymestudio.rhyme.core.recipe.AmountIngredient;
 import rhymestudio.rhyme.core.registry.ModRecipes;
+import rhymestudio.rhyme.core.registry.items.MaterialItems;
+import rhymestudio.rhyme.core.registry.items.PlantItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,51 +31,46 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
         //向日葵
         gen(PlantItems.SUN_FLOWER)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.PLANT_GENE)
-                .add(MaterialItems.SOLID_SUN,3).build();
+                .add(MaterialItems.SOLID_SUN,4).build();
 
         //豌豆
         gen(PlantItems.PEA_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.PLANT_GENE)
                 .add(MaterialItems.PEA_GENE,6).build();
 
         gen(PlantItems.SNOW_PEA_ITEM)
                 .add(PlantItems.PEA_ITEM)
-                .add(MaterialItems.PLANT_GENE)
-                .add(MaterialItems.SNOW_GENE,3).build();
+                .add(MaterialItems.SNOW_GENE,6).build();
 
         gen(PlantItems.REPEATER_ITEM)
                 .add(PlantItems.PEA_ITEM)
-                .add(MaterialItems.PLANT_GENE)
                 .add(MaterialItems.PEA_GENE,6).build();
 
         //土豆
         gen(PlantItems.POTATO_MINE_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.PLANT_GENE)
                 .add(MaterialItems.POTATO_GENE,4).build();
 
         //蘑菇
         gen(PlantItems.PUFF_SHROOM_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.PLANT_GENE)
-                .add(MaterialItems.SPORE_GENE,3).build();
+                .add(MaterialItems.MUSHROOM_GENE,4).build();
 
         //坚果
         gen(PlantItems.NUT_WALL_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.PLANT_GENE)
                 .add(MaterialItems.NUT_GENE,4).build();
 
 
         //卷心菜
         gen(PlantItems.CABBAGE_PULT_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.PLANT_GENE)
                 .add(MaterialItems.CABBAGE_GENE,6).build();
 
-
+        //大嘴花
+        gen(PlantItems.CHOMPER)
+                .add(MaterialItems.GENERAL_SEED)
+                .add(MaterialItems.STRONG_GENE,6).build();
     }
 
     protected String pathSuffix(){

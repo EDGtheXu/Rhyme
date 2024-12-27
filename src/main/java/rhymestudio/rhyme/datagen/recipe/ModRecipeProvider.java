@@ -74,6 +74,88 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(MODID, "plant_gene_to_repeater"));
 //
 //        cookRecipes(recipeOutput, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, CampfireCookingRecipe::new, 100);
+
+        //豌豆基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.PEA_GENE)
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BBB")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',MaterialItems.PEA)
+                .unlockedBy("has_pea",has(MaterialItems.PEA))
+                .save(recipeOutput);
+
+        //寒冷基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.SNOW_GENE)
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BBB")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',Items.SNOWBALL)
+                .unlockedBy("has_snow_ball",has(Items.SNOWBALL))
+                .save(recipeOutput);
+
+        //土豆基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.POTATO_GENE)
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BBB")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',Items.POTATO)
+                .unlockedBy("has_potato",has(Items.POTATO))
+                .save(recipeOutput);
+
+        //蘑菇基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.MUSHROOM_GENE)
+                .pattern("CBC")
+                .pattern("BAB")
+                .pattern("CBC")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',Items.RED_MUSHROOM)
+                .define('C',Items.BROWN_MUSHROOM)
+                .unlockedBy("has_red_mushroom",has(Items.RED_MUSHROOM))
+                .unlockedBy("has_brown_mushroom",has(Items.BROWN_MUSHROOM))
+                .save(recipeOutput);
+
+        //坚果基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.NUT_GENE)
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BBB")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',MaterialItems.NUT)
+                .unlockedBy("has_nut",has(MaterialItems.NUT))
+                .save(recipeOutput);
+
+        //卷心菜基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.CABBAGE_GENE)
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BBB")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',MaterialItems.CABBAGE)
+                .unlockedBy("has_cabbage",has(MaterialItems.CABBAGE))
+                .save(recipeOutput);
+
+        //易怒基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.ANGER_GENE)
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BBB")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',MaterialItems.CHILI)
+                .unlockedBy("has_chili",has(MaterialItems.CHILI))
+                .save(recipeOutput);
+
+        //壮力基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.STRONG_GENE)
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BBB")
+                .define('A',MaterialItems.PLANT_GENE)
+                .define('B',MaterialItems.MUSCLE)
+                .unlockedBy("has_muscle",has(MaterialItems.MUSCLE))
+                .save(recipeOutput);
     }
 
     protected static <T extends AbstractCookingRecipe> void cookRecipes(
