@@ -21,7 +21,7 @@ public class ModelPartRenderer extends EntityRenderer<ModelPartEntity> {
         super(context);
     }
     protected float getShadowRadius(ModelPartEntity entity) {
-        return 0.3F;
+        return 0F;
     }
     public void render(ModelPartEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 

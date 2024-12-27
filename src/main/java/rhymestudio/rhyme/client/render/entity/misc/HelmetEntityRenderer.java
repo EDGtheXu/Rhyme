@@ -20,7 +20,7 @@ public class HelmetEntityRenderer extends EntityRenderer<HelmetEntity> {
         super(context);
     }
     protected float getShadowRadius(HelmetEntity entity) {
-        return 0.5F;
+        return 0F;
     }
     public void render(HelmetEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         ItemStack stack = entity.helmetStack;
