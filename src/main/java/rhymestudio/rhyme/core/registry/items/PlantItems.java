@@ -37,7 +37,7 @@ public class PlantItems {
     public static final DeferredItem<Item> CABBAGE_PULT_ITEM = registerPlant("cabbage_pult", "卷心菜投手", ()-> builder(PlantEntities.CABBAGE_PULT,100).build());
 
     // tip 大嘴花类
-    public static final DeferredItem<Item> CHOMPER = registerPlant("chomper", "大嘴花", ()-> builder(PlantEntities.CHOMPER,150).build());
+    public static final DeferredItem<Item> CHOMPER_ITEM = registerPlant("chomper", "大嘴花", ()-> builder(PlantEntities.CHOMPER,150).build());
     /**
      * @param en id
      * @param zh 中文名

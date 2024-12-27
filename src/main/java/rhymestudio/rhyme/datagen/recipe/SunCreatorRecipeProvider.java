@@ -68,7 +68,7 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
                 .add(MaterialItems.CABBAGE_GENE,6).build();
 
         //大嘴花
-        gen(PlantItems.CHOMPER)
+        gen(PlantItems.CHOMPER_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
                 .add(MaterialItems.STRONG_GENE,6).build();
     }
