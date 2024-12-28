@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.render.gui.CardUpLevelScreen;
+import rhymestudio.rhyme.client.render.gui.DaveTradeScreen;
 import rhymestudio.rhyme.client.render.gui.SunCreatorScreen;
 import rhymestudio.rhyme.client.model.ModelUtils;
 import rhymestudio.rhyme.client.render.post.PostUtil;
@@ -45,10 +46,8 @@ public class ModClientEvent {
                 for(int i=1;i<=3;i++){
                     String name = new StringBuilder("models/item/").append(location1.getPath()).append("_head").append(i>1?"_"+i:"").append(".json").toString();
                     ResourceLocation location = ModelUtils.getHeadModelResourceLocation(item, i);
-                    ResourceLocation location2 = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), name);
-                    provider.getResourceOrThrow(location2);
-                    var modelResourceLocation = ModelResourceLocation.standalone(location);
-                    event.register(modelResourceLocation);
+                    provider.getResourceOrThrow(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), name));
+                    event.register(ModelResourceLocation.standalone(location));
                     if(HEAD_MODEL_ITEMS.get(item)==null){
                         List<ResourceLocation> list = new ArrayList<>();
                         list.add(location);
@@ -60,9 +59,8 @@ public class ModClientEvent {
                 }
 
             } catch (FileNotFoundException e) {
-                System.out.println("not exist");
+                Rhyme.LOGGER.warn(e.getMessage());
             }
-
         });
     }
 
@@ -70,5 +68,6 @@ public class ModClientEvent {
     public static void registerMenuScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.SUN_CREATOR_MENU.get(), SunCreatorScreen::new);
         event.register(ModMenus.CARD_UP_LEVEL_MENU.get(), CardUpLevelScreen::new);
+        event.register(ModMenus.DAVE_TRADES_MENU.get(), DaveTradeScreen::new);
     }
 }

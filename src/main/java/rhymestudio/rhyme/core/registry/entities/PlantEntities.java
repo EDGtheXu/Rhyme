@@ -2,11 +2,13 @@ package rhymestudio.rhyme.core.registry.entities;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.animation.plantAnimations.*;
+import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.plants.*;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.registry.ModSounds;
@@ -62,10 +64,15 @@ public class PlantEntities {
             new Chomper(type,level, 20 * 15,200,NORMAL_PEA_PLANT.get()),1.1F,2.1F);
 
 
-    public static <T extends AbstractPlant> DeferredHolder<EntityType<?>, EntityType<T>> registerPlants(String name, String zh,EntityType.EntityFactory<T> entityFactory) {
+    //      tip 疯狂戴夫
+    public static final DeferredHolder<EntityType<?>, EntityType<CrazyDave>> CRAZY_DAVE = registerPlants("crazy_dave","疯狂戴夫",(type, level)->
+            new CrazyDave(type,level),0.95f,2);
+
+
+    public static <T extends Mob> DeferredHolder<EntityType<?>, EntityType<T>> registerPlants(String name, String zh, EntityType.EntityFactory<T> entityFactory) {
         return registerPlants(name,zh,entityFactory,0.9F,1);
     }
-    public static <T extends AbstractPlant> DeferredHolder<EntityType<?>, EntityType<T>> registerPlants(String name, String zh,EntityType.EntityFactory<T> entityFactory, float w,float h) {
+    public static <T extends Mob> DeferredHolder<EntityType<?>, EntityType<T>> registerPlants(String name, String zh,EntityType.EntityFactory<T> entityFactory, float w,float h) {
         var entity =ENTITIES.register(name, ()->EntityType.Builder.of(entityFactory , MobCategory.MISC).clientTrackingRange(10).sized(w,h).build("rhyme:entity."+name));
         add_zh_en(entity, zh);
         return entity;

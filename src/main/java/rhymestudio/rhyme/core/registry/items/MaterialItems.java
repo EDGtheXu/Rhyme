@@ -42,6 +42,8 @@ public class MaterialItems {
     public static  final DeferredItem<Item> MUSCLE = register("muscle", "肌肉", ModRarity.ORANGE);
 
 
+    public static  final DeferredItem<Item> SILVER_COIN = register("silver_coin", "银币", ModRarity.WHITE);
+    public static  final DeferredItem<Item> GOLD_COIN = register("gold_coin", "金币", ModRarity.YELLOW);
 
 
 

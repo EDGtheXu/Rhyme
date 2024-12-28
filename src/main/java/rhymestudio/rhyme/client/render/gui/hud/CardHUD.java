@@ -15,8 +15,11 @@ import java.awt.*;
 public class CardHUD {
 
     private long lastCacheTime = 0;
-    private int StrSize = 0;
+    private int cacheSunStrSize = 0;
+    private int cacheMoneyStrSize = 0;
+
     private String cacheSunStr = "";
+    private String cacheMoneyStr = "";
 
     private int itemInternalX0 = 40;
     private int itemInternalX = 40;
@@ -107,12 +110,20 @@ public class CardHUD {
         if(time > lastCacheTime + 500){
             lastCacheTime = time;
 //            int cacheSunNumber = Computer.getInventoryItemCount(player, MaterialItems.SUN_ITEM.get());
-            int cacheSunNumber =player.getData(ModAttachments.PLAYER_STORAGE).sunCount;
+            var data = player.getData(ModAttachments.PLAYER_STORAGE);
+            int cacheSunNumber = data.sunCount;
             cacheSunStr =String.valueOf(cacheSunNumber) ;
-            StrSize = cacheSunStr.length();
+            cacheSunStrSize = cacheSunStr.length();
+
+            int cacheMoney = data.moneys;
+            cacheMoneyStr = String.valueOf(cacheMoney);
+            cacheMoneyStrSize = cacheMoneyStr.length();
+
         }
 
-        guiGraphics.drawString(mc.font,cacheSunStr,w/2-3*StrSize,h-12, Color.yellow.getRGB());
+        guiGraphics.drawString(mc.font,cacheSunStr,w/2-3* cacheSunStrSize,h-12, Color.yellow.getRGB());
+        guiGraphics.drawString(mc.font,cacheMoneyStr,w/2-3* cacheMoneyStrSize,h+2, Color.white.getRGB());
+
     }
 
     public void drawCard(GuiGraphics guiGraphics, Item item, int x, int y, float scale){

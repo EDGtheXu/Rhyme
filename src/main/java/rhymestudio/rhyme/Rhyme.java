@@ -64,7 +64,9 @@ public class Rhyme {
         ModAttachments.TYPES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
+        ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON,Config.SPEC);
+
 
         MainConfig.cfg.load();
         CodecRegister.registerCodecs();

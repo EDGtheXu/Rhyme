@@ -5,8 +5,10 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "rhyme.refmap.json",
   "mixins": [
+    "EntityMixin",
     "LivingEntityMixin",
     "MonsterMixin",
+    "PlayerMixin",
     "ShaderInstanceMixin"
   ],
   "client": [

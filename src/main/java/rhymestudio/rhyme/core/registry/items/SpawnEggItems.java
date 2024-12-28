@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
+import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 
 import static rhymestudio.rhyme.Rhyme.add_zh_en;
@@ -21,6 +22,7 @@ public class SpawnEggItems{
     public static final DeferredItem<Item> NORMAL_ZOMBIE_EGG = register("normal_zombie_egg", "普通僵尸刷怪蛋", Zombies.NORMAL_ZOMBIE);
     public static final DeferredItem<Item> CONE_ZOMBIE_EGG = register("cone_zombie_egg", "路障僵尸刷怪蛋", Zombies.CONE_ZOMBIE);
     public static final DeferredItem<Item> IRON_BUCKET_ZOMBIE_EGG = register("pyramid_zombie_egg", "铁桶僵尸刷怪蛋", Zombies.IRON_BUCKET_ZOMBIE);
+    public static final DeferredItem<Item> CRAZY_DAVE_EGG = register("crazy_dave_egg", "疯狂戴夫刷怪蛋", PlantEntities.CRAZY_DAVE);
 
 
 

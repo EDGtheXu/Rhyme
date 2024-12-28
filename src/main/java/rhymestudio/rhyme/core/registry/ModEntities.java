@@ -29,12 +29,9 @@ import static rhymestudio.rhyme.core.registry.entities.PlantEntities.*;
 @EventBusSubscriber(modid = Rhyme.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ModEntities {
 
-
-
     //tip 注册属性
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-
         AttributeSupplier.Builder genericPlant = Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE)
@@ -63,6 +60,8 @@ public class ModEntities {
         event.put(Zombies.CONE_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(Zombies.IRON_BUCKET_ZOMBIE.get(), AbstractMonster.createAttributes().build());
 
+        //疯狂戴夫
+        event.put(CRAZY_DAVE.get(), AbstractMonster.createAttributes().build());
 
     }
 

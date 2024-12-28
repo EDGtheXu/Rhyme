@@ -118,7 +118,7 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
                 var data = serverplayer.getData(ModAttachments.PLAYER_STORAGE);
                 data.sunCount += this.getItem().getCount() * 25;
                 data.sunCount = Math.min(data.sunCount, 2000);
-                PacketDistributor.sendToPlayer(serverplayer, new SunCountPacketS2C(data.sunCount));
+                data.sendSunCountUpdate(serverplayer);
                 playSound(ModSounds.POINTS.get());
             }
             touchTick = tickCount;
