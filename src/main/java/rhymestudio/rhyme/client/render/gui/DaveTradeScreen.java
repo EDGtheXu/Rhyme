@@ -125,7 +125,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
         for (int l = 0; l < Math.min(trades.size(), NUMBER_OF_OFFER_BUTTONS); l++) {
             this.tradeOfferButtons[l].visible = true;
             this.tradeOfferButtons[l].render(guiGraphics, mouseX, mouseY, partialTick);
-            var it = trades.get(l+scrollOff).give();
+            var it = trades.get(l+scrollOff).result();
             y+=20;
             guiGraphics.renderItem(it, x , y );
             if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16)
@@ -173,7 +173,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
 
         // 能否购买
         if(canBuy){
-             menu.slots.get(0).set(trade.give().copy());
+             menu.slots.get(0).set(trade.result().copy());
 //            guiGraphics.renderItem(result, x2, y2);
 //            guiGraphics.renderItemDecorations(this.font, result, x2, y2);
             guiGraphics.blitSprite(TRADE_ARROW_SPRITE, ii+200, jj+0, 0, 10, 9);

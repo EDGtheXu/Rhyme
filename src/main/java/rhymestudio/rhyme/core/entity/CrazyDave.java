@@ -36,7 +36,7 @@ public class CrazyDave extends Mob {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        daveTrades = DaveTrades.RAND_TRADE.get();
+        daveTrades = DaveTrades.RAND_TRADE.apply(random.nextIntBetweenInclusive(5,10));
         builder.define(DATA_DAVE_DATA, daveTrades);
     }
     @Override

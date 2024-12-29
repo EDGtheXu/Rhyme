@@ -36,7 +36,7 @@ public record DaveShopPacket(DaveTrades.Trade trade) implements CustomPacketPayl
                 data.sendSunCountUpdate(sp);
                 for (var item : trade.requires())
                     Computer.tryCombineInventoryItem(context.player(), item.getItem(), item.getCount());
-                ItemStack result = trade.give();
+                ItemStack result = trade.result();
                 context.player().addItem(result.copy());
             }else{
                 context.player().sendSystemMessage(Component.translatable("rhyme.trade.not_enough_items"));
