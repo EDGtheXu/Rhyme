@@ -5,7 +5,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundSelectTradePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -49,8 +48,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     private static final int SCROLL_BAR_HEIGHT = 139;
     private static final int SCROLL_BAR_TOP_POS_Y = 18;
     private static final int SCROLL_BAR_START_X = 94;
-    private static final Component TRADES_LABEL = Component.translatable("merchant.trades");
-    private static final Component DEPRECATED_TOOLTIP = Component.translatable("merchant.deprecated");
+    private static final Component TRADES_LABEL = Component.translatable("dave.trades");
 
     private int shopItem;
     private final TradeOfferButton[] tradeOfferButtons = new TradeOfferButton[NUMBER_OF_OFFER_BUTTONS];
@@ -64,11 +62,6 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
         this.inventoryLabelX = 107;
     }
 
-    private void postButtonClick() {
-
-        this.minecraft.getConnection().send(new ServerboundSelectTradePacket(this.shopItem));
-    }
-
     @Override
     protected void init() {
         super.init();
@@ -77,10 +70,9 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
         int k = j + 16 + 2;
 
         for (int l = 0; l < NUMBER_OF_OFFER_BUTTONS; l++) {
-            this.tradeOfferButtons[l] = this.addRenderableWidget(new TradeOfferButton(i + 5, k, l, p_99174_ -> {
-                if (p_99174_ instanceof TradeOfferButton) {
-                    this.shopItem = ((TradeOfferButton) p_99174_).getIndex() + this.scrollOff;
-                    this.postButtonClick();
+            this.tradeOfferButtons[l] = this.addRenderableWidget(new TradeOfferButton(i + 5, k, l, p -> {
+                if (p instanceof TradeOfferButton) {
+                    this.shopItem = ((TradeOfferButton) p).getIndex() + this.scrollOff;
                     menu.clickMenuButton(minecraft.player, shopItem);
                 }
             }));
@@ -101,7 +93,6 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(VILLAGER_LOCATION, i, j, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
-
     }
 
     private void renderScroller(GuiGraphics guiGraphics, int posX, int posY) {
