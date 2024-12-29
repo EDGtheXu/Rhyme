@@ -21,6 +21,8 @@ public class CardHUD {
     private String cacheSunStr = "";
     private String cacheMoneyStr = "";
 
+    public static int cachedMoney = 0;
+
     private int itemInternalX0 = 40;
     private int itemInternalX = 40;
 
@@ -115,8 +117,8 @@ public class CardHUD {
             cacheSunStr =String.valueOf(cacheSunNumber) ;
             cacheSunStrSize = cacheSunStr.length();
 
-            int cacheMoney = data.moneys;
-            cacheMoneyStr = String.valueOf(cacheMoney);
+            cachedMoney = data.moneys;
+            cacheMoneyStr = String.valueOf(cachedMoney);
             cacheMoneyStrSize = cacheMoneyStr.length();
 
         }

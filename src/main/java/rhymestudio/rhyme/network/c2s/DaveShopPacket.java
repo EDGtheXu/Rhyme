@@ -9,16 +9,16 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.menu.DaveTradesMenu;
+import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.utils.Computer;
 
-public record DaveShopPacket(DaveTradesMenu.DaveTrades.Trade trade) implements CustomPacketPayload {
+public record DaveShopPacket(DaveTrades.Trade trade) implements CustomPacketPayload {
 
     
     public static final Type<DaveShopPacket> TYPE = new Type<>(Rhyme.space("dave_shop_packet_s2c"));
     public static final StreamCodec<RegistryFriendlyByteBuf, DaveShopPacket> STREAM_CODEC = StreamCodec.composite(
-            DaveTradesMenu.DaveTrades.Trade.STREAM_CODEC,
+            DaveTrades.Trade.STREAM_CODEC,
             DaveShopPacket::trade,
             DaveShopPacket::new
     );

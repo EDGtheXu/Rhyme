@@ -1,11 +1,5 @@
 package rhymestudio.rhyme.core.menu;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,13 +9,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.entity.CrazyDave;
-import rhymestudio.rhyme.core.registry.ModAttachments;
+import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.ModMenus;
 import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 import rhymestudio.rhyme.network.c2s.DaveShopPacket;
-import rhymestudio.rhyme.utils.Computer;
-
-import java.util.List;
 
 public class DaveTradesMenu extends AbstractContainerMenu {
     protected static final int PAYMENT1_SLOT = 0;
@@ -48,18 +39,10 @@ public class DaveTradesMenu extends AbstractContainerMenu {
         this(containerId, playerInventory, ((CrazyDave)((IPlayer)playerInventory.player).rhyme$getInteractEntity()).daveTrades);
     }
 
-
-
     public DaveTradesMenu(int containerId, Inventory playerInventory, DaveTrades daveTrades) {
         super(ModMenus.DAVE_TRADES_MENU.get(), containerId);
         this.daveTrades = daveTrades;
-
-//        this.tradeContainer = new MerchantContainer(trader);
-//        this.addSlot(new Slot(this.tradeContainer, 0, 136, 37));
-//        this.addSlot(new Slot(this.tradeContainer, 1, 162, 37));
-//        this.addSlot(new MerchantResultSlot(playerInventory.player, trader, this.tradeContainer, 2, 220, 37));
         this.container = new SimpleContainer(1);
-
         this.addSlot(new Slot(this.container, 0, 220, 37){
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -67,12 +50,11 @@ public class DaveTradesMenu extends AbstractContainerMenu {
             }
             @Override
             public void onTake(Player player, ItemStack stack){
-                if(selectedMerchantIndex > 0 && selectedMerchantIndex < daveTrades.trades.size())
-                    PacketDistributor.sendToServer(new DaveShopPacket(daveTrades.trades.get(selectedMerchantIndex)));
+                if(selectedMerchantIndex >= 0 && selectedMerchantIndex < daveTrades.trades().size())
+                    PacketDistributor.sendToServer(new DaveShopPacket(daveTrades.trades().get(selectedMerchantIndex)));
                 super.onTake(player, stack);
             }
         });
-
 
         int k;
         for(k = 0; k < 3; ++k) {
@@ -168,40 +150,4 @@ public class DaveTradesMenu extends AbstractContainerMenu {
     }
 
 
-    public record DaveTrades(List<Trade> trades){
-
-        public static Codec<DaveTrades> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Trade.CODEC.listOf().fieldOf("trades").forGetter(DaveTrades::trades)
-        ).apply(instance, DaveTrades::new));
-        public static StreamCodec<RegistryFriendlyByteBuf,DaveTrades> STREAM_CODEC = StreamCodec.composite(
-                Trade.LIST_STREAM_CODEC, DaveTrades::trades,
-                DaveTrades::new
-        );
-
-
-        public record Trade(int money, List<ItemStack> requires, ItemStack give){
-            public boolean canTrade(Player player) {
-                if(player.getData(ModAttachments.PLAYER_STORAGE).moneys < money)
-                    return false;
-                for (ItemStack it : requires) {
-                    if (Computer.getInventoryItemCount(player, it.getItem()) < it.getCount()) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            public static Codec<Trade> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                    Codec.INT.fieldOf("money").forGetter(Trade::money),
-                    ItemStack.CODEC.listOf().fieldOf("requires").forGetter(Trade::requires),
-                    ItemStack.CODEC.fieldOf("give").forGetter(Trade::give)
-            ).apply(instance, Trade::new));
-            public static StreamCodec<RegistryFriendlyByteBuf,Trade> STREAM_CODEC = StreamCodec.composite(
-                    ByteBufCodecs.INT, Trade::money,
-                    ItemStack.LIST_STREAM_CODEC, Trade::requires,
-                    ItemStack.STREAM_CODEC, Trade::give,
-                    Trade::new
-            );
-            public static StreamCodec<RegistryFriendlyByteBuf,List<Trade>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity));
-        }
-    }
 }

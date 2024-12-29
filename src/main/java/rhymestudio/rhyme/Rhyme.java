@@ -68,6 +68,7 @@ public class Rhyme {
         modContainer.registerConfig(ModConfig.Type.COMMON,Config.SPEC);
 
 
+
         MainConfig.cfg.load();
         CodecRegister.registerCodecs();
 
