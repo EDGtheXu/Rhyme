@@ -18,7 +18,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.slf4j.Logger;
 
-import rhymestudio.rhyme.client.config.Config;
+import rhymestudio.rhyme.config.client.ClientConfig;
 import rhymestudio.rhyme.config.Codec.*;
 import rhymestudio.rhyme.config.MainConfig;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
@@ -68,7 +68,7 @@ public class Rhyme {
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
-        modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 
 

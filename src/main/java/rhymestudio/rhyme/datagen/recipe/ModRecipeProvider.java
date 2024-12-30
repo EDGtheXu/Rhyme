@@ -13,7 +13,6 @@ import net.minecraft.world.level.ItemLike;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.items.ArmorItems;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
-import rhymestudio.rhyme.core.registry.items.PlantItems;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -69,10 +68,6 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
 
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(MaterialItems.PLANT_GENE.get()), Ingredient.of(MaterialItems.SOLID_SUN.get()),Ingredient.of( PlantItems.PEA_ITEM.get()), RecipeCategory.MISC, PlantItems.REPEATER_ITEM.get())
-                .unlocks("has_plant_gene",has(MaterialItems.PLANT_GENE.get()))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(MODID, "plant_gene_to_repeater"));
-//
 //        cookRecipes(recipeOutput, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, CampfireCookingRecipe::new, 100);
 
         //豌豆基因
