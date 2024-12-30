@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.menu.DaveTradesMenu;
-import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 
 import static rhymestudio.rhyme.core.registry.ModEntityDataSerializer.DAVE_TRADES_SERIALIZER;
 
@@ -55,11 +54,10 @@ public class CrazyDave extends Mob {
         DataResult<Tag> data = DaveTrades.CODEC.encodeStart(NbtOps.INSTANCE, daveTrades);
         compound.put("dave_data",data.result().get());
     }
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ((IPlayer)player).rhyme$setDaveTrades(this.daveTrades);
-        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> {
-            return new DaveTradesMenu(id,playerInventory,daveTrades);},Component.translatable("rhyme.menu.dave shop")));
 
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new DaveTradesMenu(id,playerInventory,daveTrades),Component.translatable("rhyme.menu.dave_shop")));
         return InteractionResult.PASS;
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.menu.DaveTradesMenu;
 import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 import rhymestudio.rhyme.utils.Computer;
@@ -23,37 +24,25 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace(
             "container/villager/experience_bar_background"
     );
-    private static final ResourceLocation EXPERIENCE_BAR_CURRENT_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/experience_bar_current");
-    private static final ResourceLocation EXPERIENCE_BAR_RESULT_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/experience_bar_result");
     private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller");
     private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller_disabled");
     private static final ResourceLocation TRADE_ARROW_OUT_OF_STOCK_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow_out_of_stock");
     private static final ResourceLocation TRADE_ARROW_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow");
-    private static final ResourceLocation DISCOUNT_STRIKETHRUOGH_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/discount_strikethrough");
 
-    private static final ResourceLocation VILLAGER_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/villager.png");
-    private static final int TEXTURE_WIDTH = 512;
-    private static final int TEXTURE_HEIGHT = 256;
-    private static final int MERCHANT_MENU_PART_X = 99;
-    private static final int PROGRESS_BAR_X = 136;
-    private static final int PROGRESS_BAR_Y = 16;
-    private static final int SELL_ITEM_1_X = 5;
-    private static final int SELL_ITEM_2_X = 35;
-    private static final int BUY_ITEM_X = 68;
-    private static final int LABEL_Y = 6;
+    private static final ResourceLocation MENU_LOCATION = Rhyme.space("textures/gui/dave_shop.png");
+
     private static final int NUMBER_OF_OFFER_BUTTONS = 7;
-    private static final int TRADE_BUTTON_X = 5;
-    private static final int TRADE_BUTTON_HEIGHT = 20;
-    private static final int TRADE_BUTTON_WIDTH = 88;
-    private static final int SCROLLER_HEIGHT = 27;
-    private static final int SCROLLER_WIDTH = 6;
-    private static final int SCROLL_BAR_HEIGHT = 139;
-    private static final int SCROLL_BAR_TOP_POS_Y = 18;
-    private static final int SCROLL_BAR_START_X = 94;
+
     private static final Component TRADES_LABEL = Component.translatable("dave.trades");
 
-    private int shopItem;
-    private final TradeOfferButton[] tradeOfferButtons = new TradeOfferButton[NUMBER_OF_OFFER_BUTTONS];
+    private int shopItem = -1;
+    private int hoveredItem = -1;
+    private int row;
+    private final int col = 4;
+    private int offsetX;
+    private int offsetY;
+    private int intervalX = 20;
+
     int scrollOff;
     private boolean isDragging;
 
@@ -67,26 +56,31 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     @Override
     protected void init() {
         super.init();
-        if (menu.daveTrades == null) menu.daveTrades = ((IPlayer)Minecraft.getInstance().player).rhyme$getDaveTrades();
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
-        int k = j + 16 + 2;
+        if (menu.daveTrades == null)
+            menu.daveTrades = ((IPlayer)Minecraft.getInstance().player).rhyme$getDaveTrades();
 
-        for (int l = 0; l < NUMBER_OF_OFFER_BUTTONS; l++) {
-            this.tradeOfferButtons[l] = this.addRenderableWidget(new TradeOfferButton(i + 5, k, l, p -> {
-                if (p instanceof TradeOfferButton) {
-                    this.shopItem = ((TradeOfferButton) p).getIndex() + this.scrollOff;
-                    menu.clickMenuButton(minecraft.player, shopItem);
-                }
-            }));
-            k += 20;
-        }
+        offsetX = (this.width - this.imageWidth) / 2 + 10;
+        offsetY = (this.height - this.imageHeight) / 2 + 20;
+
+        this.row = menu.daveTrades.trades().size() / 3;
+        if (menu.daveTrades.trades().size() % 3 != 0)
+            this.row++;
+
+//        for (int l = 0; l < NUMBER_OF_OFFER_BUTTONS; l++) {
+//            this.tradeOfferButtons[l] = this.addRenderableWidget(new TradeOfferButton(i + 5, k, l, p -> {
+//                if (p instanceof TradeOfferButton) {
+//                    this.shopItem = ((TradeOfferButton) p).getIndex() + this.scrollOff;
+//                    menu.clickMenuButton(minecraft.player, shopItem);
+//                }
+//            }));
+//            k += 20;
+//        }
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, 49 + this.imageWidth / 2 - this.font.width(this.title) / 2, 6, 4210752, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle,90 + this.imageWidth / 2, this.inventoryLabelY, 4210752, false);
         int l = this.font.width(TRADES_LABEL);
         guiGraphics.drawString(this.font, TRADES_LABEL, 5 - l / 2 + 48, 6, 4210752, false);
     }
@@ -95,7 +89,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(VILLAGER_LOCATION, i, j, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
+        guiGraphics.blit(MENU_LOCATION, i, j, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
     }
 
     private void renderScroller(GuiGraphics guiGraphics, int posX, int posY) {
@@ -118,36 +112,62 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        if (menu.daveTrades == null) return;
+        if (menu.daveTrades == null){
+//            menu.daveTrades = ((IPlayer)Minecraft.getInstance().player).rhyme$getDaveTrades();
+            return;
+        }
         int ii = (this.width - this.imageWidth) / 2;
         int jj = (this.height - this.imageHeight) / 2;
         this.renderScroller(guiGraphics, ii, jj);
 
         // 左侧物品
-        var trades = menu.daveTrades.trades();
-        int x = ii + 40;
-        int y = jj;
-        for (int l = 0; l < Math.min(trades.size(), NUMBER_OF_OFFER_BUTTONS); l++) {
-            this.tradeOfferButtons[l].visible = true;
-            this.tradeOfferButtons[l].render(guiGraphics, mouseX, mouseY, partialTick);
-            var it = trades.get(l+scrollOff).result();
-            y+=20;
-            guiGraphics.renderItem(it, x , y );
-            if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16)
-                guiGraphics.renderTooltip(this.font, it, mouseX, mouseY);
-            guiGraphics.renderItemDecorations(this.font, it, x, y);
+        if(this.hoveredItem >= 0 && this.hoveredItem < menu.daveTrades.trades().size()){
+            int x = offsetX + hoveredItem % col * intervalX;
+            int y = offsetY + hoveredItem / col * 20;
+            renderSlotHighlight(guiGraphics,x,y, 20);
         }
+        // 左侧物品
+        if(this.shopItem >= 0 && this.shopItem < menu.daveTrades.trades().size()){
+            int x = offsetX + shopItem % col * intervalX;
+            int y = offsetY + shopItem / col * 20;
+            renderSlotHighlight(guiGraphics,x,y, 20);
+        }
+        var trades = menu.daveTrades.trades();
+        int x = offsetX;
+        int y = offsetY;
+        for (int l = 0; l < Math.min(row, NUMBER_OF_OFFER_BUTTONS); l++) {
+//            this.tradeOfferButtons[l].visible = true;
+//            this.tradeOfferButtons[l].render(guiGraphics, mouseX, mouseY, partialTick);
+            for(int k = 0; k < col; k++){
+                int index = k+(l+ scrollOff) * col;
+                if(index >= trades.size()) break;
+                var it = trades.get(index).result();
+
+                guiGraphics.renderItem(it, x , y );
+                if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16)
+                    guiGraphics.renderTooltip(this.font, it, mouseX, mouseY);
+                guiGraphics.renderItemDecorations(this.font, it, x, y);
+                x+=intervalX;
+            }
+            x = offsetX;
+            y += 20;
+        }
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
 
         // 上面的材料物品
+        if(shopItem < 0 ||shopItem >= trades.size()){
+            return;
+        }
+
         var trade = trades.get(this.shopItem);
         var its = trade.requires();
         boolean canBuy = true;
-        int x1 = ii + 200;
+        int x1 = ii + 190;
         int y1 = jj + 27;
         for (ItemStack it : its) {
-            if(x1 < ii+200-20*2)
+            if(x1 < 1 + ii + 190 - 20*2)
             {
-                x1 = ii+200;
+                x1 = ii + 195;
                 y1 += 20;
             }
             x1 -= 20;
@@ -181,22 +201,22 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
              menu.slots.get(0).set(trade.result().copy());
 //            guiGraphics.renderItem(result, x2, y2);
 //            guiGraphics.renderItemDecorations(this.font, result, x2, y2);
-            guiGraphics.blitSprite(TRADE_ARROW_SPRITE, ii+200, jj+0, 0, 10, 9);
+            guiGraphics.blitSprite(TRADE_ARROW_SPRITE, ii+210, jj+40, 0, 10, 9);
         }else{
             menu.slots.get(0).set(ItemStack.EMPTY);
-            guiGraphics.blitSprite(TRADE_ARROW_OUT_OF_STOCK_SPRITE, ii+200, jj+40,  0, 10, 9);
+            guiGraphics.blitSprite(TRADE_ARROW_OUT_OF_STOCK_SPRITE, ii+210, jj+40,  0, 10, 9);
         }
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+
     }
 
-    private boolean canScroll(int numOffers) {
-        return numOffers > NUMBER_OF_OFFER_BUTTONS;
+    private boolean canScroll() {
+        return row > NUMBER_OF_OFFER_BUTTONS;
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        int i = menu.daveTrades.trades().size();
-        if (this.canScroll(i)) {
+        int i = row;
+        if (this.canScroll()) {
             int j = i - NUMBER_OF_OFFER_BUTTONS;
             this.scrollOff = Mth.clamp((int)((double)this.scrollOff - scrollY), 0, j);
         }
@@ -210,17 +230,39 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.isDragging = false;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        if (this.canScroll(5)
-                && mouseX > (double)(i + 94)
-                && mouseX < (double)(i + 94 + 6)
-                && mouseY > (double)(j + 18)
-                && mouseY <= (double)(j + 18 + 139 + 1)) {
-            this.isDragging = true;
+        if (
+                mouseX > (double)(i + 238) && mouseX <= (double)(i + 238 + 16) &&
+                mouseY > (double)(j + 36)&& mouseY <= (double)(j + 36 + 16)
+        ) {
+            return super.mouseClicked(mouseX, mouseY, button);
         }
+        this.shopItem = hoveredItem;
+        menu.selectedMerchantIndex = shopItem;
+        if(menu.selectedMerchantIndex <0) menu.slots.get(0).set(ItemStack.EMPTY);
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void mouseMoved(double mouseX, double mouseY) {
+
+        int x = (int) (mouseX - offsetX);
+        int y = (int) (mouseY - offsetY);
+        int i = x / intervalX;
+        int j = y / 20;
+        if (i >= 0 && i < col && j >= 0 && j < row
+                && x % intervalX < 16 && y % 20 < 16
+                && x >= 0 && y >= 0
+        ) {
+            int index = i + (j + scrollOff) * col;
+            if (index < menu.daveTrades.trades().size()) {
+                this.hoveredItem = index;
+
+            }
+        }else {
+            this.hoveredItem = -1;
+        }
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -11,20 +11,17 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SmithingTemplateItem;
 import org.joml.Quaternionf;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.item.AbstractCardItem;
 import rhymestudio.rhyme.core.menu.CardUpLevelMenu;
-import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
-    private static final ResourceLocation ERROR_SPRITE = ResourceLocation.withDefaultNamespace("container/smithing/error");
     private static final ResourceLocation MENU_RESOURCE = Rhyme.space("textures/gui/smithing1.png");
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable("card_up_level.missing_base_tooltip");
     private static final Component ERROR_TOOLTIP = Component.translatable("card_up_level.error_tooltip");
@@ -32,16 +29,13 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
     private final CyclingSlotBackground templateIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground baseIcon = new CyclingSlotBackground(1);
     private final CyclingSlotBackground additionalIcon = new CyclingSlotBackground(2);
-    @Nullable
 
+    @Nullable
     private AbstractPlant entity;
     public CardUpLevelScreen(CardUpLevelMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title, MENU_RESOURCE);
         this.titleLabelX = 44;
         this.titleLabelY = 15;
-
-//        entity = PlantEntities.CABBAGE_PULT.get().create(Minecraft.getInstance().level);
-
     }
 
     @Override
@@ -64,15 +58,7 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
             }else{
                 entity = null;
             }
-
         }
-
-    }
-    private Optional<SmithingTemplateItem> getBaseCard() {
-        ItemStack itemstack = this.menu.getSlot(1).getItem();
-        return !itemstack.isEmpty() && itemstack.getItem() instanceof SmithingTemplateItem smithingtemplateitem
-                ? Optional.of(smithingtemplateitem)
-                : Optional.empty();
     }
 
     @Override

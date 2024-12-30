@@ -8,7 +8,6 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.ModMenus;
 import rhymestudio.rhyme.mixinauxiliary.IPlayer;
@@ -30,7 +29,7 @@ public class DaveTradesMenu extends AbstractContainerMenu {
     private final SimpleContainer container;
     public DaveTrades daveTrades = null;
 
-    private int selectedMerchantIndex = -1;
+    public int selectedMerchantIndex = -1;
     private boolean showProgressBar;
 
     public DaveTradesMenu(int containerId, Inventory playerInventory) {
@@ -43,7 +42,7 @@ public class DaveTradesMenu extends AbstractContainerMenu {
         if(daveTrades == null) this.daveTrades = ((IPlayer)playerInventory.player).rhyme$getDaveTrades();
 
         this.container = new SimpleContainer(1);
-        this.addSlot(new Slot(this.container, 0, 220, 37){
+        this.addSlot(new Slot(this.container, 0, 238, 37){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;

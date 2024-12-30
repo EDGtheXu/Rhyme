@@ -41,7 +41,8 @@ public class ModEnglishProvider extends LanguageProvider {
         add("card_up_level.missing_base_tooltip", "Missing Base Card");
         add("container.rhyme.card_up_level", "Card Up Level");
 
-        add("rhyme.menu.dave shop", "Crazy Dave's Shop");
+        add("rhyme.menu.dave_shop", "Crazy Dave's Shop");
+        add("dave.trades", "Dave supplies");
 
 
         //config

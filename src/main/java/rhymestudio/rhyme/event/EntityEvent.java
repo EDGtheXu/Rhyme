@@ -20,12 +20,15 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.core.registry.ModAttachments;
+import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
 
@@ -108,5 +111,10 @@ public class EntityEvent {
         }
 
 
+    }
+    @SubscribeEvent
+    public static void pickupItem(PlayerInteractEvent.EntityInteract event) {
+        if(event.getTarget() instanceof CrazyDave dave)
+            ((IPlayer)event.getEntity()).rhyme$setDaveTrades(dave.daveTrades);
     }
 }

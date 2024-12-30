@@ -34,6 +34,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("container.rhyme.card_up_level", "卡片进阶台");
 
         add("rhyme.menu.dave shop", "疯狂戴夫商店");
+        add("dave.trades", "窝闷提供");
 
         //config
         add("rhyme.configuration.is_open_bgm", "打开背景音乐");
