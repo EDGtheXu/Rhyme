@@ -22,12 +22,7 @@ public class ModEnglishProvider extends LanguageProvider {
     protected void addTranslations() {
 
         add("creativetab.rhyme", "Rhyme| PVZ");
-        add("creativetab.rhyme.materials", "Rhyme| materials");
-        add("creativetab.rhyme.cards", "Rhyme| cards");
-        add("creativetab.rhyme.blocks", "Rhyme| blocks");
-        add("creativetab.rhyme.armors", "Rhyme| armors");
 
-        add("container.rhyme.sun_creator", "Sun Creator");
         add("plantcard.tooltip.consumed_sun","consume sun");
         add("plantcard.tooltip.card_quality","quality");
         add("plantcard.tooltip.card_quality.card_quality_0","copper");
@@ -37,9 +32,12 @@ public class ModEnglishProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_4","emerald");
         add("plantcard.summon_success","you plant one ");
 
+        add("container.rhyme.card_up_level", "Card Up Level");
+
+        add("container.rhyme.sun_creator", "Sun Creator");
         add("card_up_level.error_tooltip", "Error Ingredient");
         add("card_up_level.missing_base_tooltip", "Missing Base Card");
-        add("container.rhyme.card_up_level", "Card Up Level");
+
 
         add("rhyme.menu.dave_shop", "Crazy Dave's Shop");
         add("dave.trades", "Dave supplies");

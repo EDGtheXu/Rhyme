@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.plugin.jei;
+package rhymestudio.rhyme.plugin.jei.suncreator;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -26,8 +26,9 @@ import rhymestudio.rhyme.core.registry.ModRecipes;
 @JeiPlugin
 public class ModJeiPlugin implements IModPlugin {
     public static final ResourceLocation UID = Rhyme.space("jei_plugin");
-    public static final ResourceLocation ARROW_RIGHT = Rhyme.space("textures/gui/arrow.png");
     public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64, null);
+    public static final JeiBackGround QUARTER_BACKGROUND = new JeiBackGround(128, 24, null);
+    public static final ResourceLocation ARROW_RIGHT = Rhyme.space("textures/gui/arrow.png");
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -38,6 +39,7 @@ public class ModJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
         registration.addRecipeCategories(new SunCreatorCategory(jeiHelpers));
+        registration.addRecipeCategories(new CardUpLevelCategory(jeiHelpers));
     }
 
     @Override
@@ -46,15 +48,13 @@ public class ModJeiPlugin implements IModPlugin {
         if (level == null) return;
         RecipeManager recipeManager = level.getRecipeManager();
         registration.addRecipes(SunCreatorCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipes.SUN_CREATOR_TYPE.get()).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(CardUpLevelCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipes.CARD_UP_LEVEL_TYPE.get()).stream().map(RecipeHolder::value).toList());
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(BuiltInRegistries.ITEM.get(ModBlocks.SUN_CREATOR_BLOCK_ENTITY.getId()).getDefaultInstance(), SunCreatorCategory.TYPE);
-    }
-
-    public static void drawArrowRight(GuiGraphics guiGraphics, int x, int y, boolean usable) {
-        guiGraphics.blit(ARROW_RIGHT, x, y+3, 0, usable ? 0 : 21, 22, 15, 22, 15);
+        registration.addRecipeCatalyst(BuiltInRegistries.ITEM.get(ModBlocks.CARD_UP_LEVEL_BLOCK_ENTITY.getId()).getDefaultInstance(), CardUpLevelCategory.TYPE);
     }
 
     public static void addInput(IRecipeLayoutBuilder builder, int x, int y, Ingredient ingredient) {

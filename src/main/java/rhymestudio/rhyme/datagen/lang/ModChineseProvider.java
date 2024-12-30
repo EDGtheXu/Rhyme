@@ -14,12 +14,7 @@ public class ModChineseProvider extends LanguageProvider {
     protected void addTranslations() {
 
         add("creativetab.rhyme", "开花与终结有限公司");
-        add("creativetab.rhyme.materials", "开花与终结有限公司：产品");
-        add("creativetab.rhyme.cards", "开花与终结有限公司：种子包");
-        add("creativetab.rhyme.blocks", "开花与终结有限公司：方块");
-        add("creativetab.rhyme.armors", "开花与终结有限公司：护具");
 
-        add("container.rhyme.sun_creator", "光萃台");
         add("plantcard.tooltip.consumed_sun","消耗阳光");
         add("plantcard.tooltip.card_quality","品质");
         add("plantcard.tooltip.card_quality.card_quality_0","黄铜");
@@ -29,9 +24,12 @@ public class ModChineseProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_4","翡翠");
         add("plantcard.summon_success","你种植了 ");
 
+        add("container.rhyme.sun_creator", "光萃台");
+
+        add("container.rhyme.card_up_level", "卡片进阶台");
         add("card_up_level.error_tooltip", "材料不正确");
         add("card_up_level.missing_base_tooltip", "缺少低级卡片");
-        add("container.rhyme.card_up_level", "卡片进阶台");
+
 
         add("rhyme.menu.dave_shop", "疯狂戴夫商店");
         add("dave.trades", "窝闷提供");

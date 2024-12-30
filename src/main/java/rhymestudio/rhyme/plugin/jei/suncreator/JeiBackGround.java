@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.plugin.jei;
+package rhymestudio.rhyme.plugin.jei.suncreator;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.GuiGraphics;

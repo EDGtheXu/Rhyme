@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.plugin.jei;
+package rhymestudio.rhyme.plugin.jei.suncreator;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -16,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.recipe.SunCreatorRecipe;
 import rhymestudio.rhyme.core.registry.ModBlocks;
+
+import static rhymestudio.rhyme.plugin.jei.suncreator.ModJeiPlugin.ARROW_RIGHT;
 
 public class SunCreatorCategory implements IRecipeCategory<SunCreatorRecipe> {
     public static final RecipeType<SunCreatorRecipe> TYPE = RecipeType.create(Rhyme.MODID, "sun_creator", SunCreatorRecipe.class);
@@ -77,6 +79,6 @@ public class SunCreatorCategory implements IRecipeCategory<SunCreatorRecipe> {
 
     @Override
     public void draw(@NotNull SunCreatorRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        ModJeiPlugin.drawArrowRight(guiGraphics, 50, 22, true);
+        guiGraphics.blit(ARROW_RIGHT, 50, 25, 0, 0, 22, 15, 22, 15);
     }
 }
