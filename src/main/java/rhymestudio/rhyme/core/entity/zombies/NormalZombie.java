@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity.zombies;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -9,7 +10,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.entity.misc.HelmetEntity;
 import rhymestudio.rhyme.core.entity.misc.ModelPartEntity;
@@ -25,11 +25,6 @@ public class NormalZombie extends AbstractMonster {
     public boolean isDropHead = false;
     public NormalZombie(EntityType<? extends Monster> type, Level level, Builder builder) {
         super(type, level, builder);
-        if(this.getType() == Zombies.CONE_ZOMBIE.get()){
-            this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.CONE_HELMET.toStack());
-        }else if(this.getType() == Zombies.IRON_BUCKET_ZOMBIE.get()){
-            this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.IRON_BUCKET_HELMET.toStack());
-        }
     }
     public static final EntityDataAccessor<Boolean> DATA_DROP_ARM = SynchedEntityData.defineId(NormalZombie.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> DATA_DROP_HEAD = SynchedEntityData.defineId(NormalZombie.class, EntityDataSerializers.BOOLEAN);
@@ -42,7 +37,7 @@ public class NormalZombie extends AbstractMonster {
         builder.define(DATA_DROP_HEAD, false);
     }
 
-
+    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
          super.onSyncedDataUpdated(key);
         if (this.level().isClientSide() && DATA_DROP_ARM.equals(key)) {
@@ -51,14 +46,31 @@ public class NormalZombie extends AbstractMonster {
             this.isDropHead = this.getEntityData().get(DATA_DROP_HEAD);
         }
     }
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("isDropHead", this.isDropHead);
+        tag.putBoolean("isDropArm", this.isDropArm);
+    }
 
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.isDropHead = tag.getBoolean("isDropHead");
+        this.isDropArm = tag.getBoolean("isDropArm");
+        this.entityData.set(DATA_DROP_ARM, this.isDropArm);
+        this.entityData.set(DATA_DROP_HEAD, this.isDropHead);
+    }
+
+    @Override
     public String getNamePath() {
         return "normal_zombie";
     }
 
+    @Override
     public boolean hurt(DamageSource source, float amount){
         ItemStack stack = this.getItemBySlot(EquipmentSlot.HEAD);
-        if(!level().isClientSide ){
+//        if(!level().isClientSide ){
             if (this.getHealth() - amount < 35 && !stack.isEmpty()) {
                 HelmetEntity entity = MiscEntities.HELMET_ENTITY.get().create(level());
                 entity.setPos(this.getEyePosition());
@@ -86,9 +98,7 @@ public class NormalZombie extends AbstractMonster {
                 modelPartEntity.setOwner(this,"head");
                 level().addFreshEntity(modelPartEntity);
             }
-
-        }
-
+//        }
         return super.hurt(source, amount);
     }
 
@@ -102,6 +112,19 @@ public class NormalZombie extends AbstractMonster {
         return super.getHurtSound(damageSourceIn);
     }
 
+    @Override
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        if(this.dirty && !level().isClientSide()){
+            if(this.getType() == Zombies.CONE_ZOMBIE.get()){
+                this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.CONE_HELMET.toStack());
+            }else if(this.getType() == Zombies.IRON_BUCKET_ZOMBIE.get()){
+                this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.IRON_BUCKET_HELMET.toStack());
+            }
+        }
+    }
+
+    @Override
     public void tick(){
         super.tick();
         if(this.getHealth() < healthToDropHead && tickCount % 40 == 0){

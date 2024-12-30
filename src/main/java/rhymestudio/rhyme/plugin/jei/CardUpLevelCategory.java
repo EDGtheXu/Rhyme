@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.plugin.jei.suncreator;
+package rhymestudio.rhyme.plugin.jei;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,7 +18,7 @@ import rhymestudio.rhyme.core.recipe.CardUpLevelRecipe;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
-import static rhymestudio.rhyme.plugin.jei.suncreator.ModJeiPlugin.ARROW_RIGHT;
+import static rhymestudio.rhyme.plugin.jei.ModJeiPlugin.ARROW_RIGHT;
 
 public class CardUpLevelCategory implements IRecipeCategory<CardUpLevelRecipe> {
     public static final RecipeType<CardUpLevelRecipe> TYPE = RecipeType.create(Rhyme.MODID, "card_up_level", CardUpLevelRecipe.class);
@@ -64,8 +64,8 @@ public class CardUpLevelCategory implements IRecipeCategory<CardUpLevelRecipe> {
         Ingredient i1 = Ingredient.of(recipe.am_template.getItems());
         Ingredient i2 = Ingredient.of(recipe.am_addition.getItems());
         ModJeiPlugin.addInput(builder, x, y, i1);
-        ModJeiPlugin.addInput(builder, x+16, y,recipe.base);
-        ModJeiPlugin.addInput(builder, x+32, y, i2);
+        ModJeiPlugin.addInput(builder, x+20, y,recipe.base);
+        ModJeiPlugin.addInput(builder, x+40, y, i2);
 
         // output
         builder.addSlot(RecipeIngredientRole.OUTPUT, 96, y).addItemStack(recipe.getResultItem(null));
@@ -73,6 +73,6 @@ public class CardUpLevelCategory implements IRecipeCategory<CardUpLevelRecipe> {
 
     @Override
     public void draw(@NotNull CardUpLevelRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        guiGraphics.blit(ARROW_RIGHT, 60, 5, 0, 0, 22, 15, 22, 15);
+        guiGraphics.blit(ARROW_RIGHT, 65, 5, 0, 0, 22, 15, 22, 15);
     }
 }

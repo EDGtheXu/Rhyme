@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.plugin.jei.suncreator;
+package rhymestudio.rhyme.plugin.jei;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -17,7 +17,7 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.recipe.SunCreatorRecipe;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 
-import static rhymestudio.rhyme.plugin.jei.suncreator.ModJeiPlugin.ARROW_RIGHT;
+import static rhymestudio.rhyme.plugin.jei.ModJeiPlugin.ARROW_RIGHT;
 
 public class SunCreatorCategory implements IRecipeCategory<SunCreatorRecipe> {
     public static final RecipeType<SunCreatorRecipe> TYPE = RecipeType.create(Rhyme.MODID, "sun_creator", SunCreatorRecipe.class);

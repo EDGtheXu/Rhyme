@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -27,6 +28,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
     public String namePath;
     public int attackInternal = 0;
     private int _attackInternal = 20;
+    protected boolean dirty = true;
     public Builder builder;
     public CafeAnimationState animState = new CafeAnimationState(this);
 
@@ -42,8 +44,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
         this.builder.animation.accept(animState);
         this.animState.playAnim("idle",0);
 
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
-        this.setHealth(builder.MAX_HEALTH);
+
         this.getAttribute(Attributes.ARMOR).setBaseValue(builder.ARMOR);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.ATTACK_DAMAGE);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(builder.MOVEMENT_SPEED);
@@ -72,12 +73,24 @@ public class AbstractMonster extends Monster implements ICafeMob{
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
-
         if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
             String name = entityData.get(DATA_CAFE_POSE_NAME);
             this.animState.playAnim(name,this.tickCount);
         }
         super.onSyncedDataUpdated(key);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("dirty", dirty);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if(tag.contains("dirty"))
+            this.dirty = false;
     }
 
     @Override
@@ -104,6 +117,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
                 ;
     }
 
+    @Override
     public void aiStep() {
         super.aiStep();
         if(!level().isClientSide) {
@@ -158,27 +172,30 @@ public class AbstractMonster extends Monster implements ICafeMob{
         return super.createNavigation(level);
     }
 
+    @Override
     public boolean isNoGravity() {
         if(builder == null)return true;
         return builder.noGravity;
     }
 
+    @Override
     public void tick(){
         super.tick();
-        if(!level().isClientSide && tickCount == 1) this.setHealth(this.getMaxHealth());
+
     }
 
+    @Override
     public boolean canAttack(LivingEntity entity) {
         return attackInternal < 0 && entity.canBeSeenAsEnemy();
     }
 
+    @Override
     public boolean hurt(DamageSource source, float amount){
         boolean flag = super.hurt(source, amount);
         if(!level().isClientSide){
             this.animState.playAnim("hurt",this.tickCount);
             entityData.set(DATA_CAFE_POSE_NAME, "hurt");
         }
-
         return flag;
     }
 
@@ -187,9 +204,15 @@ public class AbstractMonster extends Monster implements ICafeMob{
         return animState;
     }
 
+    @Override
     public void onAddedToLevel(){
         super.onAddedToLevel();
+        if(this.dirty){
+            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
+            this.setHealth(getMaxHealth());
+        }
     }
+
     public static class Builder {
         public int ATTACK_DAMAGE = 15;
         public int MAX_HEALTH = 31;
