@@ -22,8 +22,8 @@ public abstract class AbstractAnimModel<T extends Mob & ICafeMob> extends Hierar
         }
 
         var cafe = entity.getCafeAnimState();
-
-        this.animate(cafe.curAnimState, cafe.curAnimDef, ageInTicks, cafe.globalAnimSpeed);
+        if(cafe.curAnimDef!= null)
+            this.animate(cafe.curAnimState, cafe.curAnimDef, ageInTicks, cafe.globalAnimSpeed);
     }
 
     public boolean isRotatingZ() {

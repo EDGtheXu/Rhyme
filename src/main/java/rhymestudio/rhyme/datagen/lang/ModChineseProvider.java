@@ -29,6 +29,15 @@ public class ModChineseProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_4","翡翠");
         add("plantcard.summon_success","你种植了 ");
 
+        add("card_up_level.error_tooltip", "材料不正确");
+        add("card_up_level.missing_base_tooltip", "缺少低级卡片");
+        add("container.rhyme.card_up_level", "卡片进阶台");
+
+        add("rhyme.menu.dave shop", "疯狂戴夫商店");
+
+        //config
+        add("rhyme.configuration.is_open_bgm", "打开背景音乐");
+
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 
     }

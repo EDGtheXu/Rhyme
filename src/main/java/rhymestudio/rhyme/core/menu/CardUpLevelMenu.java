@@ -71,8 +71,8 @@ public class CardUpLevelMenu extends ItemCombinerMenu {
         this.shrinkStackInSlot(0);
         this.shrinkStackInSlot(1);
         this.shrinkStackInSlot(2);
-        this.access.execute((p_40263_, p_40264_) -> {
-            p_40263_.levelEvent(1044, p_40264_, 0);
+        this.access.execute((level, pos) -> {
+            level.levelEvent(1044, pos, 0);
         });
     }
 

@@ -70,7 +70,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
         builder.define(DATA_CAFE_POSE_NAME, "idle");
     }
 
-
+    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
 
         if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
@@ -80,7 +80,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
         super.onSyncedDataUpdated(key);
     }
 
-
+    @Override
     protected void registerGoals() {
         if(builder!= null) {
             super.registerGoals();
@@ -103,33 +103,6 @@ public class AbstractMonster extends Monster implements ICafeMob{
                 .add(Attributes.FLYING_SPEED)
                 ;
     }
-
-/*
-    @Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
-        RandomSource randomsource = level.getRandom();
-
-        if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-            LocalDate localdate = LocalDate.now();
-            int i = localdate.get(ChronoField.DAY_OF_MONTH);
-            int j = localdate.get(ChronoField.MONTH_OF_YEAR);
-            if (j == 10 && i == 31 && randomsource.nextFloat() < 0.25F) {
-                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(randomsource.nextFloat() < 0.1F ? Blocks.JACK_O_LANTERN : Blocks.CARVED_PUMPKIN));
-                this.armorDropChances[EquipmentSlot.HEAD.getIndex()] = 0.0F;
-            }else if(randomsource.nextFloat() < getAttributeBaseValue(Attributes.SPAWN_REINFORCEMENTS_CHANCE)){
-                if(randomsource.nextFloat() < 0.33f){
-                    this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.IRON_BUCKET_HELMET.toStack());
-
-                }else{
-                    this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.CONE_HELMET.toStack());
-                }
-
-            }
-        }
-
-        return spawnGroupData;
-    }
-*/
 
     public void aiStep() {
         super.aiStep();

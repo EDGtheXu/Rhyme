@@ -8,6 +8,7 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.Map;
 import java.util.Objects;
@@ -37,7 +38,8 @@ public interface IFSMGeoMob<T extends AbstractPlant> extends GeoEntity {
         return (T) this;
     }
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 20, state -> {
+        controllers.add(DefaultAnimations.genericIdleController(this));
+        controllers.add(new AnimationController<>(this, "skills_controller",20, state -> {
             Chomper entity =  (Chomper) state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
             if (getSelf().skills.count() == 0) return PlayState.STOP;

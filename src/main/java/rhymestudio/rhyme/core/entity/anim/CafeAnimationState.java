@@ -52,13 +52,24 @@ public class CafeAnimationState {
         this.curAnimState.stop();
     }
 
-    public void playAnim(String name, int tick){
+    public boolean playAnim(String name, int tick){
+        boolean isPlaying = false;
         if(!this.animationMap.isEmpty()){
             curAnimState.start(tick);
-            this.curAnimDef = this.animationMap.get(name).animDef;
+            if(this.animationMap.containsKey(name)){
+                this.curAnimDef = this.animationMap.get(name).animDef;
+                isPlaying = true;
+            }
             this.prevName = this.curName;
             this.curName = name;
             this.tick = tick;
+        }
+        return isPlaying;
+    }
+
+    public void playDefaultAnim(int tick){
+        if (!playAnim("idle", tick)) {
+            playAnim("idle_on", tick);
         }
     }
 

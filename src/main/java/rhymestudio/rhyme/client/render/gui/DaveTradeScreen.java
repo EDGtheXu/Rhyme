@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.client.render.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import rhymestudio.rhyme.core.menu.DaveTradesMenu;
+import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 import rhymestudio.rhyme.utils.Computer;
 
 import static rhymestudio.rhyme.client.render.gui.hud.CardHUD.cachedMoney;
@@ -65,6 +67,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     @Override
     protected void init() {
         super.init();
+        if (menu.daveTrades == null) menu.daveTrades = ((IPlayer)Minecraft.getInstance().player).rhyme$getDaveTrades();
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         int k = j + 16 + 2;
@@ -96,6 +99,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     }
 
     private void renderScroller(GuiGraphics guiGraphics, int posX, int posY) {
+
         int i = menu.daveTrades.trades().size() - 7;
         if (i > 1) {
             int j = 139 - (27 + (i - 1) * 139 / i);
@@ -114,6 +118,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        if (menu.daveTrades == null) return;
         int ii = (this.width - this.imageWidth) / 2;
         int jj = (this.height - this.imageHeight) / 2;
         this.renderScroller(guiGraphics, ii, jj);

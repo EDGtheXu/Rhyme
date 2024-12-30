@@ -28,20 +28,20 @@ public class DaveTradesMenu extends AbstractContainerMenu {
     private static final int ROW_Y = 37;
 //    private final Merchant trader;
     private final SimpleContainer container;
-    public final DaveTrades daveTrades;
+    public DaveTrades daveTrades = null;
 
     private int selectedMerchantIndex = -1;
-    private int merchantLevel;
     private boolean showProgressBar;
-    private boolean canRestock;
 
     public DaveTradesMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, ((CrazyDave)((IPlayer)playerInventory.player).rhyme$getInteractEntity()).daveTrades);
+        this(containerId, playerInventory, null);
     }
 
     public DaveTradesMenu(int containerId, Inventory playerInventory, DaveTrades daveTrades) {
         super(ModMenus.DAVE_TRADES_MENU.get(), containerId);
         this.daveTrades = daveTrades;
+        if(daveTrades == null) this.daveTrades = ((IPlayer)playerInventory.player).rhyme$getDaveTrades();
+
         this.container = new SimpleContainer(1);
         this.addSlot(new Slot(this.container, 0, 220, 37){
             @Override
@@ -50,8 +50,9 @@ public class DaveTradesMenu extends AbstractContainerMenu {
             }
             @Override
             public void onTake(Player player, ItemStack stack){
-                if(selectedMerchantIndex >= 0 && selectedMerchantIndex < daveTrades.trades().size())
-                    PacketDistributor.sendToServer(new DaveShopPacket(daveTrades.trades().get(selectedMerchantIndex)));
+                var d  = ((IPlayer)playerInventory.player).rhyme$getDaveTrades();
+                if(selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size())
+                    PacketDistributor.sendToServer(new DaveShopPacket(d.trades().get(selectedMerchantIndex)));
                 super.onTake(player, stack);
             }
         });

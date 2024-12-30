@@ -104,7 +104,6 @@ public record DaveTrades(List<Trade> trades) {
                 Codec.INT.fieldOf("money").forGetter(Trade::money),
                 ItemStack.CODEC.listOf().fieldOf("requires").forGetter(Trade::requires),
                 ItemStack.CODEC.fieldOf("result").forGetter(Trade::result)
-
         ).apply(instance, Trade::new));
         public static StreamCodec<RegistryFriendlyByteBuf, Trade> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.INT, Trade::weight,
