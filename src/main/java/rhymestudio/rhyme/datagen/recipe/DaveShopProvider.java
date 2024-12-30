@@ -44,7 +44,7 @@ public class DaveShopProvider extends AbstractRecipeProvider {
                 .add(MaterialItems.PEA_GENE,5)
                 .add(MaterialItems.NUT_GENE,2)
                 .add(MaterialItems.GENERAL_SEED,1)
-                .add(MaterialItems.CABBAGE_GENE,1)
+                .add(MaterialItems.THROWABLE_GENE,1)
                 .build();
         gen(40,MaterialItems.GENERAL_SEED,7)
                 .cost(10)

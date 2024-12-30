@@ -27,6 +27,7 @@ public final class ModTags {
 
     public static class Items {
         public static final TagKey<Item> MODEL_ARMOR_ITEM_TAG = tag("model_armor_item_tag");
+        public static final TagKey<Item> DAVE_FOOD = tag("dave_food_tag");
 
 
         private static TagKey<Item> tag(String id) {

@@ -22,7 +22,7 @@ import static rhymestudio.rhyme.client.render.gui.hud.CardHUD.cachedMoney;
 public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller");
     private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller_disabled");
-    private static final ResourceLocation MENU_LOCATION = Rhyme.space("textures/gui/dave_shop.png");
+    private static final ResourceLocation MENU_LOCATION = Rhyme.space("textures/gui/dave_shop_menu.png");
     private static final int NUMBER_OF_OFFER_BUTTONS = 7;
     private static final Component TRADES_LABEL = Component.translatable("dave.trades");
 

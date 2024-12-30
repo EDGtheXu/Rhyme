@@ -118,20 +118,20 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
 
         //土豆雷
         gen(PlantItems.POTATO_MINE_ITEM, 1)
-                .template(MaterialItems.POTATO_GENE, 5)
-                .addition(MaterialItems.POTATO_GENE, 5)
+                .template(MaterialItems.HIDDEN_GENE, 5)
+                .addition(MaterialItems.HIDDEN_GENE, 5)
                 .build();
         gen(PlantItems.POTATO_MINE_ITEM, 2)
-                .template(MaterialItems.POTATO_GENE, 5)
-                .addition(MaterialItems.POTATO_GENE, 5)
+                .template(MaterialItems.HIDDEN_GENE, 5)
+                .addition(MaterialItems.HIDDEN_GENE, 5)
                 .build();
         gen(PlantItems.POTATO_MINE_ITEM, 3)
-                .template(MaterialItems.POTATO_GENE, 5)
-                .addition(MaterialItems.POTATO_GENE, 5)
+                .template(MaterialItems.HIDDEN_GENE, 5)
+                .addition(MaterialItems.HIDDEN_GENE, 5)
                 .build();
         gen(PlantItems.POTATO_MINE_ITEM, 4)
-                .template(MaterialItems.POTATO_GENE, 5)
-                .addition(MaterialItems.POTATO_GENE, 5)
+                .template(MaterialItems.HIDDEN_GENE, 5)
+                .addition(MaterialItems.HIDDEN_GENE, 5)
                 .build();
 
         //坚果墙
@@ -154,20 +154,20 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
 
         //卷心菜投手
         gen(PlantItems.CABBAGE_PULT_ITEM, 1)
-                .template(MaterialItems.CABBAGE_GENE, 5)
-                .addition(MaterialItems.CABBAGE_GENE, 5)
+                .template(MaterialItems.THROWABLE_GENE, 5)
+                .addition(MaterialItems.THROWABLE_GENE, 5)
                 .build();
         gen(PlantItems.CABBAGE_PULT_ITEM, 2)
-                .template(MaterialItems.CABBAGE_GENE, 5)
-                .addition(MaterialItems.CABBAGE_GENE, 5)
+                .template(MaterialItems.THROWABLE_GENE, 5)
+                .addition(MaterialItems.THROWABLE_GENE, 5)
                 .build();
         gen(PlantItems.CABBAGE_PULT_ITEM, 3)
-                .template(MaterialItems.CABBAGE_GENE, 5)
-                .addition(MaterialItems.CABBAGE_GENE, 5)
+                .template(MaterialItems.THROWABLE_GENE, 5)
+                .addition(MaterialItems.THROWABLE_GENE, 5)
                 .build();
         gen(PlantItems.CABBAGE_PULT_ITEM, 4)
-                .template(MaterialItems.CABBAGE_GENE, 5)
-                .addition(MaterialItems.CABBAGE_GENE, 5)
+                .template(MaterialItems.THROWABLE_GENE, 5)
+                .addition(MaterialItems.THROWABLE_GENE, 5)
                 .build();
 
         //大嘴花

@@ -49,7 +49,7 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
         //土豆
         gen(PlantItems.POTATO_MINE_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.POTATO_GENE,4).build();
+                .add(MaterialItems.HIDDEN_GENE,4).build();
 
         //蘑菇
         gen(PlantItems.PUFF_SHROOM_ITEM)
@@ -65,7 +65,7 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
         //卷心菜
         gen(PlantItems.CABBAGE_PULT_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
-                .add(MaterialItems.CABBAGE_GENE,6).build();
+                .add(MaterialItems.THROWABLE_GENE,6).build();
 
         //大嘴花
         gen(PlantItems.CHOMPER_ITEM)

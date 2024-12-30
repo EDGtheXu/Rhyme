@@ -19,30 +19,17 @@ public class PlantShovel extends Item {
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+
         EntityHitResult result = getEyeTraceHitResult(player,5);
         if(result != null){
+            if(player.canBeSeenAsEnemy()){// 创造模式
+                ItemStack itemStack = player.getItemInHand(usedHand);
+                itemStack.setDamageValue(itemStack.getDamageValue() + 1);
+            }
             AbstractPlant plant = (AbstractPlant) result.getEntity();
             player.playSound(ModSounds.SHOVEL.get());
             plant.discard();
-
-
         }
-        var m = Minecraft.getInstance().getResourceManager().listResources(
-                "dave_shop",
-                p_251575_ -> {
-                    String s = p_251575_.getPath();
-                    return s.endsWith(".json");
-                }
-        );
-//        ItemStack it = player.getItemInHand(InteractionHand.OFF_HAND);
-//        var a = ItemStack.CODEC.encodeStart(JavaOps.INSTANCE,it).result().get();
-//        System.out.println(a);
-//        var b = ItemStack.CODEC.decode(JavaOps.INSTANCE,a).result().get().getFirst();
-//        player.drop(b,true);
-//        JsonElement jsonObject = JsonParser.parseString(ICodec.getGson().toJson(a));
-
-
-
         return super.use(level, player, usedHand);
     }
 }

@@ -29,7 +29,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         ALL.add(IconItems.QUALITY_ITEMS);
         ALL.add(ArmorItems.ARMORS);
         ALL.add(PlantItems.PLANTS);
-        ALL.add(ToolItems.TOOLS);
         ALL.forEach(registry -> registry.getEntries().forEach(item -> {
             String path = item.getId().getPath().toLowerCase();
             try {
@@ -38,6 +37,15 @@ public class ModItemModelProvider extends ItemModelProvider {
                 withExistingParent("item/"+path,MISSING_ITEM);
             }
         }));
+
+        ToolItems.TOOLS.getEntries().forEach(item -> {
+            String path = item.getId().getPath().toLowerCase();
+            try {
+                withExistingParent("item/"+path, "item/handheld").texture("layer0", Rhyme.space("item/"+path));
+            }catch (Exception e){
+                withExistingParent("item/"+path,MISSING_ITEM);
+            }
+        });
 
         SpawnEggItems.EGGS.getEntries().forEach(item -> {
             String path = item.getId().getPath().toLowerCase();

@@ -97,8 +97,8 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
             .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.NUT_GENE, 0.2F, 0.5F))
             .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.SNOW_GENE, 0.2F, 0.5F))
             .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.MUSHROOM_GENE, 0.3F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.CABBAGE_GENE, 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.POTATO_GENE, 0.2F, 0.5F))
+            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.THROWABLE_GENE, 0.2F, 0.5F))
+            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.HIDDEN_GENE, 0.2F, 0.5F))
             .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.ANGER_GENE, 0.2F, 0.5F))
             .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.STRONG_GENE, 0.2F, 0.5F))
 

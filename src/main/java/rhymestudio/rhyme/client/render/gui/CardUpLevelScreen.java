@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,10 +19,11 @@ import rhymestudio.rhyme.core.menu.CardUpLevelMenu;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.Optional;
 
 public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
-    private static final ResourceLocation MENU_RESOURCE = Rhyme.space("textures/gui/smithing1.png");
+    private static final ResourceLocation MENU_RESOURCE = Rhyme.space("textures/gui/card_up_level_menu.png");
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable("card_up_level.missing_base_tooltip");
     private static final Component ERROR_TOOLTIP = Component.translatable("card_up_level.error_tooltip");
 
@@ -32,8 +34,8 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
     @Nullable
     private AbstractPlant entity;
     public CardUpLevelScreen(CardUpLevelMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, MENU_RESOURCE);
-        this.titleLabelX = 44;
+        super(menu, playerInventory, title.copy().setStyle(Style.EMPTY.withBold(true)).withColor(Color.MAGENTA.getRGB()), MENU_RESOURCE);
+        this.titleLabelX = 70;
         this.titleLabelY = 15;
     }
 
@@ -42,7 +44,6 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
         if (slotId == 1) {
             if(this.menu.getSlot(slotId).getItem().getItem() instanceof AbstractCardItem<?> cardItem){
                 entity = cardItem.entityType.get().create(Minecraft.getInstance().level);
-                entity.setYRot(25.0F);
 //                entity.setXRot(25.0F);
                 if(entity instanceof GeoEntity geo){
                     geo.triggerAnim("base_controller","misc.idle");
@@ -61,9 +62,9 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
 
         if (entity != null) {
             guiGraphics.pose().pushPose();
-            float scale = 30f;
-            guiGraphics.pose().translate((float)(this.leftPos+140 ), (float)(this.topPos+70), 50.0);
-            guiGraphics.pose().mulPose(new Quaternionf().rotationXYZ(2.8f, 4f, 0));
+            float scale = 25f;
+            guiGraphics.pose().translate((float)(this.leftPos+145 ), (float)(this.topPos+63), 50.0);
+            guiGraphics.pose().mulPose(new Quaternionf().rotationXYZ(2.8f, 3.6f, 0));
             guiGraphics.pose().scale(scale, scale, scale);
             entity.tickCount = (int) minecraft.level.getLevelData().getGameTime();
 

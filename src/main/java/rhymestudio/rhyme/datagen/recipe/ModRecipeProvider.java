@@ -81,8 +81,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("BAB")
                 .pattern("BBB")
                 .define('A',MaterialItems.PLANT_GENE)
-                .define('B',MaterialItems.PEA)
-                .unlockedBy("has_pea",has(MaterialItems.PEA))
+                .define('B',Items.WHEAT_SEEDS)
+                .unlockedBy("has_wheat_seeds",has(Items.WHEAT_SEEDS))
                 .save(recipeOutput);
 
         //寒冷基因
@@ -96,13 +96,13 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         //土豆基因
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.POTATO_GENE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.HIDDEN_GENE)
                 .pattern("BBB")
                 .pattern("BAB")
                 .pattern("BBB")
                 .define('A',MaterialItems.PLANT_GENE)
-                .define('B',Items.POTATO)
-                .unlockedBy("has_potato",has(Items.POTATO))
+                .define('B', Items.INK_SAC)
+                .unlockedBy("has_ink_sac",has(Items.INK_SAC))
                 .save(recipeOutput);
 
         //蘑菇基因
@@ -118,33 +118,30 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         //坚果基因
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.NUT_GENE)
-                .pattern("BBB")
-                .pattern("BAB")
-                .pattern("BBB")
-                .define('A',MaterialItems.PLANT_GENE)
-                .define('B',MaterialItems.NUT)
-                .unlockedBy("has_nut",has(MaterialItems.NUT))
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MaterialItems.NUT_GENE)
+                .requires(MaterialItems.PLANT_GENE)
+                .requires(Items.NAUTILUS_SHELL)
+                .unlockedBy("has_nautilus_shell",has(Items.NAUTILUS_SHELL))
                 .save(recipeOutput);
 
-        //卷心菜基因
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.CABBAGE_GENE)
+        //投手基因
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.THROWABLE_GENE)
                 .pattern("BBB")
                 .pattern("BAB")
                 .pattern("BBB")
                 .define('A',MaterialItems.PLANT_GENE)
-                .define('B',MaterialItems.CABBAGE)
-                .unlockedBy("has_cabbage",has(MaterialItems.CABBAGE))
+                .define('B',Items.WHEAT)
+                .unlockedBy("has_wheat",has(Items.WHEAT))
                 .save(recipeOutput);
 
         //易怒基因
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.ANGER_GENE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialItems.ANGER_GENE.get())
                 .pattern("BBB")
                 .pattern("BAB")
                 .pattern("BBB")
                 .define('A',MaterialItems.PLANT_GENE)
-                .define('B',MaterialItems.CHILI)
-                .unlockedBy("has_chili",has(MaterialItems.CHILI))
+                .define('B',Items.BLAZE_POWDER)
+                .unlockedBy("has_blaze_powder",has(Items.BLAZE_POWDER))
                 .save(recipeOutput);
 
         //壮力基因
@@ -153,8 +150,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("BAB")
                 .pattern("BBB")
                 .define('A',MaterialItems.PLANT_GENE)
-                .define('B',MaterialItems.MUSCLE)
-                .unlockedBy("has_muscle",has(MaterialItems.MUSCLE))
+                .define('B',Items.BEEF)
+                .unlockedBy("has_beef",has(Items.BEEF))
                 .save(recipeOutput);
     }
 
