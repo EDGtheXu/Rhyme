@@ -20,19 +20,10 @@ import rhymestudio.rhyme.utils.Computer;
 import static rhymestudio.rhyme.client.render.gui.hud.CardHUD.cachedMoney;
 
 public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
-    private static final ResourceLocation OUT_OF_STOCK_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/out_of_stock");
-    private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace(
-            "container/villager/experience_bar_background"
-    );
     private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller");
     private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller_disabled");
-    private static final ResourceLocation TRADE_ARROW_OUT_OF_STOCK_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow_out_of_stock");
-    private static final ResourceLocation TRADE_ARROW_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow");
-
     private static final ResourceLocation MENU_LOCATION = Rhyme.space("textures/gui/dave_shop.png");
-
     private static final int NUMBER_OF_OFFER_BUTTONS = 7;
-
     private static final Component TRADES_LABEL = Component.translatable("dave.trades");
 
     private int shopItem = -1;
@@ -48,7 +39,6 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
 
     public DaveTradeScreen(DaveTradesMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-
         this.imageWidth = 276;
         this.inventoryLabelX = 107;
     }
@@ -65,16 +55,6 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
         this.row = menu.daveTrades.trades().size() / 3;
         if (menu.daveTrades.trades().size() % 3 != 0)
             this.row++;
-
-//        for (int l = 0; l < NUMBER_OF_OFFER_BUTTONS; l++) {
-//            this.tradeOfferButtons[l] = this.addRenderableWidget(new TradeOfferButton(i + 5, k, l, p -> {
-//                if (p instanceof TradeOfferButton) {
-//                    this.shopItem = ((TradeOfferButton) p).getIndex() + this.scrollOff;
-//                    menu.clickMenuButton(minecraft.player, shopItem);
-//                }
-//            }));
-//            k += 20;
-//        }
     }
 
     @Override
@@ -198,13 +178,11 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
 
         // 能否购买
         if(canBuy){
-             menu.slots.get(0).set(trade.result().copy());
-//            guiGraphics.renderItem(result, x2, y2);
-//            guiGraphics.renderItemDecorations(this.font, result, x2, y2);
-            guiGraphics.blitSprite(TRADE_ARROW_SPRITE, ii+210, jj+40, 0, 10, 9);
+            menu.slots.get(0).set(trade.result().copy());
+            guiGraphics.blit(MENU_LOCATION,ii+203,jj+35,276,0,35,17,512,256);
         }else{
             menu.slots.get(0).set(ItemStack.EMPTY);
-            guiGraphics.blitSprite(TRADE_ARROW_OUT_OF_STOCK_SPRITE, ii+210, jj+40,  0, 10, 9);
+            guiGraphics.blit(MENU_LOCATION,ii+203,jj+35,276,17,35,17,512,256);
         }
 
     }
