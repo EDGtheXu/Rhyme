@@ -116,8 +116,6 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
         int x = offsetX;
         int y = offsetY;
         for (int l = 0; l < Math.min(row, NUMBER_OF_OFFER_BUTTONS); l++) {
-//            this.tradeOfferButtons[l].visible = true;
-//            this.tradeOfferButtons[l].render(guiGraphics, mouseX, mouseY, partialTick);
             for(int k = 0; k < col; k++){
                 int index = k+(l+ scrollOff) * col;
                 if(index >= trades.size()) break;
@@ -145,7 +143,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
         int x1 = ii + 190;
         int y1 = jj + 27;
         for (ItemStack it : its) {
-            if(x1 < 1 + ii + 190 - 20*2)
+            if(x1 < 1 + ii + 190 - 20 * 4)
             {
                 x1 = ii + 195;
                 y1 += 20;

@@ -14,23 +14,9 @@ import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 import rhymestudio.rhyme.network.c2s.DaveShopPacket;
 
 public class DaveTradesMenu extends AbstractContainerMenu {
-    protected static final int PAYMENT1_SLOT = 0;
-    protected static final int PAYMENT2_SLOT = 1;
-    protected static final int RESULT_SLOT = 2;
-    private static final int INV_SLOT_START = 3;
-    private static final int INV_SLOT_END = 30;
-    private static final int USE_ROW_SLOT_START = 30;
-    private static final int USE_ROW_SLOT_END = 39;
-    private static final int SELLSLOT1_X = 136;
-    private static final int SELLSLOT2_X = 162;
-    private static final int BUYSLOT_X = 220;
-    private static final int ROW_Y = 37;
-//    private final Merchant trader;
     private final SimpleContainer container;
-    public DaveTrades daveTrades = null;
-
+    public DaveTrades daveTrades;
     public int selectedMerchantIndex = -1;
-    private boolean showProgressBar;
 
     public DaveTradesMenu(int containerId, Inventory playerInventory) {
         this(containerId, playerInventory, null);
@@ -50,8 +36,10 @@ public class DaveTradesMenu extends AbstractContainerMenu {
             @Override
             public void onTake(Player player, ItemStack stack){
                 var d  = ((IPlayer)playerInventory.player).rhyme$getDaveTrades();
-                if(selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size())
+                if(selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()){
                     PacketDistributor.sendToServer(new DaveShopPacket(d.trades().get(selectedMerchantIndex)));
+
+                }
                 super.onTake(player, stack);
             }
         });
@@ -66,7 +54,6 @@ public class DaveTradesMenu extends AbstractContainerMenu {
         for(k = 0; k < 9; ++k) {
             this.addSlot(new Slot(playerInventory, k, 108 + k * 18, 142));
         }
-
     }
 
     @Override
@@ -75,48 +62,30 @@ public class DaveTradesMenu extends AbstractContainerMenu {
         return true;
     }
 
-    public void setShowProgressBar(boolean showProgressBar) {
-        this.showProgressBar = showProgressBar;
-    }
-
-    public void slotsChanged(Container inventory) {
-//        this.tradeContainer.updateSellItem();
-        super.slotsChanged(inventory);
-    }
-
-
-
     public boolean stillValid(Player player) {
         return true;
     }
 
-    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
-        return false;
-    }
-
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        Slot slot = this.slots.get(index);
+        if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (index == 2) {
-                if (!this.moveItemStackTo(itemstack1, 3, 39, true)) {
+            if (index == 0) {
+                if (!this.moveItemStackTo(itemstack1, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }
-
                 slot.onQuickCraft(itemstack1, itemstack);
-                this.playTradeSound();
-            } else if (index != 0 && index != 1) {
-                if (index >= 3 && index < 30) {
-                    if (!this.moveItemStackTo(itemstack1, 30, 39, false)) {
+                playTradeSound();
+            } else  {
+                if (index >= 1 && index < 28) {
+                    if (!this.moveItemStackTo(itemstack1, 28, 37, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index >= 30 && index < 39 && !this.moveItemStackTo(itemstack1, 3, 30, false)) {
+                } else if (index >= 28 && index < 37 && !this.moveItemStackTo(itemstack1, 1, 28, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 3, 39, false)) {
-                return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
@@ -135,19 +104,8 @@ public class DaveTradesMenu extends AbstractContainerMenu {
         return itemstack;
     }
 
-    private void playTradeSound() {
-
-
-    }
-
-    public void removed(Player player) {
-        super.removed(player);
+    public void playTradeSound() {
 
     }
-
-    public boolean showProgressBar() {
-        return this.showProgressBar;
-    }
-
 
 }

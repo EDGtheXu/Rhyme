@@ -33,7 +33,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("card_up_level.missing_base_tooltip", "缺少低级卡片");
         add("container.rhyme.card_up_level", "卡片进阶台");
 
-        add("rhyme.menu.dave shop", "疯狂戴夫商店");
+        add("rhyme.menu.dave_shop", "疯狂戴夫商店");
         add("dave.trades", "窝闷提供");
 
         //config
