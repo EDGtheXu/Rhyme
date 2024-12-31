@@ -14,7 +14,8 @@ public class ModEnglishProvider extends LanguageProvider {
         super(output, Rhyme.MODID, "en_us");
     }
     public static String toTitleCase(String raw) {
-        return Arrays.stream(raw.split("_"))
+        return Arrays.stream(raw.replaceFirst("material.|plant_card.|armor.|egg.", "")
+                        .split("[_/]"))
                 .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
     }
@@ -23,15 +24,15 @@ public class ModEnglishProvider extends LanguageProvider {
 
         add("creativetab.rhyme", "Rhyme| PVZ");
 
-        add("plantcard.tooltip.consumed_sun","consume sun");
-        add("plantcard.tooltip.card_quality","quality");
-        add("plantcard.tooltip.card_quality.card_quality_0","copper");
-        add("plantcard.tooltip.card_quality.card_quality_1","silver");
-        add("plantcard.tooltip.card_quality.card_quality_2","gold");
-        add("plantcard.tooltip.card_quality.card_quality_3","diamond");
-        add("plantcard.tooltip.card_quality.card_quality_4","emerald");
-        add("plantcard.summon_success","you plant one ");
-        add("plantcard.tooltip.damage","use remaining");
+        add("plantcard.tooltip.consumed_sun","Consume Sun");
+        add("plantcard.tooltip.card_quality","Quality");
+        add("plantcard.tooltip.card_quality.card_quality_0","Copper");
+        add("plantcard.tooltip.card_quality.card_quality_1","Silver");
+        add("plantcard.tooltip.card_quality.card_quality_2","Gold");
+        add("plantcard.tooltip.card_quality.card_quality_3","Diamond");
+        add("plantcard.tooltip.card_quality.card_quality_4","Emerald");
+        add("plantcard.summon_success","You Plant One ");
+        add("plantcard.tooltip.damage","Use Remaining");
 
 
 
@@ -43,12 +44,12 @@ public class ModEnglishProvider extends LanguageProvider {
 
 
         add("rhyme.menu.dave_shop", "Crazy Dave's Shop");
-        add("dave.trades", "Dave supplies");
+        add("dave.trades", "Dave Supplies");
 
 
         //config
-        add("rhyme.configuration.is_open_bgm", "if open bgm");
-        add("rhyme.configuration.dave_drop_rate", "dave drop money rate");
+        add("rhyme.configuration.is_open_bgm", "If Open Bgm");
+        add("rhyme.configuration.dave_drop_rate", "Dave Drop Money Rate");
 
         Rhyme.englishProviders.forEach(a->a.accept(this));
 //        PlantItems.PLANTS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));

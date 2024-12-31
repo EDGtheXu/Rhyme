@@ -5,9 +5,11 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
@@ -19,8 +21,8 @@ import rhymestudio.rhyme.core.registry.entities.Zombies;
 import rhymestudio.rhyme.core.registry.items.ArmorItems;
 
 public class NormalZombie extends AbstractMonster {
-    public static int healthToDropArm = 20;
-    public static int healthToDropHead = 10;
+    public static int healthToDropArm = 15;
+    public static int healthToDropHead = 7;
     public boolean isDropArm = false;
     public boolean isDropHead = false;
     public NormalZombie(EntityType<? extends Monster> type, Level level, Builder builder) {
@@ -125,9 +127,14 @@ public class NormalZombie extends AbstractMonster {
     }
 
     @Override
+    public boolean canAttack(LivingEntity target) {
+        return super.canAttack(target) && this.getHealth() > healthToDropHead;
+    }
+
+    @Override
     public void tick(){
         super.tick();
-        if(this.getHealth() < healthToDropHead && tickCount % 40 == 0){
+        if(this.isDropHead && tickCount % 40 == 0){
             LivingEntity mob = this.getLastHurtByMob();
             if(mob != null){
                 this.hurt(mob.damageSources().generic(), 1);

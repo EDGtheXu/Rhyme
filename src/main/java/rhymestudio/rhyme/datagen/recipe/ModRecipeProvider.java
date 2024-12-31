@@ -13,6 +13,7 @@ import net.minecraft.world.level.ItemLike;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.items.ArmorItems;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
+import rhymestudio.rhyme.core.registry.items.ToolItems;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -37,6 +38,18 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('C',Items.EMERALD)
                 .unlockedBy("has_emerald",has(Items.EMERALD))
                 .save(recipeOutput);
+
+        //植物铲子
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ToolItems.PLANT_SHOVEL.get())
+                .pattern(" A ")
+                .pattern("BCB")
+                .pattern(" C ")
+                .define('A',Items.IRON_INGOT)
+                .define('B',MaterialItems.GENERAL_SEED)
+                .define('C',Items.STICK)
+                .unlockedBy("has_general_seed",has(MaterialItems.GENERAL_SEED))
+                .save(recipeOutput);
+
         //路障
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ArmorItems.CONE_HELMET.get())
                 .pattern(" A ")

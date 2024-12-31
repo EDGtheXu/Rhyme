@@ -49,24 +49,6 @@ public class NormalZombieRenderer<T extends NormalZombie, M extends NormalZombie
         super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
     }
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-/*
-        ItemStack helmet = entity.getItemBySlot(EquipmentSlot.HEAD);
-        if(!helmet.isEmpty())
-        {
-            int pack = OverlayTexture.pack((int) (partialTick*Math.sin(partialTick/10)), (int) (partialTick*Math.cos(partialTick/10)));
-            float s = 0.6f;
-            poseStack.pushPose();
-            poseStack.scale(s,s,s);
-
-            float roty = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
-            poseStack.mulPose(Axis.YP.rotationDegrees(-roty + 180));
-
-            poseStack.translate(0,2.8,0);
-            Minecraft.getInstance().getItemRenderer().renderStatic(helmet,ItemDisplayContext.HEAD,packedLight,pack,poseStack,buffer,entity.level(),0);
-
-            poseStack.popPose();
-        }
-        */
         ModelPart arm = null;
         ModelPart head = null;
         for(ModelPart part : model.root().getAllParts().toList()){

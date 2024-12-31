@@ -39,7 +39,7 @@ public class MaterialItems {
     public static final DeferredItem<Item> SILVER_COIN = register("silver_coin", "银币", p->p.component(ModDataComponentTypes.ITEM_DAT_MAP, ItemDataMapComponent.builder().add("money","value",5).build()));
     public static final DeferredItem<Item> GOLD_COIN = register("gold_coin", "金币", p->p.component(ModDataComponentTypes.ITEM_DAT_MAP, ItemDataMapComponent.builder().add("money","value",10).build()).component(ModDataComponentTypes.MOD_RARITY,ModRarity.YELLOW));
 
-    public static final DeferredItem<Item> TACOS = register("tacos", "玉米卷",p->p.component(ModDataComponentTypes.MOD_RARITY,ModRarity.ORANGE).food(new FoodProperties(
+    public static final DeferredItem<Item> TACO = register("taco", "玉米卷",p->p.component(ModDataComponentTypes.MOD_RARITY,ModRarity.ORANGE).food(new FoodProperties(
             5,50,true,2, Optional.of(ItemStack.EMPTY), List.of(
                     new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 0),0.8f),
                     new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.ABSORPTION, 200, 0),0.2f),
@@ -54,9 +54,7 @@ public class MaterialItems {
     }
 
     public static DeferredItem<Item> register(String en, String zh, ModRarity rarity) {
-        DeferredItem<Item> item =  MATERIALS.register("material/"+en, () -> new CustomRarityItem(new Item.Properties().component(ModDataComponentTypes.MOD_RARITY,rarity)));
-        add_zh_en(item, zh);
-        return item;
+        return register(en, zh, p->p.component(ModDataComponentTypes.MOD_RARITY,rarity));
     }
     public static DeferredItem<Item> register(String en, String zh) {
         return register(en, zh, ModRarity.COMMON);

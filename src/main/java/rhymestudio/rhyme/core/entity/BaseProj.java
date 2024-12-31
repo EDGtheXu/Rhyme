@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,11 +28,17 @@ import rhymestudio.rhyme.core.particle.options.BrokenProjOptions;
 import rhymestudio.rhyme.core.registry.ModEffects;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.mixinauxiliary.ILivingEntity;
+import rhymestudio.rhyme.network.s2c.ProjHitPacket;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class BaseProj extends AbstractHurtingProjectile{
     private final long starttime = System.currentTimeMillis();
     public float damage;
-    public int penetration = 1;
+    private List<Integer> hitList = new ArrayList<>();
+    public int penetration =1;
     protected MobEffectInstance effect;
     public ResourceLocation texture;
     protected DeferredHolder<SoundEvent,SoundEvent> hitSound;
@@ -58,9 +65,10 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         //包围盒检测造成伤害
         var entities=level().getEntities(this,this.getBoundingBox());
         if(!entities.isEmpty() && penetration > 0){
-
             for (var e:entities) {
-                if(canHitEntity(e)) {
+                int id = e.getId();
+                if(canHitEntity(e) && !hitList.contains(id)) {
+                    hitList.add(id);
                     if(e instanceof LivingEntity living) {
                         doHurt(living);
                         //doKnockBack(living);
@@ -120,33 +128,38 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity hurter = pResult.getEntity();
-        if(hurter instanceof LivingEntity living) doHurt(living);
+        if(!hitList.contains(hurter.getId()) && hurter instanceof LivingEntity living && canHitEntity(living))
+            doHurt(living);
+        super.onHitEntity(pResult);
+    }
+
+    protected void doHurt(LivingEntity hurter){
+        Entity entity = this.getOwner();
+        if(effect!= null && hurter != entity){
+            if(effect.getEffect().is(ModEffects.FROZEN_EFFECT.getId())){
+                PacketDistributor.sendToAllPlayers(new ProjHitPacket(hurter.getId(),effect.getDuration()));
+            }
+            hurter.addEffect(effect);
+        }
+        if(hitSound != null)
+            level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
+        if(entity!= null)
+            hurter.hurt(entity.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
+        else if(hurter!= null)
+            hurter.hurt(this.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
         Vec3 pos = hurter.position();
 
-        if(this.level() instanceof ServerLevel serverlevel)
+        if(this.level() instanceof ServerLevel serverlevel){
             serverlevel.sendParticles(new BrokenProjOptions(this.texture.getPath()),
                     pos.x,
                     pos.y+1,
                     pos.z,
                     20, 0.2, 0, 0.2, 0.1F);
-
-        super.onHitEntity(pResult);
-        penetration--;
-        if(penetration <= 0) {
-            discard();
-        }
-    }
-
-    protected void doHurt(LivingEntity hurter){
-        Entity entity = this.getOwner();
-        if(effect!= null && hurter != entity && hurter instanceof LivingEntity living){
-            if(effect.getEffect().is(ModEffects.FROZEN_EFFECT.getId())){
-                ((ILivingEntity) hurter).rhyme$setFrozenTime(effect.getDuration());
+            penetration--;
+            if(penetration <= 0) {
+                discard();
             }
-            living.addEffect(effect);
         }
-        if(hitSound != null) level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
-        hurter.hurt(this.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
     }
 
 

@@ -6,6 +6,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.network.c2s.DaveShopPacket;
+import rhymestudio.rhyme.network.s2c.ProjHitPacket;
 import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
@@ -17,6 +18,9 @@ public class ModEvent {
     public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar("1");
         registrar.playToClient(SunCountPacketS2C.TYPE, SunCountPacketS2C.STREAM_CODEC, SunCountPacketS2C::handle);
+        registrar.playToClient(ProjHitPacket.TYPE, ProjHitPacket.STREAM_CODEC, ProjHitPacket::handle);
+
+
         registrar.playToServer(DaveShopPacket.TYPE, DaveShopPacket.STREAM_CODEC, DaveShopPacket::handle);
 
 
