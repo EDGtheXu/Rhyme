@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -11,19 +12,16 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.*;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
@@ -33,10 +31,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.core.menu.SunCreatorMenu;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModBlocks;
+import rhymestudio.rhyme.core.registry.items.MaterialItems;
 
 import static net.minecraft.world.level.block.BarrelBlock.FACING;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -62,30 +60,28 @@ public class SunCreaterBlock extends BaseEntityBlock  {
         }
     }
 
-    @Override
-    public @Nullable MenuProvider getMenuProvider(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
-        return new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) -> new SunCreatorMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos)), CONTAINER_TITLE);
-    }
+//    @Override
+//    public @Nullable MenuProvider getMenuProvider(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
+//        return new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) -> new SunCreatorMenu(pContainerId, pPlayerInventory, new SimpleContainerData(2)), CONTAINER_TITLE);
+//    }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, ModBlocks.SUN_CREATOR_BLOCK_ENTITY.get(), (level, pos, state, blockEntity)->{
-            if(!level.isNight()) {
-                blockEntity.time++;
-                if(blockEntity.time >= blockEntity.interval){
-                    blockEntity.time = 0;
-                    if(blockEntity.count < blockEntity.MAX_COUNT){
-                        blockEntity.count++;
-                        blockEntity.getData(ModAttachments.PLAYER_STORAGE).sunCount = blockEntity.count;
-
-                        pLevel.sendBlockUpdated(pos,pLevel.getBlockState(pos),pLevel.getBlockState(pos),3);
-                    }else{
-                        Player nearestPlayer = pLevel.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, false);
-                        Component component = Component.literal("creator full: "+blockEntity.count +"/" + blockEntity.MAX_COUNT);
-                        if(nearestPlayer!=null){
-                            nearestPlayer.sendSystemMessage(component);
-                        }
+            if(!level.isNight() && blockEntity.getItems().get(1).is(MaterialItems.GENERAL_SEED)
+                && blockEntity.getItems().get(2).is(MaterialItems.PEA_GENE)
+            ) {
+                int t = blockEntity.time;
+                if(t >= blockEntity.interval){
+                    int has = blockEntity.getItems().get(0).getCount();
+                    if(has < 64){
+                        blockEntity.time = 0;
+                        blockEntity.getItems().get(1).shrink(1);
+                        blockEntity.getItems().get(2).shrink(1);
+                        blockEntity.getItems().set(0, new ItemStack(MaterialItems.SOLID_SUN.get(), has + 1));
                     }
+                }else{
+                    blockEntity.time++;
                 }
             }
         });}
@@ -102,14 +98,36 @@ public class SunCreaterBlock extends BaseEntityBlock  {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    public static final class SunCreaterBlockEntity extends BlockEntity {
+    public static final class SunCreaterBlockEntity extends BaseContainerBlockEntity {
         public static int MAX_COUNT = 64;
         public int interval = 20 * 60;
         public int time = 0;
-        public int count = 0;
+        private final ContainerData dataAccess;
+        private NonNullList<ItemStack> items;
 
         public SunCreaterBlockEntity(BlockEntityType<SunCreaterBlockEntity> type, BlockPos pos, BlockState state) {
             super(type, pos, state);
+            this.items = NonNullList.withSize(3, ItemStack.EMPTY);
+            this.dataAccess = new ContainerData() {
+                public int get(int id) {
+                    return switch (id) {
+                        case 0 -> time;
+                        case 1 -> interval;
+                        default -> 0;
+                    };
+                }
+                public void set(int id, int value) {
+                    switch (id) {
+                        case 0 -> time = value;
+                        case 1 -> interval = value;
+                    }
+
+                }
+                public int getCount() {
+                    return 2;
+                }
+            };
+
         }
 
         public SunCreaterBlockEntity(BlockPos pos, BlockState state) {
@@ -124,24 +142,66 @@ public class SunCreaterBlock extends BaseEntityBlock  {
         @Override
         public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
             CompoundTag tag = pkt.getTag();
-            count = tag.getInt("count");
+            time = tag.getInt("time");
+            this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+            ContainerHelper.loadAllItems(tag, this.items, lookupProvider);
         }
 
         @Override
-        public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
-            CompoundTag compoundNBT = super.getUpdateTag(lookupProvider);
-            compoundNBT.putInt("count", count);
-            return compoundNBT;
-        }
-        protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-            super.loadAdditional(tag, registries);
-            count =tag.getInt("count");
-        }
-        protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-            super.saveAdditional(tag, registries);
-            tag.putInt("count", count);
+        public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+            CompoundTag tag = super.getUpdateTag(registries);
+            tag.putInt("time", time);
+            ContainerHelper.saveAllItems(tag, this.items, registries);
+            return tag;
         }
 
+        protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+            super.loadAdditional(tag, registries);
+            time = tag.getInt("time");
+            this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+            ContainerHelper.loadAllItems(tag, this.items, registries);
+        }
+
+        protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+            super.saveAdditional(tag, registries);
+            tag.putInt("time", time);
+            ContainerHelper.saveAllItems(tag, this.items, registries);
+        }
+
+        @Override
+        protected Component getDefaultName() {
+            return CONTAINER_TITLE;
+        }
+
+        @Override
+        protected NonNullList<ItemStack> getItems() {
+            return items;
+        }
+
+        @Override
+        protected void setItems(NonNullList<ItemStack> nonNullList) {
+             items = nonNullList;
+        }
+        @Override
+        public void setItem(int index, ItemStack stack) {
+            ItemStack itemstack = getItem(index);
+            boolean flag = !stack.isEmpty() && ItemStack.isSameItemSameComponents(itemstack, stack);
+            getItems().set(index, stack);
+            stack.limitSize(getMaxStackSize(stack));
+            if (index < 3 && !flag) {
+                setChanged();
+            }
+
+        }
+        @Override
+        protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
+            return new SunCreatorMenu(id, inventory, this,this.dataAccess);
+        }
+
+        @Override
+        public int getContainerSize() {
+            return 3;
+        }
     }
 
 

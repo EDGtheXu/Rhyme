@@ -36,7 +36,7 @@ public class PlantEntities {
             new Pea(type,level, IcePeaAnimation.idle_normal, IcePeaAnimation.shoot,
                     builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()));
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> DOUBLE_PEA = registerCreature("double_pea_shooter","双发射手",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> REPEATER = registerCreature("repeater","双发射手",(type, level)->
             new Pea(type,level, RepeaterAnimation.idle_normal, RepeaterAnimation.shoot,
                     builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get()));
 
@@ -65,7 +65,8 @@ public class PlantEntities {
             new Chomper(type,level, 20 * 15,200,NORMAL_PEA_PLANT.get()),1.1F,2.1F);
 
 
-    //      tip 疯狂戴夫
+
+    // tip 疯狂戴夫
     public static final DeferredHolder<EntityType<?>, EntityType<CrazyDave>> CRAZY_DAVE = registerCreature("crazy_dave","疯狂戴夫",(type, level)->
             new CrazyDave(type,level),0.95f,2);
 

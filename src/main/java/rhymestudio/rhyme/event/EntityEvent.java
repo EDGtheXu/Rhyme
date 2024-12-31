@@ -8,7 +8,6 @@ import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Slime;
 
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -39,17 +38,16 @@ import static rhymestudio.rhyme.Rhyme.MODID;
 @EventBusSubscriber(modid = MODID,bus = EventBusSubscriber.Bus.GAME)
 public class EntityEvent {
 
+    // 怪物生成添加攻击植物goal
     @SubscribeEvent
     public static void onEntitySpawn(FinalizeSpawnEvent event) {
         if (event.getEntity() instanceof Monster monster) {
             if (monster instanceof NeutralMob) return;
             monster.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(monster, AbstractPlant.class, false));
-        } else if (event.getEntity() instanceof Slime slime) {
-
-            slime.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(slime, AbstractPlant.class, true));
         }
     }
 
+    // 玩家加入世界同步数据
     @SubscribeEvent
     public static void onPlayerJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
@@ -69,12 +67,13 @@ public class EntityEvent {
         }
     }
 
+    // 自然生成阳光
     @SubscribeEvent
     public static void onLevelTickEvent(LevelTickEvent.Pre event){
         Level level = event.getLevel();
         if(level instanceof ServerLevel serverLevel){
             float f = event.getLevel().getDayTime();
-            if(level.isDay() && f % (20 * 2) == 0){
+            if(level.isDay() && f % (20 * 15) == 0){
                 SunItemEntity.summon(serverLevel);
             }
         }
@@ -89,9 +88,10 @@ public class EntityEvent {
         }
     }
 
+    // 死亡掉落金币
     @SubscribeEvent
     public static void livingDead(LivingDeathEvent event) {
-        if(!event.getEntity().level().isClientSide){
+        if(!event.getEntity().level().isClientSide && event.getEntity() instanceof Monster){
             ItemEntity ite = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), MaterialItems.SILVER_COIN.toStack());
             event.getEntity().level().addFreshEntity(ite);
 
@@ -99,6 +99,7 @@ public class EntityEvent {
         }
     }
 
+    // 玩家捡到金币，消失并同步数据
     @SubscribeEvent
     public static void pickupItem(ItemEntityPickupEvent.Pre event) {
         if(event.getPlayer() instanceof ServerPlayer sp){
@@ -123,6 +124,7 @@ public class EntityEvent {
         }
     }
 
+    // 打开戴夫商店
     @SubscribeEvent
     public static void interactEntity(PlayerInteractEvent.EntityInteract event) {
         if(event.getTarget() instanceof CrazyDave dave) {

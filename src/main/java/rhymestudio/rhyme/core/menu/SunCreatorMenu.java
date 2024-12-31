@@ -1,41 +1,35 @@
 package rhymestudio.rhyme.core.menu;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import rhymestudio.rhyme.core.block.SunCreaterBlock;
-import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.recipe.AbstractAmountRecipe;
 import rhymestudio.rhyme.core.recipe.SunCreatorRecipe;
-import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.ModRecipes;
 import rhymestudio.rhyme.core.registry.ModMenus;
-import rhymestudio.rhyme.core.registry.items.MaterialItems;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SunCreatorMenu extends AbstractContainerMenu {
-    private final ContainerLevelAccess access;
+    public final ContainerData access;
     private final Player player;
     private final CraftingContainer craftSlots = new TransientCraftingContainer(this, 3, 4);
     private final ResultContainer resultSlot = new ResultContainer();
+    private final ResultContainer resultSlot2 = new ResultContainer();
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<SunCreatorRecipe>> recipes = new ArrayList<>();
-
+    public Container container;
     public SunCreatorMenu(int pContainerId, Inventory inventory) {
-        this(pContainerId, inventory, ContainerLevelAccess.NULL);
+        this(pContainerId, inventory, new SimpleContainer(3),new SimpleContainerData(2));
     }
 
     /*
@@ -44,11 +38,14 @@ public class SunCreatorMenu extends AbstractContainerMenu {
      * 10       05
      * 09 08 07 06
      */
-    public SunCreatorMenu(int pContainerId, Inventory pPlayerInventory, final ContainerLevelAccess pAccess) {
+    public SunCreatorMenu(int pContainerId, Inventory pPlayerInventory,Container container, ContainerData pAccess) {
         super(ModMenus.SUN_CREATOR_MENU.get(), pContainerId);
         this.player = pPlayerInventory.player;
+        checkContainerSize(container, 3);
+        checkContainerDataCount(pAccess, 2);
         this.access = pAccess;
-        addSlot(new AmountResultSlot(craftSlots, resultSlot, 0, 62, 35) {
+        this.container = container;
+        addSlot(new AmountResultSlot(craftSlots, resultSlot, 0, 62, 35,1) {
             @Override
             public void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
                 if (recipe != null) {
@@ -59,18 +56,27 @@ public class SunCreatorMenu extends AbstractContainerMenu {
             }
         });
 
-        addSlot(new Slot(craftSlots, 0, 35, 8));
-        addSlot(new Slot(craftSlots, 1, 53, 8));
-        addSlot(new Slot(craftSlots, 2, 71, 8));
-        addSlot(new Slot(craftSlots, 3, 89, 8));
-        addSlot(new Slot(craftSlots, 4, 89, 26));
-        addSlot(new Slot(craftSlots, 5, 89, 44));
-        addSlot(new Slot(craftSlots, 6, 89, 62));
-        addSlot(new Slot(craftSlots, 7, 71, 62));
-        addSlot(new Slot(craftSlots, 8, 53, 62));
-        addSlot(new Slot(craftSlots, 9, 35, 62));
-        addSlot(new Slot(craftSlots, 10, 35, 44));
-        addSlot(new Slot(craftSlots, 11, 35, 26));
+        addSlot(new HiddenSlot(craftSlots, 0, 35, 8,1));
+        addSlot(new HiddenSlot(craftSlots, 1, 53, 8,1));
+        addSlot(new HiddenSlot(craftSlots, 2, 71, 8,1));
+        addSlot(new HiddenSlot(craftSlots, 3, 89, 8,1));
+        addSlot(new HiddenSlot(craftSlots, 4, 89, 26,1));
+        addSlot(new HiddenSlot(craftSlots, 5, 89, 44,1));
+        addSlot(new HiddenSlot(craftSlots, 6, 89, 62,1));
+        addSlot(new HiddenSlot(craftSlots, 7, 71, 62,1));
+        addSlot(new HiddenSlot(craftSlots, 8, 53, 62,1));
+        addSlot(new HiddenSlot(craftSlots, 9, 35, 62,1));
+        addSlot(new HiddenSlot(craftSlots, 10, 35, 44,1));
+        addSlot(new HiddenSlot(craftSlots, 11, 35, 26,1));
+
+        addSlot(new HiddenSlot(container,0,35,14,2){
+            @Override
+            public boolean mayPlace(@NotNull ItemStack pStack) {
+                return false;
+            }
+        });
+        addSlot(new HiddenSlot(container,1,16,38,2));
+        addSlot(new HiddenSlot(container,2,54,38,2));
 
         for (int k = 0; k < 3; k++) {
             for (int l = 0; l < 9; l++) {
@@ -81,6 +87,7 @@ public class SunCreatorMenu extends AbstractContainerMenu {
             addSlot(new Slot(pPlayerInventory, m, 8 + m * 18, 142));
         }
 
+        addDataSlots(access);
         addDataSlot(selectedRecipeIndex);
     }
 
@@ -143,21 +150,6 @@ public class SunCreatorMenu extends AbstractContainerMenu {
             selectedRecipeIndex.set(pId);
             setupResultSlot();
         }
-        if(pId == 114){
-            var data = player.getData(ModAttachments.PLAYER_STORAGE);
-            BlockEntity blockEntity = player.level().getBlockEntity(new BlockPos(data.x,data.y,data.z));
-            if(!(blockEntity instanceof SunCreaterBlock.SunCreaterBlockEntity entity)){
-                player.closeContainer();
-                return true;
-            }
-            ItemStack itemStack = new ItemStack(MaterialItems.SOLID_SUN.get(),entity.count);
-            ItemEntity sun = new ItemEntity( player.level(), entity.getBlockPos().getCenter().x,entity.getBlockPos().getCenter().y+0.5,entity.getBlockPos().getCenter().z,itemStack);
-            Vec3 dir = sun.position().subtract( player.position().add(0,  player.getEyeHeight(), 0));
-
-            sun.setDeltaMovement(dir.normalize().scale(-0.5f));
-            player.level().addFreshEntity(sun);
-            entity.count = 0;
-        }
         return true;
     }
 
@@ -179,13 +171,13 @@ public class SunCreatorMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(@NotNull Player pPlayer) {
-        return stillValid(access, pPlayer, ModBlocks.SUN_CREATOR_BLOCK.get());
+        return container.stillValid(pPlayer);
     }
 
     @Override
     public void removed(@NotNull Player pPlayer) {
         super.removed(pPlayer);
-        access.execute((level, blockPos) -> clearContainer(pPlayer, craftSlots));
+        clearContainer(pPlayer, craftSlots);
     }
 
     @Override
@@ -197,20 +189,20 @@ public class SunCreatorMenu extends AbstractContainerMenu {
     public void slotsChanged(@NotNull Container pContainer) {
         this.recipes = player.level().getRecipeManager().getRecipesFor(ModRecipes.SUN_CREATOR_TYPE.get(), craftSlots.asCraftInput(), player.level());
         if (selectedRecipeIndex.get() >= recipes.size()) selectedRecipeIndex.set(recipes.size() - 1);
-        access.execute((level, pos) -> {
-            if (player instanceof ServerPlayer serverPlayer) {
-                ItemStack itemStack = ItemStack.EMPTY;
-                if (!recipes.isEmpty()) {
-                    if (selectedRecipeIndex.get() == -1) selectedRecipeIndex.set(0);
-                    SunCreatorRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
-                    itemStack = recipe.getResultItem(null).copy();
-                    setCurrentRecipe(recipe);
-                }
-                resultSlot.setItem(0, itemStack);
-                setRemoteSlot(0, itemStack);
-                serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 0, itemStack));
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            ItemStack itemStack = ItemStack.EMPTY;
+            if (!recipes.isEmpty()) {
+                if (selectedRecipeIndex.get() == -1) selectedRecipeIndex.set(0);
+                SunCreatorRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
+                itemStack = recipe.getResultItem(null).copy();
+                setCurrentRecipe(recipe);
             }
-        });
+            resultSlot.setItem(0, itemStack);
+            setRemoteSlot(0, itemStack);
+            serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 0, itemStack));
+        }
+
     }
 
     private void setCurrentRecipe(SunCreatorRecipe recipe) {
@@ -227,23 +219,23 @@ public class SunCreatorMenu extends AbstractContainerMenu {
             ItemStack slotItem = slot.getItem();
             itemStack = slotItem.copy();
             if (pIndex == 0) { // resultSlot
-                access.execute((level, blockPos) -> slotItem.getItem().onCraftedBy(slotItem, level, pPlayer));
-                if (!moveItemStackTo(slotItem, 13, 49, true)) { // playerInventory(ALL)
+                slotItem.getItem().onCraftedBy(slotItem, pPlayer.level(), pPlayer);
+                if (!moveItemStackTo(slotItem, 16, 52, true)) { // playerInventory(ALL)
                     return ItemStack.EMPTY;
                 }
 
                 slot.onQuickCraft(slotItem, itemStack);
-            } else if (pIndex >= 13 && pIndex < 49) { // playerInventory(ALL)
+            } else if (pIndex >= 16 && pIndex < 52) { // playerInventory(ALL)
                 if (!moveItemStackTo(slotItem, 1, 13, false)) { // craftSlots
-                    if (pIndex < 40) {
-                        if (!moveItemStackTo(slotItem, 40, 49, false)) { // playerInventory(HOT BAR)
+                    if (pIndex < 43) {
+                        if (!moveItemStackTo(slotItem, 43, 52, false)) { // playerInventory(HOT BAR)
                             return ItemStack.EMPTY;
                         }
-                    } else if (!moveItemStackTo(slotItem, 13, 40, false)) { // playerInventory(MAIN)
+                    } else if (!moveItemStackTo(slotItem, 16, 43, false)) { // playerInventory(MAIN)
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!moveItemStackTo(slotItem, 13, 49, false)) { // playerInventory(ALL)
+            } else if (!moveItemStackTo(slotItem, 16, 52, false)) { // playerInventory(ALL)
                 return ItemStack.EMPTY;
             }
 
@@ -265,4 +257,7 @@ public class SunCreatorMenu extends AbstractContainerMenu {
 
         return itemStack;
     }
+
+
+
 }

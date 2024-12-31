@@ -47,7 +47,7 @@ public class ModEntities {
         event.put(SUN_FLOWER.get(), genericPlant.build());
         event.put(PEA.get(), genericPlant.build());
         event.put(SNOW_PEA.get(), genericPlant.build());
-        event.put(DOUBLE_PEA.get(), genericPlant.build());
+        event.put(REPEATER.get(), genericPlant.build());
         event.put(PUFF_SHROOM.get(), genericPlant.build());
         event.put(WALL_NUT.get(), genericPlant.build());
         event.put(CABBAGE_PULT.get(), genericPlant.build());
