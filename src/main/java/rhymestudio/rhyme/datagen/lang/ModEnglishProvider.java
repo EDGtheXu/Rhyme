@@ -31,6 +31,9 @@ public class ModEnglishProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_3","diamond");
         add("plantcard.tooltip.card_quality.card_quality_4","emerald");
         add("plantcard.summon_success","you plant one ");
+        add("plantcard.tooltip.damage","use remaining");
+
+
 
         add("container.rhyme.card_up_level", "Card Up Level");
 
@@ -45,7 +48,7 @@ public class ModEnglishProvider extends LanguageProvider {
 
         //config
         add("rhyme.configuration.is_open_bgm", "if open bgm");
-
+        add("rhyme.configuration.dave_drop_rate", "dave drop money rate");
 
         Rhyme.englishProviders.forEach(a->a.accept(this));
 //        PlantItems.PLANTS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));

@@ -37,7 +37,7 @@ public record DaveTrades(List<Trade> trades) {
     public static Function<Integer,DaveTrades> RAND_TRADE = (num) -> {
         List<Trade> res = weightedRandomSubsequence(allTrades, num);
         Collections.shuffle(res);
-        return new DaveTrades(res.subList(0, Math.min(num-1, res.size())));
+        return new DaveTrades(res.subList(0, Math.min(num, res.size())));
     };
 
     public static void readTradesFromJson() {
@@ -54,14 +54,14 @@ public record DaveTrades(List<Trade> trades) {
     }
 
     public static List<Trade> weightedRandomSubsequence(List<Trade> trades, int n) {
-        if (trades == null || trades.isEmpty() || n <= 0 || n > trades.size()) {
+        if (trades == null || trades.isEmpty() || n < 0 || n > trades.size()) {
             throw new IllegalArgumentException("Invalid input parameters");
         }
         double totalWeight = trades.stream().mapToDouble(t -> t.weight).sum();
         List<Trade> result = new ArrayList<>();
         List<Trade> copyTrades = new ArrayList<>(trades);
         for (int i = 0; i < n; i++) {
-            double randomValue = Minecraft.getInstance().level.random.nextDouble() * totalWeight;
+            double randomValue = Math.random() * totalWeight;
             double cumulativeWeight = 0.0;
             for (Trade trade : copyTrades) {
                 cumulativeWeight += trade.weight;

@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -37,7 +38,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
         this.builder = builder;
         this.registerGoals();
 
-        this.namePath = getName().getString().split("\\.")[2];
+        this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
 
         this.navigation = createNavigation(level);
         this.setDiscardFriction(builder.noFriction);

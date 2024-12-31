@@ -39,7 +39,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
 
     public DaveTradeScreen(DaveTradesMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = 276;
+        this.imageWidth = 290;
         this.inventoryLabelX = 107;
     }
 
@@ -69,7 +69,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(MENU_LOCATION, i, j, 0, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
+        guiGraphics.blit(MENU_LOCATION, i, j, 0, 0.0F, 0.0F, this.imageWidth-15, this.imageHeight, 512, 256);
     }
 
     private void renderScroller(GuiGraphics guiGraphics, int posX, int posY) {
@@ -96,6 +96,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
 //            menu.daveTrades = ((IPlayer)Minecraft.getInstance().player).rhyme$getDaveTrades();
             return;
         }
+
         int ii = (this.width - this.imageWidth) / 2;
         int jj = (this.height - this.imageHeight) / 2;
         this.renderScroller(guiGraphics, ii, jj);
@@ -122,8 +123,11 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
                 var it = trades.get(index).result();
 
                 guiGraphics.renderItem(it, x , y );
-                if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16)
+                if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16){
+//                    guiGraphics.setColor(1, 1, 1, 1);
                     guiGraphics.renderTooltip(this.font, it, mouseX, mouseY);
+                }
+
                 guiGraphics.renderItemDecorations(this.font, it, x, y);
                 x+=intervalX;
             }
@@ -158,6 +162,7 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
                 guiGraphics.setColor(1, 0.5f, 0.5f, 1);
                 canBuy = false;
             }
+
             guiGraphics.renderItem(it, x1, y1);
             guiGraphics.renderItemDecorations(this.font, it, x1, y1);
             guiGraphics.setColor(1, 1, 1, 1);
@@ -165,14 +170,14 @@ public class DaveTradeScreen extends AbstractContainerScreen<DaveTradesMenu> {
 
         // 花费金币
         int m = trade.money();
+        int color;
         String numberText = m + " ￥ ";
-        if(cachedMoney >= m)guiGraphics.setColor(0.4F, 1, 0.4F, 1);
+        if(cachedMoney >= m)color = 0x00FF00;
         else {
-            guiGraphics.setColor(0.8F, 0.2F, 0.2F, 1);
+            color = 0xFF0000;
             canBuy = false;
         }
-        guiGraphics.drawString(this.font, numberText, ii+215, jj+65 , 0xFFFFFF, false);
-        guiGraphics.setColor(1, 1, 1, 1);
+        guiGraphics.drawString(this.font, numberText, ii+204, jj+60 , color, false);
 
         // 能否购买
         if(canBuy){

@@ -27,7 +27,7 @@ public class ModJeiPlugin implements IModPlugin {
     public static final ResourceLocation UID = Rhyme.space("jei_plugin");
     public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64, null);
     public static final JeiBackGround QUARTER_BACKGROUND = new JeiBackGround(128, 24, null);
-    public static final ResourceLocation ARROW_RIGHT = Rhyme.space("textures/gui/arrow.png");
+    public static final ResourceLocation ARROW_RIGHT = Rhyme.space("textures/gui/gray_arrow.png");
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {

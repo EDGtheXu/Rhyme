@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import rhymestudio.rhyme.client.animation.zombieAnimations.NormalZombieAnimation;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.ai.goals.JumpOverBlockGoal;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
@@ -28,7 +29,8 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     .addTarget((t,e)->{
                         t.addGoal(1,new HurtByTargetGoal(e));
                         t.addGoal(2, new NearestAttackableTargetGoal<>(e, AbstractPlant.class,false, LivingEntity::canBeSeenAsEnemy));
-                        t.addGoal(3, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
+                        t.addGoal(3, new NearestAttackableTargetGoal<>(e, CrazyDave.class,false, LivingEntity::canBeSeenAsEnemy));
+                        t.addGoal(4, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
 
                     })
                     .addGoal((g,e)-> {

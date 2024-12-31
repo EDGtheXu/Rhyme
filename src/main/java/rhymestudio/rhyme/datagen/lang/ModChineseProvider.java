@@ -23,6 +23,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_3","钻石");
         add("plantcard.tooltip.card_quality.card_quality_4","翡翠");
         add("plantcard.summon_success","你种植了 ");
+        add("plantcard.tooltip.damage","使用次数");
 
         add("container.rhyme.sun_creator", "光萃台");
 
@@ -36,6 +37,7 @@ public class ModChineseProvider extends LanguageProvider {
 
         //config
         add("rhyme.configuration.is_open_bgm", "打开背景音乐");
+        add("rhyme.configuration.dave_drop_rate", "戴夫掉落金币比率");
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 

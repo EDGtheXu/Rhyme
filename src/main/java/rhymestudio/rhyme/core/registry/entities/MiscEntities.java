@@ -19,6 +19,7 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 import java.util.function.Supplier;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
+import static rhymestudio.rhyme.core.registry.ModEntities.Key;
 
 public class MiscEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
@@ -54,7 +55,4 @@ public class MiscEntities {
         return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).sized(width,height).build(Key(name)));
     }
 
-    public static String Key(String key){
-        return MODID + ":" + key;
-    }
 }

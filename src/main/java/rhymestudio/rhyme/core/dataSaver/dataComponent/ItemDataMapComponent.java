@@ -3,6 +3,7 @@ package rhymestudio.rhyme.core.dataSaver.dataComponent;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -28,11 +29,18 @@ public class ItemDataMapComponent implements DataComponentType<ItemDataMapCompon
     public static class DataMapBuilder{
         Map<String,Map<String, JsonElement>> itemData = new HashMap<>();
 
-        public DataMapBuilder add(String key, String name, String value) {
+        public DataMapBuilder add(String key, String name, Object value) {
             if(!itemData.containsKey(key)){
                 itemData.put(key, new HashMap<>());
             }
-            itemData.get(key).put(name, JsonParser.parseString(value));
+            if(value instanceof Float)
+                itemData.get(key).put(name,new JsonPrimitive((Float)value));
+            else if(value instanceof Boolean)
+                itemData.get(key).put(name,new JsonPrimitive((Boolean)value));
+            else if(value instanceof String)
+                itemData.get(key).put(name,new JsonPrimitive((String)value));
+            else if(value instanceof Integer)
+                itemData.get(key).put(name,new JsonPrimitive((Integer)value));
             return this;
         }
 
@@ -48,7 +56,14 @@ public class ItemDataMapComponent implements DataComponentType<ItemDataMapCompon
             return new ItemDataMapComponent(itemDataMap);
         }
     }
-
+    public int getInt(String key,String name) {
+        try{
+            return itemData.get(key).getAsJsonObject().get(name).getAsInt();
+        }catch (Exception e){
+            System.out.println("Error in getting float value for key: " + key + " and name: " + name);
+            return 0;
+        }
+    }
 
     public float getFloat(String key,String name) {
         try{

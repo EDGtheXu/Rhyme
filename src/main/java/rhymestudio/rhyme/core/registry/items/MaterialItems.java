@@ -1,12 +1,21 @@
 package rhymestudio.rhyme.core.registry.items;
 
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.ItemDataMapComponent;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import static rhymestudio.rhyme.Rhyme.add_zh_en;
 
@@ -27,10 +36,22 @@ public class MaterialItems {
     public static final DeferredItem<Item> STRONG_GENE =register("strong_gene","壮力基因", ModRarity.ORANGE);
 
 
-    public static  final DeferredItem<Item> SILVER_COIN = register("silver_coin", "银币", ModRarity.WHITE);
-    public static  final DeferredItem<Item> GOLD_COIN = register("gold_coin", "金币", ModRarity.YELLOW);
+    public static final DeferredItem<Item> SILVER_COIN = register("silver_coin", "银币", p->p.component(ModDataComponentTypes.ITEM_DAT_MAP, ItemDataMapComponent.builder().add("money","value",5).build()));
+    public static final DeferredItem<Item> GOLD_COIN = register("gold_coin", "金币", p->p.component(ModDataComponentTypes.ITEM_DAT_MAP, ItemDataMapComponent.builder().add("money","value",10).build()).component(ModDataComponentTypes.MOD_RARITY,ModRarity.YELLOW));
+
+    public static final DeferredItem<Item> TACOS = register("tacos", "玉米卷",p->p.component(ModDataComponentTypes.MOD_RARITY,ModRarity.ORANGE).food(new FoodProperties(
+            5,50,true,2, Optional.of(ItemStack.EMPTY), List.of(
+                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 0),0.8f),
+                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.ABSORPTION, 200, 0),0.2f),
+                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.SATURATION, 200, 0),1f)
+    ))));
 
 
+    public static DeferredItem<Item> register(String en, String zh, Function<Item.Properties, Item.Properties> properties) {
+        DeferredItem<Item> item =  MATERIALS.register("material/"+en, () -> new CustomRarityItem(properties.apply(new Item.Properties())));
+        add_zh_en(item, zh);
+        return item;
+    }
 
     public static DeferredItem<Item> register(String en, String zh, ModRarity rarity) {
         DeferredItem<Item> item =  MATERIALS.register("material/"+en, () -> new CustomRarityItem(new Item.Properties().component(ModDataComponentTypes.MOD_RARITY,rarity)));
@@ -40,5 +61,8 @@ public class MaterialItems {
     public static DeferredItem<Item> register(String en, String zh) {
         return register(en, zh, ModRarity.COMMON);
     }
+
+
+
 
 }

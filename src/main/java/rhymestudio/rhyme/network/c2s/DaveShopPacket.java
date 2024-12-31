@@ -9,8 +9,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.ModAttachments;
+import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 import rhymestudio.rhyme.utils.Computer;
 
 public record DaveShopPacket(DaveTrades.Trade trade) implements CustomPacketPayload {
@@ -33,6 +35,8 @@ public record DaveShopPacket(DaveTrades.Trade trade) implements CustomPacketPayl
             if(trade.canTrade(context.player()) && context.player() instanceof ServerPlayer sp){
                 var data = context.player().getData(ModAttachments.PLAYER_STORAGE);
                 data.moneys -= trade.money();
+                if(((IPlayer)context.player()).rhyme$getInteractingEntity() instanceof CrazyDave dave)
+                    dave.addMoney(trade.money());
                 data.sendSunCountUpdate(sp);
                 for (var item : trade.requires())
                     Computer.tryCombineInventoryItem(context.player(), item.getItem(), item.getCount());

@@ -81,7 +81,8 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         level.addFreshEntity(entity);
         entity.playSound(ModSounds.PLANT.get());
         entity.setHealth(entity.getMaxHealth());
-        player.getCooldowns().addCooldown(stack.getItem(), this.cd);
+        if(player.canBeSeenAsEnemy())
+            player.getCooldowns().addCooldown(stack.getItem(), this.cd);
         if(level.isClientSide){
             var data = stack.get(ModDataComponentTypes.CARD_QUALITY.get());
             player.sendSystemMessage(Component.translatable("plantcard.summon_success").append(Component.translatable("entity.rhyme."+ entityType.getId().getPath()).withColor(data.color())));
@@ -97,6 +98,11 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
                 .append(Component.translatable("plantcard.tooltip.card_quality."+BuiltInRegistries.ITEM.getKey(quality.getQualityItem()).getPath().split("/")[1]).withColor(quality.color())));
 
         tooltipComponents.add(Component.translatable("plantcard.tooltip.consumed_sun").append(": "+this.consume).withColor(0xffff00));
+        float percent = (float)stack.getDamageValue()/(float)stack.getMaxDamage();
+        int color = (int)((1-percent)*0x0000ff)<<8 | (int)(percent*0x0000ff)<<16;
+        tooltipComponents.add(Component.translatable("plantcard.tooltip.damage").append(": ")
+                .append(Component.literal((stack.getMaxDamage()-stack.getDamageValue())+"/"+stack.getMaxDamage()).withColor(color)));
+
     }
 
     public static <T extends AbstractPlant> Builder<T> builder(DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume){

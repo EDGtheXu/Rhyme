@@ -8,7 +8,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.SelectMusicEvent;
-import rhymestudio.rhyme.config.client.ClientConfig;
+import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.client.animate.ExpertColorAnimation;
 import rhymestudio.rhyme.client.animate.MasterColorAnimation;
 import rhymestudio.rhyme.client.render.gui.hud.CardHUD;

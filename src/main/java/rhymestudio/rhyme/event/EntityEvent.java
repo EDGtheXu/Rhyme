@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.event;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -25,6 +26,7 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
+import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.core.registry.ModAttachments;
@@ -97,24 +99,31 @@ public class EntityEvent {
     public static void pickupItem(ItemEntityPickupEvent.Pre event) {
         if(event.getPlayer() instanceof ServerPlayer sp){
             var originalStack = event.getItemEntity().getItem();
-            if(originalStack.is(MaterialItems.SILVER_COIN)
-                || originalStack.is(MaterialItems.GOLD_COIN)
+
+            if(!event.getItemEntity().hasPickUpDelay() &&
+                    (originalStack.is(MaterialItems.SILVER_COIN)
+                        || originalStack.is(MaterialItems.GOLD_COIN))
             ){
-                event.getPlayer().getData(ModAttachments.PLAYER_STORAGE).moneys +=
-                        originalStack.getCount() * (originalStack.is(MaterialItems.GOLD_COIN)? 10 : 5);
+                var coin_data = originalStack.getComponents().get(ModDataComponentTypes.ITEM_DAT_MAP.get());
+                if(coin_data!= null){
+                    int coin_capacity = coin_data.getInt("money","value");
 
-                var data = sp.getData(ModAttachments.PLAYER_STORAGE);
-                data.sendSunCountUpdate(sp);
+                    var data = sp.getData(ModAttachments.PLAYER_STORAGE);
+                    data.moneys += coin_capacity * originalStack.getCount();
+                    data.sendSunCountUpdate(sp);
 
-                originalStack.setCount(0);
+                    originalStack.setCount(0);
+                }
+
             }
         }
-
-
     }
+
     @SubscribeEvent
-    public static void pickupItem(PlayerInteractEvent.EntityInteract event) {
-        if(event.getTarget() instanceof CrazyDave dave)
-            ((IPlayer)event.getEntity()).rhyme$setDaveTrades(dave.daveTrades);
+    public static void interactEntity(PlayerInteractEvent.EntityInteract event) {
+        if(event.getTarget() instanceof CrazyDave dave) {
+            ((IPlayer) event.getEntity()).rhyme$setDaveTrades(dave.daveTrades);
+            ((IPlayer) event.getEntity()).rhyme$setInteractingEntity(dave);
+        }
     }
 }

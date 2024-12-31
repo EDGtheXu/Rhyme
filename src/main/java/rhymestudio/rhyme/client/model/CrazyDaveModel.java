@@ -5,16 +5,14 @@ package rhymestudio.rhyme.client.model;// Made with Blockbench 4.11.2
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 
-public class CrazyDaveModel<T extends CrazyDave> extends HierarchicalModel<T> {
+public class CrazyDaveModel<T extends CrazyDave> extends AbstractAnimModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Rhyme.space( "normal_zombie_model"), "main");
 	private final ModelPart all;
@@ -66,9 +64,8 @@ public class CrazyDaveModel<T extends CrazyDave> extends HierarchicalModel<T> {
 
 
 	@Override
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
-
+	public ModelPart getHead() {
+		return head;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 
 public class ModBiomeModifier {
@@ -18,6 +19,7 @@ public class ModBiomeModifier {
     public static final ResourceKey<BiomeModifier> NORMAL_ZOMBIE_SPAWN = createModifierKey("spawn/normal_zombie_spawns");
     public static final ResourceKey<BiomeModifier> CONE_ZOMBIE_SPAWN = createModifierKey("spawn/cone_zombie_spawns");
     public static final ResourceKey<BiomeModifier> IRON_BUCKET_ZOMBIE_SPAWN = createModifierKey("spawn/iron_bucket_zombie_spawns");
+    public static final ResourceKey<BiomeModifier> CRAZY_DAVE_SPAWN = createModifierKey("spawn/crazy_dave_spawns");
 
 
     public static void createBiomeModifier(BootstrapContext<BiomeModifier> context) {
@@ -52,6 +54,13 @@ public class ModBiomeModifier {
                 )
         );
 
-
+        context.register(CRAZY_DAVE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(
+                        biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_PLAINS),
+                        biomeLookup.getOrThrow(BiomeTags.IS_END),
+                        new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(PlantEntities.CRAZY_DAVE.get(),
+                                5, 1, 1,
+                                PlantEntities.CRAZY_DAVE.get().getCategory())
+                )
+        );
     }
 }

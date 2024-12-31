@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.core.menu;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -63,7 +62,7 @@ public class DaveTradesMenu extends AbstractContainerMenu {
     }
 
     public boolean stillValid(Player player) {
-        return true;
+        return ((IPlayer)player).rhyme$getDaveTrades() == daveTrades;
     }
 
     public ItemStack quickMoveStack(Player player, int index) {
@@ -107,5 +106,7 @@ public class DaveTradesMenu extends AbstractContainerMenu {
     public void playTradeSound() {
 
     }
+
+
 
 }

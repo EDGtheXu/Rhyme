@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.config.client;
+package rhymestudio.rhyme.config;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

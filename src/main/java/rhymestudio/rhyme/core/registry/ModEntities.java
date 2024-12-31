@@ -24,6 +24,7 @@ import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 
 import static net.minecraft.world.entity.Mob.checkMobSpawnRules;
+import static rhymestudio.rhyme.Rhyme.MODID;
 import static rhymestudio.rhyme.core.registry.entities.PlantEntities.*;
 
 @EventBusSubscriber(modid = Rhyme.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -61,7 +62,7 @@ public class ModEntities {
         event.put(Zombies.IRON_BUCKET_ZOMBIE.get(), AbstractMonster.createAttributes().build());
 
         //疯狂戴夫
-        event.put(CRAZY_DAVE.get(), AbstractMonster.createAttributes().build());
+        event.put(CRAZY_DAVE.get(), AbstractMonster.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.5f).build());
 
     }
 
@@ -85,12 +86,18 @@ public class ModEntities {
     @SubscribeEvent
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
         event.register(Zombies.NORMAL_ZOMBIE.get(),  SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::checkBloodCrawlerSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
-
+        event.register(Zombies.CONE_ZOMBIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::checkBloodCrawlerSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(Zombies.IRON_BUCKET_ZOMBIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::checkBloodCrawlerSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CRAZY_DAVE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::checkBloodCrawlerSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
     }
 
     public static void registerEntities(IEventBus modEventBus) {
         PlantEntities.ENTITIES.register(modEventBus);
         Zombies.ZOMBIES.register(modEventBus);
         MiscEntities.ENTITIES.register(modEventBus);
+    }
+
+    public static String Key(String key){
+        return MODID + ":entity." + key;
     }
 }
