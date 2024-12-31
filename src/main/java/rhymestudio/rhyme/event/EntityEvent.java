@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.event;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -23,6 +22,8 @@ import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import rhymestudio.rhyme.core.dataSaver.attactment.PlantRecorderAttachment;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
@@ -31,6 +32,7 @@ import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.mixinauxiliary.IPlayer;
+import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
 
@@ -53,6 +55,8 @@ public class EntityEvent {
         if (event.getEntity() instanceof ServerPlayer player) {
             var data = player.getData(ModAttachments.PLAYER_STORAGE);
             data.sendSunCountUpdate(player);
+            PlantRecorderAttachment plantRecorder = player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
+            PacketDistributor.sendToPlayer(player,new PlantRecorderPacket(plantRecorder.ids));
         }
 
 
@@ -70,7 +74,7 @@ public class EntityEvent {
         Level level = event.getLevel();
         if(level instanceof ServerLevel serverLevel){
             float f = event.getLevel().getDayTime();
-            if(level.isDay() && f % (20 * 15) == 0){
+            if(level.isDay() && f % (20 * 2) == 0){
                 SunItemEntity.summon(serverLevel);
             }
         }

@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -17,12 +18,15 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Vector3f;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 import rhymestudio.rhyme.core.entity.ai.CircleSkills;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
+import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
+import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
 
 public abstract class AbstractPlant extends Mob implements ICafeMob{
 
@@ -66,6 +70,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         return animState;
     }
 
+    @Override
     public void registerGoals(){
         //this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, LivingEntity.class, 20.0F));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10,true,true, this::canAttack));
@@ -91,6 +96,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         return super.hurt(source, damage);
     }
 
+    @Override
     public void die(DamageSource damageSource) {
         playSound(ModSounds.GULP.get());
         super.die(damageSource);
@@ -117,6 +123,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         return false;
     }
 
+    @Override
     public void tick(){
 
         if (!level().isClientSide) skills.tick();
@@ -150,12 +157,13 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         builder.define(DATA_CAFE_POSE_NAME, "idle");
     }
 
+    @Override
     public boolean ignoreExplosion(Explosion e){
 //        return true;
         return e.getIndirectSourceEntity() instanceof AbstractPlant || super.ignoreExplosion(e);
     }
 
-
+    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
             String name = entityData.get(DATA_CAFE_POSE_NAME);
@@ -165,8 +173,20 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         super.onSyncedDataUpdated(key);
     }
 
+    @Override
     public double getEyeY(){
         return this.getY() + 0.5;
+    }
+
+    @Override
+    public void onRemovedFromLevel() {
+        super.onRemovedFromLevel();
+        if(owner instanceof ServerPlayer serverPlayer){ // 只在服务端才有owner
+            var list = serverPlayer.getData(ModAttachments.PLANT_RECORDER_STORAGE).ids;
+
+            list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
+            PacketDistributor.sendToPlayer(serverPlayer, new PlantRecorderPacket(list));
+        }
     }
 
 

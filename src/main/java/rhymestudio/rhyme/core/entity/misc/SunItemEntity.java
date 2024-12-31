@@ -12,11 +12,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
-import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -52,9 +50,9 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
             this.setYRot(cachedYaw);
         }
         BlockPos pos = this.blockPosition();
-        if(this.tickCount < 50 ){
+        if(this.tickCount < 80 ){
             float h = 0;
-            while(pos.getY() > 0 && level().getBlockState(pos).isAir()){
+            while(pos.getY() > -60 && level().getBlockState(pos).isAir()){
                 pos = pos.below();
                 h++;
             }

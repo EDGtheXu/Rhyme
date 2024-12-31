@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,8 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.List;
 
+import static rhymestudio.rhyme.config.ServerConfig.PlantConsumeAdditionStep;
+
 public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem {
     public DeferredHolder<EntityType<?>, EntityType<T>> entityType;
 
@@ -54,8 +57,14 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
 //            if(!Computer.tryCombineInventoryItem(player, MaterialItems.SUN_ITEM.get(), consume)){
 //                return InteractionResultHolder.fail(itemstack);
 //            }
-        var flag = player.getData(ModAttachments.PLAYER_STORAGE).consumeSun(consume);
-        if(!flag) return InteractionResultHolder.fail(itemstack);
+        var data =player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
+        int consumeCount = data.ids.size() * PlantConsumeAdditionStep.get() + this.consume;
+        var flag = player.getData(ModAttachments.PLAYER_STORAGE).consumeSun(consumeCount);
+        if(!flag) {
+            if(!level.isClientSide)
+                player.sendSystemMessage(Component.translatable("plantcard.not_enough_sun").withColor(0xff0000));
+            return InteractionResultHolder.fail(itemstack);
+        }
         if(!summon(player, level, itemstack)) return InteractionResultHolder.fail(itemstack);
         itemstack.setDamageValue(itemstack.getDamageValue() + 1);
         if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
@@ -81,9 +90,11 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         level.addFreshEntity(entity);
         entity.playSound(ModSounds.PLANT.get());
         entity.setHealth(entity.getMaxHealth());
+        var plantData = player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
+        plantData.ids.add(entity.getId());
         if(player.canBeSeenAsEnemy())
             player.getCooldowns().addCooldown(stack.getItem(), this.cd);
-        if(level.isClientSide){
+        if(!level.isClientSide){
             var data = stack.get(ModDataComponentTypes.CARD_QUALITY.get());
             player.sendSystemMessage(Component.translatable("plantcard.summon_success").append(Component.translatable("entity.rhyme."+ entityType.getId().getPath()).withColor(data.color())));
         }
@@ -97,7 +108,10 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         tooltipComponents.add(Component.translatable("plantcard.tooltip.card_quality").append(": ")
                 .append(Component.translatable("plantcard.tooltip.card_quality."+BuiltInRegistries.ITEM.getKey(quality.getQualityItem()).getPath().split("/")[1]).withColor(quality.color())));
 
-        tooltipComponents.add(Component.translatable("plantcard.tooltip.consumed_sun").append(": "+this.consume).withColor(0xffff00));
+
+        var data = Minecraft.getInstance().player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
+        int consumeCount = data.ids.size() * PlantConsumeAdditionStep.get();
+        tooltipComponents.add(Component.translatable("plantcard.tooltip.consumed_sun").append(": "+this.consume + " + "+consumeCount).withColor(0xffff00));
         float percent = (float)stack.getDamageValue()/(float)stack.getMaxDamage();
         int color = (int)((1-percent)*0x0000ff)<<8 | (int)(percent*0x0000ff)<<16;
         tooltipComponents.add(Component.translatable("plantcard.tooltip.damage").append(": ")

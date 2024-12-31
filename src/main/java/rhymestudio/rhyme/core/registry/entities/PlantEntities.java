@@ -37,7 +37,7 @@ public class PlantEntities {
                     builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()));
 
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> DOUBLE_PEA = registerCreature("double_pea_shooter","双发射手",(type, level)->
-            new Pea(type,level, DoublePeaAnimation.idle_normal,DoublePeaAnimation.shoot,
+            new Pea(type,level, RepeaterAnimation.idle_normal, RepeaterAnimation.shoot,
                     builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get()));
 
     //      tip 坚果类

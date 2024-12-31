@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -27,6 +28,12 @@ public class CardUpLevelBlock extends BaseEntityBlock {
     public CardUpLevelBlock(Properties properties) {
         super(properties);
     }
+
+    @Override
+    protected RenderShape getRenderShape(@NotNull BlockState state) {
+        return RenderShape.MODEL;
+    }
+
 
     public static final MapCodec<CardUpLevelBlock> CODEC = simpleCodec(CardUpLevelBlock::new);
 

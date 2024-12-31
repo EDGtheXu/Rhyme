@@ -24,6 +24,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("plantcard.tooltip.card_quality.card_quality_4","翡翠");
         add("plantcard.summon_success","你种植了 ");
         add("plantcard.tooltip.damage","使用次数");
+        add("plantcard.not_enough_sun","你没有足够阳光");
 
         add("container.rhyme.sun_creator", "光萃台");
 
@@ -38,6 +39,8 @@ public class ModChineseProvider extends LanguageProvider {
         //config
         add("rhyme.configuration.is_open_bgm", "打开背景音乐");
         add("rhyme.configuration.dave_drop_rate", "戴夫掉落金币比率");
+        add("rhyme.configuration.plant_consume_addition_step", "额外消耗阳光/植物个");
+
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 

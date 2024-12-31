@@ -34,7 +34,7 @@ public class RegisterModel {
         register(evt, PeaModel.class);
         register(evt, PotatoMineModel.class);
         register(evt, SnowPeaModel.class);
-        register(evt, DoublePeaModel.class);
+        register(evt, RepeaterModel.class);
         register(evt, PuffShroomModel.class);
         register(evt, WallNutModel.class);
         register(evt, CabbageModel.class);

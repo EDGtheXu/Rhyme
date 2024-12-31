@@ -46,8 +46,8 @@ public class RegisterRenderer {
 
         registerOne(event,SUN_FLOWER.get(),getRenderSup(SunflowerModel.class));
         registerOne(event,PEA.get(),getRenderSup(PeaModel.class));
-        registerOne(event, SNOW_PEA.get(),getRenderSup(SnowPeaModel.class));
-        registerOne(event,DOUBLE_PEA.get(),getRenderSup(DoublePeaModel.class));
+        registerOne(event,SNOW_PEA.get(),getRenderSup(SnowPeaModel.class));
+        registerOne(event,DOUBLE_PEA.get(),getRenderSup(RepeaterModel.class),0.5f,1f,true);
         registerOne(event,WALL_NUT.get(),getRenderSup(WallNutModel.class),0.5f,1f);
         registerOne(event,POTATO_MINE.get(),getRenderSup(PotatoMineModel.class),0,1f);
         registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);

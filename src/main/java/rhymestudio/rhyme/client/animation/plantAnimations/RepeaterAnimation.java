@@ -10,7 +10,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
  * Exported for Minecraft version 1.19 or later with Mojang mappings
  * @author Author
  */
-public class DoublePeaAnimation {
+public class RepeaterAnimation {
 	public static final AnimationDefinition idle_normal = AnimationDefinition.Builder.withLength(3.0F).looping()
 			.addAnimation("Genh", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
@@ -73,7 +73,7 @@ public class DoublePeaAnimation {
 			))
 			.build();
 
-	public static final AnimationDefinition shoot = AnimationDefinition.Builder.withLength(1.2083F)
+	public static final AnimationDefinition shoot = AnimationDefinition.Builder.withLength(1.2083F).looping()
 			.addAnimation("Genh", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.5F, KeyframeAnimations.degreeVec(0.0F, 0.0F, -17.5F), AnimationChannel.Interpolations.CATMULLROM),
@@ -98,7 +98,8 @@ public class DoublePeaAnimation {
 			.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.POSITION,
 					new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.5F, KeyframeAnimations.posVec(-3.0F, -2.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-					new Keyframe(0.5833F, KeyframeAnimations.posVec(2.1F, 0.4F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(0.5833F, KeyframeAnimations.posVec(2.1F, -1.32F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
+					new Keyframe(0.8333F, KeyframeAnimations.posVec(2.1F, -1.12F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(1.2083F, KeyframeAnimations.posVec(0.19F, 0.08F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
 			))
 			.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.SCALE,
