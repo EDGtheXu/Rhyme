@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredItem;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
+import rhymestudio.rhyme.core.registry.items.PlantItems;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -28,60 +29,45 @@ public class DaveShopProvider extends AbstractRecipeProvider {
     @Override
     protected void run() {
 
-        gen(10,MaterialItems.GENERAL_SEED,10)
+        gen(200,MaterialItems.GENERAL_SEED,1)
                 .cost(10)
-                .add(MaterialItems.PEA_GENE,3)
-                .add(MaterialItems.NUT_GENE,2)
-                .add(MaterialItems.GENERAL_SEED,1)
-                .build();
-        gen(20,MaterialItems.GENERAL_SEED,9)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,4)
-                .add(MaterialItems.NUT_GENE,2)
-                .build();
-        gen(30,MaterialItems.GENERAL_SEED,8)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,5)
-                .add(MaterialItems.NUT_GENE,2)
-                .add(MaterialItems.GENERAL_SEED,1)
-                .add(MaterialItems.THROWABLE_GENE,1)
-                .build();
-        gen(40,MaterialItems.GENERAL_SEED,7)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,6)
-                .add(MaterialItems.NUT_GENE,2)
-                .build();
-        gen(50,MaterialItems.GENERAL_SEED,6)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,7)
-                .add(MaterialItems.NUT_GENE,2)
-                .build();
-        gen(60,MaterialItems.GENERAL_SEED,5)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,8)
-                .add(MaterialItems.NUT_GENE,2)
-                .build();
-        gen(70,MaterialItems.GENERAL_SEED,4)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,9)
-                .add(MaterialItems.NUT_GENE,2)
-                .build();
-        gen(80,MaterialItems.GENERAL_SEED,3)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,10)
-                .add(MaterialItems.NUT_GENE,2)
-                .build();
-        gen(90,MaterialItems.GENERAL_SEED,2)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,11)
-                .add(MaterialItems.NUT_GENE,2)
-                .build();
-        gen(100,MaterialItems.GENERAL_SEED,1)
-                .cost(10)
-                .add(MaterialItems.PEA_GENE,12)
-                .add(MaterialItems.NUT_GENE,2)
                 .build();
 
+        gen(100, PlantItems.SUN_FLOWER, 1)
+                .cost(100)
+                .build();
+
+        gen(100, PlantItems.PEA_ITEM, 1)
+                .cost(100)
+                .build();
+
+        gen(80, PlantItems.SNOW_PEA_ITEM, 1)
+                .cost(125)
+                .build();
+
+        gen(80, PlantItems.REPEATER_ITEM, 1)
+                .cost(200)
+                .build();
+
+        gen(100, PlantItems.PUFF_SHROOM_ITEM, 1)
+                .cost(25)
+                .build();
+
+        gen(100, PlantItems.POTATO_MINE_ITEM, 1)
+                .cost(25)
+                .build();
+
+        gen(100, PlantItems.NUT_WALL_ITEM, 1)
+                .cost(50)
+                .build();
+
+        gen(80, PlantItems.CABBAGE_PULT_ITEM, 1)
+                .cost(100)
+                .build();
+
+        gen(100, PlantItems.CHOMPER_ITEM, 1)
+                .cost(150)
+                .build();
     }
 
     private void genRecipe(DaveTrades.Trade trade){

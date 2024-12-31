@@ -54,7 +54,7 @@ public class CrazyDave extends PathfinderMob {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        daveTrades = DaveTrades.RAND_TRADE.apply(random.nextIntBetweenInclusive(5,10));
+        daveTrades = DaveTrades.RAND_TRADE.apply(random.nextIntBetweenInclusive(0,DaveTrades.GetAllTradesLength() - 1));
         builder.define(DATA_DAVE_DATA, daveTrades);
     }
     @Override

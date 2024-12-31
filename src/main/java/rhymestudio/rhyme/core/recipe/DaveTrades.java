@@ -19,13 +19,21 @@ import rhymestudio.rhyme.utils.Computer;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public record DaveTrades(List<Trade> trades) {
 //    public static Registry<DaveTrades> DAVE_SHOP_REGISTRY = new MappedRegistry<>(ResourceKey.createRegistryKey(Rhyme.space("dave_shop")), Lifecycle.stable());
 //    public static DeferredRegister<DaveTrades> DAVE_SHOPS = DeferredRegister.create(DAVE_SHOP_REGISTRY, Rhyme.MODID);
     private static final List<Trade> allTrades = new ArrayList<>();
+
+    public static int GetAllTradesLength()
+    {
+        return allTrades.size();
+    }
     public static Function<Integer,DaveTrades> RAND_TRADE = (num) -> {
         List<Trade> res = weightedRandomSubsequence(allTrades, num);
         Collections.shuffle(res);
