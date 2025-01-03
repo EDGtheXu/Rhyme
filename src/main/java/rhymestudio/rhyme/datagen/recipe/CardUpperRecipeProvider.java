@@ -6,8 +6,10 @@ import com.mojang.serialization.JavaOps;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.registries.DeferredItem;
+import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
 import rhymestudio.rhyme.core.recipe.AmountIngredient;
 import rhymestudio.rhyme.core.recipe.CardUpLevelRecipe;
@@ -134,22 +136,22 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
                 .addition(MaterialItems.HIDDEN_GENE, 5)
                 .build();
 
-        //坚果墙
+        //坚果墙，我硬死你
         gen(PlantItems.NUT_WALL_ITEM, 1)
-                .template(MaterialItems.NUT_GENE, 5)
-                .addition(MaterialItems.NUT_GENE, 5)
+                .template(Items.IRON_INGOT, 8)
+                .addition(Items.COPPER_INGOT, 8)
                 .build();
         gen(PlantItems.NUT_WALL_ITEM, 2)
-                .template(MaterialItems.NUT_GENE, 5)
-                .addition(MaterialItems.NUT_GENE, 5)
+                .template(Items.GOLD_INGOT, 4)
+                .addition(Items.LAPIS_LAZULI, 6)
                 .build();
         gen(PlantItems.NUT_WALL_ITEM, 3)
-                .template(MaterialItems.NUT_GENE, 5)
-                .addition(MaterialItems.NUT_GENE, 5)
+                .template(Items.REDSTONE, 8)
+                .addition(Items.EMERALD, 8)
                 .build();
         gen(PlantItems.NUT_WALL_ITEM, 4)
-                .template(MaterialItems.NUT_GENE, 5)
-                .addition(MaterialItems.NUT_GENE, 5)
+                .template(Items.DIAMOND, 4)
+                .addition(Items.NETHERITE_INGOT, 1)
                 .build();
 
         //卷心菜投手
@@ -195,7 +197,7 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Card Upper Recipe Provider";
     }
 
@@ -216,10 +218,10 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
     protected class Builder {
         private final DeferredItem<Item> result;
         private final int level;
-        private DeferredItem<Item> template;
+        private Item template;
         int templateAmount;
         private DeferredItem<Item> base;
-        private DeferredItem<Item> addition;
+        private Item addition;
         int additionAmount;
 
         public Builder(DeferredItem<Item> result, int level) {
@@ -228,6 +230,11 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
             this.level = level;
         }
         public Builder template(DeferredItem<Item> template,int amount) {
+            this.template = template.get();
+            this.templateAmount = amount;
+            return this;
+        }
+        public Builder template(Item template, int amount) {
             this.template = template;
             this.templateAmount = amount;
             return this;
@@ -237,6 +244,11 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
             return this;
         }
         public Builder addition(DeferredItem<Item> addition,int amount) {
+            this.addition = addition.get();
+            this.additionAmount = amount;
+            return this;
+        }
+        public Builder addition(Item addition,int amount) {
             this.addition = addition;
             this.additionAmount = amount;
             return this;
