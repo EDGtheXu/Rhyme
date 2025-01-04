@@ -122,6 +122,6 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     protected abstract int maxIngredientSize();
 
     public static abstract class Serializer<R extends AbstractAmountRecipe> implements RecipeSerializer<R> {
-        protected abstract R newInstance(ItemStack pResult, NonNullList<Ingredient> pIngredients);
+//        protected abstract R newInstance(ItemStack pResult, NonNullList<Ingredient> pIngredients);
     }
 }

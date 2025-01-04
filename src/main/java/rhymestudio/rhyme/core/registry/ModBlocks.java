@@ -16,7 +16,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.block.CardUpLevelBlock;
-import rhymestudio.rhyme.core.block.SunCreaterBlock;
+import rhymestudio.rhyme.core.block.SunCreatorBlock;
 
 import java.util.function.Supplier;
 
@@ -29,11 +29,11 @@ public class ModBlocks {
 
 
 
-    public static final Supplier<BaseEntityBlock> SUN_CREATOR_BLOCK = register("sun_creator_block","光萃台", () -> new SunCreaterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SunCreaterBlock.SunCreaterBlockEntity>> SUN_CREATOR_BLOCK_ENTITY =
-            BLOCK_ENTITIES.register("sun_creator_block_entity", () -> BlockEntityType.Builder.of(SunCreaterBlock.SunCreaterBlockEntity::new, SUN_CREATOR_BLOCK.get()).build(DSL.remainderType()));
+    public static final Supplier<BaseEntityBlock> SUN_CREATOR_BLOCK = register("sun_creator_block","光萃台", () -> new SunCreatorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).destroyTime(30).noOcclusion()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SunCreatorBlock.SunCreatorBlockEntity>> SUN_CREATOR_BLOCK_ENTITY =
+            BLOCK_ENTITIES.register("sun_creator_block_entity", () -> BlockEntityType.Builder.of(SunCreatorBlock.SunCreatorBlockEntity::new, SUN_CREATOR_BLOCK.get()).build(DSL.remainderType()));
 
-    public static final Supplier<BaseEntityBlock> CARD_UP_LEVEL_BLOCK = register("card_up_level_block","卡片升阶台", () -> new CardUpLevelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
+    public static final Supplier<BaseEntityBlock> CARD_UP_LEVEL_BLOCK = register("card_up_level_block","卡片升阶台", () -> new CardUpLevelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).destroyTime(30).noOcclusion()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CardUpLevelBlock.CardUpLevelBlockEntity>> CARD_UP_LEVEL_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("card_up_level_block_entity", () -> BlockEntityType.Builder.of(CardUpLevelBlock.CardUpLevelBlockEntity::new, CARD_UP_LEVEL_BLOCK.get()).build(DSL.remainderType()));
 

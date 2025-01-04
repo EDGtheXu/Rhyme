@@ -13,14 +13,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import rhymestudio.rhyme.core.block.SunCreaterBlock.SunCreaterBlockEntity;
+import rhymestudio.rhyme.core.block.SunCreatorBlock.SunCreatorBlockEntity;
 
-public class SunCreatorBlockRenderer implements BlockEntityRenderer<SunCreaterBlockEntity> {
+public class SunCreatorBlockRenderer implements BlockEntityRenderer<SunCreatorBlockEntity> {
     public SunCreatorBlockRenderer(BlockEntityRendererProvider.Context pContext){
 
     }
     @Override
-    public void render(SunCreaterBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void render(SunCreatorBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         pPoseStack.pushPose();
         pPoseStack.translate(1,0,0);
         BlockRenderDispatcher blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();

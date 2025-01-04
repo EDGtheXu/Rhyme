@@ -4,9 +4,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import rhymestudio.rhyme.core.registry.ModBlocks;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ModBlockLootProvider extends BlockLootSubProvider {
 
@@ -21,12 +23,12 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-//        this.dropSelf(ModBlock.YU_YAN_ORE.get());
-//        this.dropSelf(ModBlock.BA_JIN_ORE.get());
+        getKnownBlocks().forEach(this::dropSelf);
+
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return BLOCK;
+        return ModBlocks.BLOCKS.getEntries().stream().map(entry -> entry.get()).collect(Collectors.toList());
     }
 }

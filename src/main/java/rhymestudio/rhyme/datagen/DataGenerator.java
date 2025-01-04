@@ -11,10 +11,7 @@ import rhymestudio.rhyme.datagen.dataPack.RegisterDataPack;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.datagen.lang.ModEnglishProvider;
 import rhymestudio.rhyme.datagen.loot.ModLootTableProvider;
-import rhymestudio.rhyme.datagen.recipe.CardUpperRecipeProvider;
-import rhymestudio.rhyme.datagen.recipe.DaveShopProvider;
-import rhymestudio.rhyme.datagen.recipe.ModRecipeProvider;
-import rhymestudio.rhyme.datagen.recipe.SunCreatorRecipeProvider;
+import rhymestudio.rhyme.datagen.recipe.*;
 import rhymestudio.rhyme.datagen.tag.ModBlockTagsProvider;
 import rhymestudio.rhyme.datagen.tag.ModDamageTypeTagsProvider;
 import rhymestudio.rhyme.datagen.tag.ModEntityTypeTagsProvider;
@@ -53,6 +50,7 @@ public class DataGenerator {
         generator.addProvider(server, new SunCreatorRecipeProvider(output));
         generator.addProvider(server, new CardUpperRecipeProvider(output));
         generator.addProvider(server, new DaveShopProvider(output));
+        generator.addProvider(server, new SunCreatorSecRecipeProvider(output));
 
         boolean client = event.includeClient();
         generator.addProvider(client, new ModChineseProvider(output));

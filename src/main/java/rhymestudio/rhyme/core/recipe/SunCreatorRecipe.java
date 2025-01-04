@@ -53,7 +53,7 @@ public class SunCreatorRecipe extends AbstractAmountRecipe {
         ).apply(instance, SunCreatorRecipe::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, SunCreatorRecipe> STREAM_CODEC = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
 
-        @Override
+//        @Override
         protected SunCreatorRecipe newInstance(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
             return new SunCreatorRecipe(pResult, pIngredients);
         }

@@ -24,7 +24,6 @@ public class SunCreatorMenu extends AbstractContainerMenu {
     private final Player player;
     private final CraftingContainer craftSlots = new TransientCraftingContainer(this, 3, 4);
     private final ResultContainer resultSlot = new ResultContainer();
-    private final ResultContainer resultSlot2 = new ResultContainer();
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<SunCreatorRecipe>> recipes = new ArrayList<>();
     public Container container;

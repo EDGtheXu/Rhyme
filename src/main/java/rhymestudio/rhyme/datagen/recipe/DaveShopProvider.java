@@ -120,7 +120,7 @@ public class DaveShopProvider extends AbstractRecipeProvider {
 
     @Override
     protected String pathSuffix() {
-        return "dave_shop";
+        return "_dave_shop";
     }
 
     @Override

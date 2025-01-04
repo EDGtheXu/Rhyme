@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -34,20 +35,21 @@ import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.menu.SunCreatorMenu;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModBlocks;
+import rhymestudio.rhyme.core.registry.ModRecipes;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 
 import static net.minecraft.world.level.block.BarrelBlock.FACING;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class SunCreaterBlock extends BaseEntityBlock  {
+public class SunCreatorBlock extends BaseEntityBlock  {
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.rhyme.sun_creator");
 
-    public SunCreaterBlock(Properties properties) {
+    public SunCreatorBlock(Properties properties) {
         super(properties);
     }
 
-    public static final MapCodec<SunCreaterBlock> CODEC = simpleCodec(SunCreaterBlock::new);
+    public static final MapCodec<SunCreatorBlock> CODEC = simpleCodec(SunCreatorBlock::new);
 
     @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
@@ -68,20 +70,36 @@ public class SunCreaterBlock extends BaseEntityBlock  {
     @Override
     public <T extends BlockEntity> BlockEntityTicker getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, ModBlocks.SUN_CREATOR_BLOCK_ENTITY.get(), (level, pos, state, blockEntity)->{
-            if(!level.isNight() && blockEntity.getItems().get(1).is(MaterialItems.GENERAL_SEED)
-                && blockEntity.getItems().get(2).is(MaterialItems.PEA_GENE)
+
+            if(!level.isNight() && !blockEntity.getItems().get(1).isEmpty() &&
+                ! blockEntity.getItems().get(2).isEmpty()
             ) {
-                int t = blockEntity.time;
-                if(t >= blockEntity.interval){
-                    int has = blockEntity.getItems().get(0).getCount();
-                    if(has < 64){
-                        blockEntity.time = 0;
-                        blockEntity.getItems().get(1).shrink(1);
-                        blockEntity.getItems().get(2).shrink(1);
-                        blockEntity.getItems().set(0, new ItemStack(MaterialItems.SOLID_SUN.get(), has + 1));
+                var validRecipes = level.getRecipeManager().getRecipeFor(ModRecipes.SUN_CREATOR_SEC_TYPE.get(), new RecipeInput() {
+                    @Override
+                    public ItemStack getItem(int i) {
+                        return blockEntity.getItems().get(i+1);
                     }
-                }else{
-                    blockEntity.time++;
+
+                    @Override
+                    public int size() {
+                        return 2;
+                    }
+                }, level);
+
+                int t = blockEntity.time;
+                if(validRecipes.isPresent()){
+                    if( t >= blockEntity.interval){
+                        ItemStack it = blockEntity.getItems().get(0);
+                        int has = it.getCount();
+                        if(has < 64 &&( it.getItem() == validRecipes.get().value().getResultItem(null).getItem() || it.isEmpty())){
+                            blockEntity.time = 0;
+                            blockEntity.getItems().get(1).shrink(1);
+                            blockEntity.getItems().get(2).shrink(1);
+                            blockEntity.getItems().set(0, new ItemStack(MaterialItems.SOLID_SUN.get(), has + 1));
+                        }
+                    }else{
+                        blockEntity.time++;
+                    }
                 }
             }
         });}
@@ -98,14 +116,13 @@ public class SunCreaterBlock extends BaseEntityBlock  {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    public static final class SunCreaterBlockEntity extends BaseContainerBlockEntity {
-        public static int MAX_COUNT = 64;
-        public int interval = 20 * 60;
+    public static final class SunCreatorBlockEntity extends BaseContainerBlockEntity {
+        public int interval = 100 ;
         public int time = 0;
         private final ContainerData dataAccess;
         private NonNullList<ItemStack> items;
 
-        public SunCreaterBlockEntity(BlockEntityType<SunCreaterBlockEntity> type, BlockPos pos, BlockState state) {
+        public SunCreatorBlockEntity(BlockEntityType<SunCreatorBlockEntity> type, BlockPos pos, BlockState state) {
             super(type, pos, state);
             this.items = NonNullList.withSize(3, ItemStack.EMPTY);
             this.dataAccess = new ContainerData() {
@@ -130,7 +147,7 @@ public class SunCreaterBlock extends BaseEntityBlock  {
 
         }
 
-        public SunCreaterBlockEntity(BlockPos pos, BlockState state) {
+        public SunCreatorBlockEntity(BlockPos pos, BlockState state) {
             this(ModBlocks.SUN_CREATOR_BLOCK_ENTITY.get(), pos, state);
         }
 
@@ -212,7 +229,7 @@ public class SunCreaterBlock extends BaseEntityBlock  {
 
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return new SunCreaterBlockEntity(pPos, pState);
+        return new SunCreatorBlockEntity(pPos, pState);
     }
 
     @Override

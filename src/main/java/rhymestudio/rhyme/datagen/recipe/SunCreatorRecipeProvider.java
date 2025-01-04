@@ -82,7 +82,7 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
         return "Sun Creator Recipe Provider: "+ MODID;
     }
 
-    public void genRecipe(Supplier<ItemStack> result, List<AmountIngredient> ingredients,String suffix){
+    protected void genRecipe(Supplier<ItemStack> result, List<AmountIngredient> ingredients,String suffix){
         JsonObject obj = new JsonObject();
 
         obj.addProperty("type",MODID + ":" + ModRecipes.SUN_CREATOR_ID);
@@ -98,17 +98,17 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
 //        futures.add(DataProvider.saveStable(cachedOutput,obj, getPath(result.get().getItemHolder().getKey().location())));
     }
 
-    public AmountIngredientBuilder gen(Supplier<ItemStack> result){
+    protected AmountIngredientBuilder gen(Supplier<ItemStack> result){
         return new AmountIngredientBuilder(result);
     }
-    public AmountIngredientBuilder gen(DeferredItem<Item> result){
+    protected AmountIngredientBuilder gen(DeferredItem<Item> result){
         return new AmountIngredientBuilder(result.get()::getDefaultInstance);
     }
-    public AmountIngredientBuilder gen(DeferredItem<Item> result, int count){
+    protected AmountIngredientBuilder gen(DeferredItem<Item> result, int count){
         return new AmountIngredientBuilder(()->result.toStack(count));
     }
 
-    public class AmountIngredientBuilder {
+    protected class AmountIngredientBuilder {
         Supplier<ItemStack> result;
         List<AmountIngredient> ingredients = new ArrayList<>();
         public AmountIngredientBuilder(Supplier<ItemStack> result){
