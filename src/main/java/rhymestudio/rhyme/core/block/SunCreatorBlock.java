@@ -33,6 +33,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.menu.SunCreatorMenu;
+import rhymestudio.rhyme.core.recipe.AmountIngredient;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.ModRecipes;
@@ -91,11 +92,19 @@ public class SunCreatorBlock extends BaseEntityBlock  {
                     if( t >= blockEntity.interval){
                         ItemStack it = blockEntity.getItems().get(0);
                         int has = it.getCount();
-                        if(has < 64 &&( it.getItem() == validRecipes.get().value().getResultItem(null).getItem() || it.isEmpty())){
+                        var recipe = validRecipes.get().value();
+                        var res = recipe.getResultItem(null);
+                        if(has < 64 &&( it.getItem() == res.getItem() || it.isEmpty())){
                             blockEntity.time = 0;
-                            blockEntity.getItems().get(1).shrink(1);
-                            blockEntity.getItems().get(2).shrink(1);
-                            blockEntity.getItems().set(0, new ItemStack(MaterialItems.SOLID_SUN.get(), has + 1));
+                            if(recipe.left.getCustomIngredient()!=null && recipe.left.getCustomIngredient() instanceof AmountIngredient ing){
+                                blockEntity.getItems().get(1).shrink(ing.amount());
+                            }else
+                                blockEntity.getItems().get(1).shrink(1);
+                            if(recipe.right.getCustomIngredient()!=null && recipe.right.getCustomIngredient() instanceof AmountIngredient ing2){
+                                blockEntity.getItems().get(2).shrink(ing2.amount());
+                            }else
+                                blockEntity.getItems().get(2).shrink(1);
+                            blockEntity.getItems().set(0, new ItemStack(MaterialItems.SOLID_SUN.get(), has + res.getCount()));
                         }
                     }else{
                         blockEntity.time++;

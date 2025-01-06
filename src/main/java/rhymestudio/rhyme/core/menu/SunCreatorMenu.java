@@ -68,14 +68,14 @@ public class SunCreatorMenu extends AbstractContainerMenu {
         addSlot(new HiddenSlot(craftSlots, 10, 35, 44,1));
         addSlot(new HiddenSlot(craftSlots, 11, 35, 26,1));
 
-        addSlot(new HiddenSlot(container,0,35,14,2){
+        addSlot(new HiddenSlot(container,0,66,25,2){
             @Override
             public boolean mayPlace(@NotNull ItemStack pStack) {
                 return false;
             }
         });
-        addSlot(new HiddenSlot(container,1,16,38,2));
-        addSlot(new HiddenSlot(container,2,54,38,2));
+        addSlot(new HiddenSlot(container,1,16+31,38+11,2));
+        addSlot(new HiddenSlot(container,2,85,49,2));
 
         for (int k = 0; k < 3; k++) {
             for (int l = 0; l < 9; l++) {

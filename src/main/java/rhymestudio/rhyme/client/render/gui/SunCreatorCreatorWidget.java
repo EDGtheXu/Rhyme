@@ -14,7 +14,7 @@ import rhymestudio.rhyme.core.menu.SunCreatorMenu;
 import java.util.List;
 
 public class SunCreatorCreatorWidget extends AbstractContainerWidget {
-    private static final ResourceLocation BACKGROUND = Rhyme.space("textures/gui/sun_creator_2.png");
+    public static final ResourceLocation BACKGROUND = Rhyme.space("textures/gui/sun_creator_2.png");
 
     private final SunCreatorMenu menu;
     private final SunCreatorScreen screen;
@@ -47,9 +47,17 @@ public class SunCreatorCreatorWidget extends AbstractContainerWidget {
 
         Font font = Minecraft.getInstance().font;
 
-        guiGraphics.drawString(font, menu.access.get(0) +"/"+menu.access.get(1),  100, 40, 4210752, false);
+        guiGraphics.drawString(font, menu.access.get(0) +"/"+menu.access.get(1),  115, 18, 4210752, false);
 
         guiGraphics.pose().popPose();
+
+
+        int h = 30;
+        float percent = (float)menu.access.get(0)/menu.access.get(1);
+        int realH = (int) (percent*h);
+        int realY = top + 32 + h - realH;
+        guiGraphics.blit(BACKGROUND, left + 39, realY, imageWidth, 0 + h - realH, 70,realH);
+
     }
 
     @Override

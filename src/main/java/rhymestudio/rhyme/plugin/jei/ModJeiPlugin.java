@@ -38,7 +38,9 @@ public class ModJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
         registration.addRecipeCategories(new SunCreatorCategory(jeiHelpers));
+        registration.addRecipeCategories(new SunCreatorSecCategory(jeiHelpers));
         registration.addRecipeCategories(new CardUpLevelCategory(jeiHelpers));
+
     }
 
     @Override
@@ -47,12 +49,14 @@ public class ModJeiPlugin implements IModPlugin {
         if (level == null) return;
         RecipeManager recipeManager = level.getRecipeManager();
         registration.addRecipes(SunCreatorCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipes.SUN_CREATOR_TYPE.get()).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(SunCreatorSecCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipes.SUN_CREATOR_SEC_TYPE.get()).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(CardUpLevelCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipes.CARD_UP_LEVEL_TYPE.get()).stream().map(RecipeHolder::value).toList());
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(BuiltInRegistries.ITEM.get(ModBlocks.SUN_CREATOR_BLOCK_ENTITY.getId()).getDefaultInstance(), SunCreatorCategory.TYPE);
+        registration.addRecipeCatalyst(BuiltInRegistries.ITEM.get(ModBlocks.SUN_CREATOR_BLOCK_ENTITY.getId()).getDefaultInstance(), SunCreatorSecCategory.TYPE);
         registration.addRecipeCatalyst(BuiltInRegistries.ITEM.get(ModBlocks.CARD_UP_LEVEL_BLOCK_ENTITY.getId()).getDefaultInstance(), CardUpLevelCategory.TYPE);
     }
 

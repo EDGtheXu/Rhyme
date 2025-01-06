@@ -32,7 +32,7 @@ public class SunCreatorScreen extends AbstractContainerScreen<SunCreatorMenu> {
         this.creatorWidget = new SunCreatorCreatorWidget(this,leftPos,topPos,imageWidth,imageHeight,Component.literal("creator"));
         this.craftWidget = new SunCreatorCraftWidget(this,leftPos,topPos,imageWidth,imageHeight,Component.literal("craft"));
 
-        switchButton = Button.builder(Component.literal("switch"), (press) -> {
+        switchButton = Button.builder(Component.literal(">"), (press) -> {
             if(state == 1){
                 state = 2;
                 this.removeWidget(craftWidget);
@@ -41,7 +41,7 @@ public class SunCreatorScreen extends AbstractContainerScreen<SunCreatorMenu> {
                     if(slot instanceof IHiddenSlot slot1)
                         slot1.setHide(state);
                 });
-
+                switchButton.setMessage(Component.literal("<"));
             }else{
                 state = 1;
                 this.removeWidget(creatorWidget);
@@ -50,12 +50,13 @@ public class SunCreatorScreen extends AbstractContainerScreen<SunCreatorMenu> {
                     if(slot instanceof IHiddenSlot slot1)
                         slot1.setHide(state);
                 });
+                switchButton.setMessage(Component.literal(">"));
             }
-        }).pos(leftPos,topPos-20).size(25,16).build();
+        }).pos(leftPos+2,topPos+2).size(25,16).build();
 
         this.addRenderableWidget(craftWidget);
 //        this.addRenderableWidget(creatorWidget);
-        this.addRenderableWidget(switchButton);
+        this.addWidget(switchButton);
 
         state = 1;
         menu.slots.forEach(slot -> {
@@ -68,9 +69,9 @@ public class SunCreatorScreen extends AbstractContainerScreen<SunCreatorMenu> {
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+
+        switchButton.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         renderTooltip(pGuiGraphics, pMouseX, pMouseY);
-
-
     }
 
     @Override
