@@ -28,6 +28,8 @@ import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
 
+import java.util.function.Consumer;
+
 public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     public String namePath;
@@ -41,7 +43,6 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         this.owner = player;
     }
 
-
     protected void addSkills(){
 
     }
@@ -50,6 +51,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         super(tEntityType, level);
         this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
         this.builder = builder;
+        if(level.isClientSide) builder.anim.accept(animState);
     }
 
     public boolean isPushable(){
@@ -61,7 +63,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.health);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.attackDamage);
         addSkills();
-        animState.playAnim(skills.getCurSkill(),tickCount);
+        if(level().isClientSide)
+            animState.playAnim(skills.getCurSkill(),tickCount);
         if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
         super.onAddedToLevel();
     }
@@ -203,6 +206,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         public int attackInternalTick = 60;
         public  int attackDamage = 1;
 
+        public Consumer<CafeAnimationState> anim = (state)->{};
+
         public Builder setProjSpeed(float projSpeed) {
             this.projSpeed = projSpeed;
             return this;
@@ -235,6 +240,11 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
         public Builder setAttackAnimTick(int attackAnimTick) {
             this.attackAnimTick = attackAnimTick;
+            return this;
+        }
+
+        public Builder setAnim(Consumer<CafeAnimationState> anim) {
+            this.anim = anim;
             return this;
         }
 

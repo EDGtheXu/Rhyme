@@ -25,40 +25,63 @@ public class PlantEntities {
     // tip 植物
     //      tip 生产类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> SUN_FLOWER = registerCreature("sunflower","向日葵" ,(type, level)->
-            new SunFlower(level,NORMAL_SUNFLOWER_PLANT.get()));
+            new SunFlower(level,NORMAL_SUNFLOWER_PLANT.get().setAnim(s->{
+                s.addAnimation("idle", SunflowerAnimation.idle,1);
+                s.addAnimation("sun", SunflowerAnimation.sun,1);
+            })));
 
     //      tip 豌豆类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PEA = registerCreature("pea_shooter","豌豆射手",(type, level)->
-            new Pea(type,level, PeaAnimation.idle,PeaAnimation.shoot,
-                    builder().setAttack(PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()));
+            new Pea(type,level, builder().setAttack(PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
+                s.addAnimation("idle", PeaAnimation.idle,1);
+                s.addAnimation("shoot", PeaAnimation.shoot,1);
+            })));
 
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> SNOW_PEA = registerCreature("snow_pea_shooter","寒冰射手",(type, level)->
-            new Pea(type,level, IcePeaAnimation.idle_normal, IcePeaAnimation.shoot,
-                    builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()));
-
+            new Pea(type,level, builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
+                s.addAnimation("idle", IcePeaAnimation.idle);
+                s.addAnimation("shoot", IcePeaAnimation.shoot);
+            })));
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> REPEATER = registerCreature("repeater","双发射手",(type, level)->
-            new Pea(type,level, RepeaterAnimation.idle_normal, RepeaterAnimation.shoot,
-                    builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get()));
-
-    //      tip 坚果类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> WALL_NUT = registerCreature("wall_nut","坚果墙",(type, level)->
-            new WallNut(type,level, WallNutAnimation.idle1,WallNutAnimation.idle2,WallNutAnimation.idle3,
-                    DEFENSE_PLANT.apply(150)));
-
-    //      tip 土豆雷类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> POTATO_MINE = registerCreature("potato_mine","土豆雷",(type, level)->
-            new PotatoMine(type,level, PotatoMineAnimation.idle, PotatoMineAnimation.up, PotatoMineAnimation.idle_on, PotatoMineAnimation.bomb,
-                    15 * 20,1,EXPLORE_PLANT.apply(1800)),1f,0.5f);
-
-    //      tip 蘑菇类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
-            new PuffShroom(type,level, PuffShroomAnimation.sleeping, PuffShroomAnimation.idle, PuffShroomAnimation.attack ,
-                    builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), NORMAL_PEA_PLANT.get()),0.5f,0.5f);
+            new Pea(type,level, builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
+                s.addAnimation("idle", RepeaterAnimation.idle);
+                s.addAnimation("shoot", RepeaterAnimation.shoot);
+            })));
 
     //      tip 投手类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> CABBAGE_PULT = registerCreature("cabbage_pult","卷心菜投手",(type, level)->
-            new Pea(type,level, CabbageAnimation.idle, CabbageAnimation.attack,
-                    builder().setAttack(THROWN_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAttackDamage(10)));
+            new Pea(type,level, builder().setAttack(THROWN_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAttackDamage(10).setAnim(s->{
+                s.addAnimation("idle", CabbageAnimation.idle);
+                s.addAnimation("shoot", CabbageAnimation.shoot);
+            })));
+
+
+
+    //      tip 坚果类
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> WALL_NUT = registerCreature("wall_nut","坚果墙",(type, level)->
+            new WallNut(type,level, DEFENSE_PLANT.apply(150).setAnim(s->{
+                        s.addAnimation("idle1", WallNutAnimation.idle1,1);
+                        s.addAnimation("idle2", WallNutAnimation.idle2,1);
+                        s.addAnimation("idle3", WallNutAnimation.idle3,1);
+                    })));
+
+    //      tip 土豆雷类
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> POTATO_MINE = registerCreature("potato_mine","土豆雷",(type, level)->
+            new PotatoMine(type,level, 15 * 20,1,EXPLORE_PLANT.apply(1800).setAnim(s->{
+                s.addAnimation("idle", PotatoMineAnimation.idle);
+                s.addAnimation("up", PotatoMineAnimation.up);
+                s.addAnimation("idle_on", PotatoMineAnimation.idle_on);
+                s.addAnimation("bomb", PotatoMineAnimation.bomb);
+            })),1f,0.5f);
+
+    //      tip 蘑菇类
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
+            new PuffShroom(type,level, builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
+                s.addAnimation("sleep", PuffShroomAnimation.sleeping,1);
+                s.addAnimation("idle", PuffShroomAnimation.idle,1);
+                s.addAnimation("shoot", PuffShroomAnimation.attack,1);
+            })),0.5f,0.5f);
+
 
     //      tip 大嘴花类
     public static final DeferredHolder<EntityType<?>, EntityType<Chomper>> CHOMPER = registerCreature("chomper","大嘴花",(type, level)->

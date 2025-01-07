@@ -16,7 +16,7 @@ import rhymestudio.rhyme.client.render.gui.CardUpLevelScreen;
 import rhymestudio.rhyme.client.render.gui.DaveTradeScreen;
 import rhymestudio.rhyme.client.render.gui.SunCreatorScreen;
 import rhymestudio.rhyme.client.model.ModelUtils;
-import rhymestudio.rhyme.client.render.post.PostUtil;
+import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.core.registry.ModMenus;
 
 import java.io.FileNotFoundException;
@@ -31,8 +31,10 @@ public class ModClientEvent {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            ClientConfig.load();
 
-            PostUtil.init();
+
+//            PostUtil.init();
         });
 
     }

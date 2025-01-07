@@ -2,6 +2,8 @@ package rhymestudio.rhyme;
 
 import com.google.gson.Gson;
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraft.world.entity.Entity;
@@ -9,19 +11,18 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import rhymestudio.rhyme.config.ServerConfig;
-import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.config.Codec.*;
-import rhymestudio.rhyme.config.MainConfig;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.datagen.biome.ModBiomes;
 import rhymestudio.rhyme.core.registry.ModRecipes;
@@ -39,6 +40,12 @@ public class Rhyme {
     public static final String MODID = "rhyme";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static ResourceLocation space(String path){return ResourceLocation.fromNamespaceAndPath(MODID, path);}
+    public static <T> ResourceKey<T> createResourceKey(ResourceKey<? extends Registry<T>> registryKey, String path) {
+        return ResourceKey.create(registryKey, space(path));
+    }
+    public static <T> ResourceKey<Registry<T>> createResourceKey(String path) {
+        return ResourceKey.createRegistryKey(space(path));
+    }
 
     public static List<Consumer<ModChineseProvider>> chineseProviders = new ArrayList<>();
     public static List<Consumer<ModEnglishProvider>> englishProviders = new ArrayList<>();
@@ -69,13 +76,9 @@ public class Rhyme {
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
-        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 
 
-
-        MainConfig.cfg.load();
         CodecRegister.registerCodecs();
 
         Gson gson = ICodec.getGson();
@@ -89,4 +92,8 @@ public class Rhyme {
 
     }
 
+    @SubscribeEvent
+    public void onNewDatapackRegistries(@NotNull DataPackRegistryEvent.NewRegistry event) {
+//        event.dataPackRegistry(DAVE_SHOP, DaveTrades.CODEC, DaveTrades.CODEC);
+    }
 }

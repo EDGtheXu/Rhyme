@@ -4,7 +4,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.network.c2s.DaveShopPacket;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
 import rhymestudio.rhyme.network.s2c.ProjHitPacket;
@@ -25,7 +24,9 @@ public class ModEvent {
 
         registrar.playToServer(DaveShopPacket.TYPE, DaveShopPacket.STREAM_CODEC, DaveShopPacket::handle);
 
-
-        DaveTrades.readTradesFromJson();
     }
+
+
+
+
 }

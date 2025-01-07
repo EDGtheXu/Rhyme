@@ -28,6 +28,8 @@ import rhymestudio.rhyme.core.menu.DaveTradesMenu;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 
+import java.util.List;
+
 import static rhymestudio.rhyme.config.ServerConfig.DaveDropRate;
 import static rhymestudio.rhyme.core.registry.ModEntityDataSerializer.DAVE_TRADES_SERIALIZER;
 
@@ -43,12 +45,17 @@ public class CrazyDave extends PathfinderMob implements ICafeMob{
     public CrazyDave(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
 
-        animState.addAnimation("walk", NormalZombieAnimation.walk);
-        animState.addAnimation("idle", NormalZombieAnimation.idle);
-        animState.addAnimation("hurt", NormalZombieAnimation.hurt);
-        animState.addAnimation("run", NormalZombieAnimation.run);
+        if(level.isClientSide()){
+            animState.addAnimation("walk", NormalZombieAnimation.walk);
+            animState.addAnimation("idle", NormalZombieAnimation.idle);
+            animState.addAnimation("hurt", NormalZombieAnimation.hurt);
+            animState.addAnimation("run", NormalZombieAnimation.run);
+            this.animState.playAnim("idle",0);
+        }else {
+            daveTrades = DaveTrades.RAND_TRADE.apply(random.nextIntBetweenInclusive(0, DaveTrades.GetAllTradesLength() - 1));
+            entityData.set(DATA_DAVE_DATA, daveTrades);
+        }
 
-        this.animState.playAnim("idle",0);
 
     }
 
@@ -70,7 +77,7 @@ public class CrazyDave extends PathfinderMob implements ICafeMob{
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (DATA_DAVE_DATA.equals(key)) {
+        if (level().isClientSide() && DATA_DAVE_DATA.equals(key)) {
             this.daveTrades = this.entityData.get(DATA_DAVE_DATA);
         }
         if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
@@ -82,8 +89,8 @@ public class CrazyDave extends PathfinderMob implements ICafeMob{
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        daveTrades = DaveTrades.RAND_TRADE.apply(random.nextIntBetweenInclusive(0,DaveTrades.GetAllTradesLength() - 1));
-        builder.define(DATA_DAVE_DATA, daveTrades);
+
+        builder.define(DATA_DAVE_DATA, new DaveTrades(List.of()));
         builder.define(DATA_CAFE_POSE_NAME, "idle");
 
     }
@@ -105,6 +112,14 @@ public class CrazyDave extends PathfinderMob implements ICafeMob{
         compound.put("dave_data",data.result().get());
     }
 
+    @Override
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        if(level().isClientSide()){
+            this.daveTrades = this.entityData.get(DATA_DAVE_DATA);
+        }
+
+    }
     @Override
     public void aiStep() {
         super.aiStep();

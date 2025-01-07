@@ -1,14 +1,18 @@
 package rhymestudio.rhyme.event;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -27,6 +31,7 @@ import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
+import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.core.registry.ModAttachments;
@@ -56,8 +61,6 @@ public class EntityEvent {
             PlantRecorderAttachment plantRecorder = player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
             PacketDistributor.sendToPlayer(player,new PlantRecorderPacket(plantRecorder.ids));
         }
-
-
     }
 
     public static void onLivingHurt(LivingDamageEvent.Post event) {
@@ -132,4 +135,5 @@ public class EntityEvent {
             ((IPlayer) event.getEntity()).rhyme$setInteractingEntity(dave);
         }
     }
+
 }

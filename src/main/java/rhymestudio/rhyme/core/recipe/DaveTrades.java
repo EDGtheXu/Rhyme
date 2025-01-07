@@ -4,13 +4,13 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,11 +40,11 @@ public record DaveTrades(List<Trade> trades) {
         return new DaveTrades(res.subList(0, Math.min(num, res.size())));
     };
 
-    public static void readTradesFromJson() {
-        Map<ResourceLocation, Resource> jsons = Minecraft.getInstance().getResourceManager().listResources("dave_shop", r -> r.getPath().endsWith(".json"));
+    public static void readTradesFromJson(ResourceManager manager) {
+        Map<ResourceLocation, Resource> jsons = manager.listResources("dave_shop", r -> r.getPath().endsWith(".json"));
         jsons.forEach((k,v)->{
             try {
-                Reader reader = Minecraft.getInstance().getResourceManager().openAsReader(k);
+                Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
                 allTrades.add(Trade.CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst());
             } catch (IOException e) {

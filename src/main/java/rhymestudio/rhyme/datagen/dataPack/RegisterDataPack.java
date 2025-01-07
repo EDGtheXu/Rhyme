@@ -11,6 +11,7 @@ public class RegisterDataPack {
 
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifier::createBiomeModifier)
             .add(Registries.DAMAGE_TYPE, ModTags.DamageTypes::createDamageTypes)
+//            .add(ModRegistry.DAVE_SHOP, DaveShopProvider::createDataPack)
             ;
 
 

@@ -8,9 +8,14 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class ClientConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static ModConfigSpec.BooleanValue IsOpenBgm  = BUILDER.comment("open bgm").define("is_open_bgm", true);
+    static ModConfigSpec.BooleanValue IsOpenBgm  = BUILDER.comment("open bgm").define("is_open_bgm", true);
 
 
+    public static boolean isOpenBgm;
+
+    public static void load(){
+        isOpenBgm = IsOpenBgm.get();
+    }
     public static final ModConfigSpec SPEC = BUILDER.build();
 
 }

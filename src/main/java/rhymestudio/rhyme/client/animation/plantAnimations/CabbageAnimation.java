@@ -100,7 +100,7 @@ public class CabbageAnimation {
 		))
 		.build();
 
-	public static final AnimationDefinition attack = AnimationDefinition.Builder.withLength(1.25F).looping()
+	public static final AnimationDefinition shoot = AnimationDefinition.Builder.withLength(1.25F).looping()
 		.addAnimation("bone2", new AnimationChannel(AnimationChannel.Targets.ROTATION, 
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 			new Keyframe(0.2917F, KeyframeAnimations.degreeVec(-10.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),

@@ -12,7 +12,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
  * @author Author
  */
 public class IcePeaAnimation {
-	public static final AnimationDefinition idle_normal = AnimationDefinition.Builder.withLength(3.0F).looping()
+	public static final AnimationDefinition idle = AnimationDefinition.Builder.withLength(3.0F).looping()
 		.addAnimation("Genh", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 			new Keyframe(0.75F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 14.5F), AnimationChannel.Interpolations.CATMULLROM),

@@ -3,6 +3,7 @@ package rhymestudio.rhyme.datagen.recipe;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JavaOps;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -70,6 +71,12 @@ public class DaveShopProvider extends AbstractRecipeProvider {
                 .build();
     }
 
+    public static void createDataPack(BootstrapContext<DaveTrades> context) {
+//        context.
+        System.out.println("createDataPack");
+
+    }
+
     private void genRecipe(DaveTrades.Trade trade){
         JsonElement res = parseCodec(DaveTrades.Trade.CODEC.encodeStart(JavaOps.INSTANCE,trade));
         addJson(res.getAsJsonObject(),trade.result(),"");
@@ -129,6 +136,6 @@ public class DaveShopProvider extends AbstractRecipeProvider {
     }
 
     protected Path getRoot(ResourceLocation loc){
-        return this.output.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve(loc.getNamespace()).resolve("dave_shop");
+        return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve("dave_shop");
     }
 }

@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.core.entity.plants;
 
-import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -30,10 +29,6 @@ public class PotatoMine extends AbstractPlant {
     private final float explosionRadius;
 
     public PotatoMine(EntityType<? extends AbstractPlant> type, Level level,
-                      AnimationDefinition idle,
-                      AnimationDefinition up,
-                      AnimationDefinition idle_on,
-                      AnimationDefinition bomb,
                       int readyTick,
                       float explosionRadius,
                       Builder builder) {
@@ -41,10 +36,6 @@ public class PotatoMine extends AbstractPlant {
         this.readyTime = readyTick;
         this.explosionRadius = explosionRadius;
 
-        this.animState.addAnimation("idle", idle,1);
-        this.animState.addAnimation("up", up,1);
-        this.animState.addAnimation("idle_on", idle_on,1);
-        this.animState.addAnimation("bomb", bomb,1);
     }
 
     public static final EntityDataAccessor<Float> DATA_SPEED = SynchedEntityData.defineId(PotatoMine.class, EntityDataSerializers.FLOAT);

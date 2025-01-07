@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.client.event;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.Music;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -48,10 +49,11 @@ public class GameClientEvent {
 
     @SubscribeEvent
     public static void onSelectMusic(SelectMusicEvent event) {
-        if(event.getMusic() == null && ClientConfig.IsOpenBgm.get()){
+        if(Minecraft.getInstance().level==null) return;
+        if(event.getPlayingMusic() == null && ClientConfig.isOpenBgm){
             event.setMusic(new Music(ModSounds.BGM,300,3000,true));
         }else if(event.getMusic()!=null && event.getMusic().getEvent() == ModSounds.BGM){
-            if(!ClientConfig.IsOpenBgm.get()){
+            if(!ClientConfig.isOpenBgm){
                 event.setMusic(null);
             }
         }

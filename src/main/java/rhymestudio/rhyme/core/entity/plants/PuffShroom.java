@@ -1,30 +1,22 @@
 package rhymestudio.rhyme.core.entity.plants;
 
-import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks;
-import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import rhymestudio.rhyme.utils.Computer;
-
-import java.util.function.BiConsumer;
 
 public class PuffShroom extends AbstractPlant {
 
     private final PresetAttacks attackCallback;
 
-    public PuffShroom(EntityType<? extends AbstractPlant> type, Level level, AnimationDefinition sleep, AnimationDefinition idle, AnimationDefinition shoot, PresetAttacks doAttack, Builder builder) {
+    public PuffShroom(EntityType<? extends AbstractPlant> type, Level level, PresetAttacks doAttack, Builder builder) {
         super(type, level,  builder);
         this.attackCallback = doAttack;
-        this.animState.addAnimation("sleep", sleep,1);
-        this.animState.addAnimation("idle", idle,1);
-        this.animState.addAnimation("shoot", shoot,1);
+
     }
 
     public void registerGoals(){
