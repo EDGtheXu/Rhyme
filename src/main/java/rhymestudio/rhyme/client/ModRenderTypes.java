@@ -28,7 +28,7 @@ public final class ModRenderTypes {
         public static ShaderInstance entityDynamic;
         public static DIYShaderInstance diy_blit;//直接输出到屏幕
         public static DIYShaderInstance gaussian_blur;
-        public static DIYShaderInstance diy_blit_mix_add;//线性混合相加
+        public static ShaderInstance rectPolar;// 矩形极坐标
 
 
 
@@ -42,8 +42,7 @@ public final class ModRenderTypes {
 //            var mx = (((IShaderInstance)ins).getRhyme$TEST());
             event.registerShader(ins, shader -> entityDynamic = shader);
 
-            event.registerShader(
-                    new DIYShaderInstance(
+            event.registerShader(new DIYShaderInstance(
                             resourceProvider,
                             Rhyme.space("diy_blit"),
                             DefaultVertexFormat.BLIT_SCREEN,null
@@ -52,8 +51,7 @@ public final class ModRenderTypes {
                     shader -> diy_blit = (DIYShaderInstance) shader
             );
 
-            event.registerShader(
-                    new DIYShaderInstance(
+            event.registerShader(new DIYShaderInstance(
                             resourceProvider,
                             Rhyme.space("gaussian_blur"),
                             DefaultVertexFormat.BLIT_SCREEN,
@@ -62,6 +60,14 @@ public final class ModRenderTypes {
                             }
                     ),
                     shader -> gaussian_blur = (DIYShaderInstance) shader
+            );
+
+            event.registerShader(new ShaderInstance(resourceProvider,
+                            Rhyme.space("rect_polar"),
+                            DefaultVertexFormat.POSITION_TEX),
+                    shader -> {
+                        rectPolar = shader;
+                    }
             );
         }
     }

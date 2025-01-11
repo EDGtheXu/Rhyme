@@ -12,6 +12,8 @@ import rhymestudio.rhyme.core.registry.ModAttachments;
 
 import java.awt.*;
 
+import static rhymestudio.rhyme.client.render.util.ShaderUtil.drawFloatGlow;
+
 public class CardHUD {
 
     private long lastCacheTime = 0;
@@ -45,50 +47,20 @@ public class CardHUD {
     public void render(GuiGraphics guiGraphics) {
 
         guiGraphics.pose().pushPose();
-
         guiGraphics.pose().translate(10,10,0);
         drawSunCard(guiGraphics,0,0,30,42);
-
         guiGraphics.pose().translate(itemInternalX0,0,0);
 //        drawCard(guiGraphics,ModItems.SUN_FLOWER.get(),0,0,2);
-
         guiGraphics.pose().translate(itemInternalX,0,0);
-//        drawCard(guiGraphics,ModItems.PEA_ITEM.get(),0,0,2);
-
-//        var bf =Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.gui());
-
-/*
-        //装备
-        for(int i=0;i<4;i++){
-            int x2 = x + 30 + 18 * i;
-            int y2 = y;
-            //guiGraphics.vLine(x2-2,y2, y2 + 18,Color.MAGENTA.getRGB());
-            ItemStack stack = player.getInventory().getArmor(3-i);
-            guiGraphics.renderItem(stack,x2, y2 );
-            drawItemBar(stack,guiGraphics,x2, y2 );
-        }
-
-        //右手物品
-        guiGraphics.pose().translate(x,y,0);
-        guiGraphics.pose().scale(1.1f,1.1f,1.1f);
-        ItemStack stack = player.getMainHandItem();
-        guiGraphics.renderItem(stack,0,0);
-
-        //名称
-        String str = stack.getDisplayName().getString();
-        guiGraphics.drawString(minecraft.font,str.substring(1,str.length()-1),0,-10, stack.getRarity().getStyleModifier().apply(Style.EMPTY).getColor().getValue());
-
-        //耐久条
-        if (stack.isBarVisible()) {
-            drawItemBar(stack, guiGraphics, 0, 0);
-            int dur = stack.getDamageValue();
-            int full = stack.getMaxDamage();
-            guiGraphics.pose().translate(3, 15, 0);
-            guiGraphics.pose().scale(0.7f, 0.7f, 0.7f);
-            guiGraphics.drawString(minecraft.font, String.valueOf(full - dur), 1, 1, stack.getBarColor());
-        }
-*/
         guiGraphics.pose().popPose();
+
+        guiGraphics.setColor(1,1,0.5f,1);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(10,8,0);
+        drawFloatGlow(guiGraphics.pose().last().pose(),Rhyme.space("textures/gui/float_glow.png"),30,30);
+        guiGraphics.pose().popPose();
+        guiGraphics.setColor(1,1,1,1);
+
     }
 
     public static void drawItemBar(ItemStack stack,GuiGraphics g,int x,int y){

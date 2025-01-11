@@ -21,14 +21,18 @@ public abstract class ShaderInstanceMixin implements IShaderInstance {
 
     @Unique private  Uniform rhyme$TEST;
     public Uniform getRhyme$TEST(){return rhyme$TEST;}
-
-
+    @Unique private  Uniform rhyme$Time;
+    public Uniform getRhyme$Time(){return rhyme$Time;}
+    @Unique private  Uniform rhyme$Radius;
+    public Uniform getRhyme$Radius(){return rhyme$Radius;}
 
 
     @Inject(method = "<init>(Lnet/minecraft/server/packs/resources/ResourceProvider;Lnet/minecraft/resources/ResourceLocation;Lcom/mojang/blaze3d/vertex/VertexFormat;)V", at = @At("RETURN"))
     public void ShaderInstance(ResourceProvider p_173336_, ResourceLocation shaderLocation, VertexFormat p_173338_, CallbackInfo ci) {
 
         rhyme$TEST = this.getUniform("TEST");
+        rhyme$Time = this.getUniform("Time");
+        rhyme$Radius = this.getUniform("Radius");
     }
 
 
