@@ -13,9 +13,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Quaternionf;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.client.ModRenderTypes;
+import rhymestudio.rhyme.client.render.util.ShaderUtil;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.item.AbstractCardItem;
 import rhymestudio.rhyme.core.menu.CardUpLevelMenu;
+import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
+import rhymestudio.rhyme.mixinauxiliary.IShaderInstance;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 import javax.annotation.Nullable;
@@ -72,6 +76,27 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
             Lighting.setupForEntityInInventory();
             Minecraft.getInstance().getEntityRenderDispatcher().render(entity,0,0,0,0,1f,guiGraphics.pose(),guiGraphics.bufferSource(),15728880);
             guiGraphics.pose().popPose();
+
+            if(menu.slots.get(3).hasItem()){
+                var data = menu.slots.get(3).getItem().getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
+                if(data!= null){
+                    int color = data.color();
+                    float r = (float) ((color >> 16) & 0xFF) / 255.0F;
+                    float g = (float) ((color >> 8) & 0xFF) / 255.0F;
+                    float b = (float) (color & 0xFF) / 255.0F;
+                    guiGraphics.setColor(r, g, b, 1.0f);
+                }
+
+                guiGraphics.pose().pushPose();
+                guiGraphics.pose().translate((float)(this.leftPos+121.5 ), (float)(this.topPos+10), 0);
+                double seconds =  System.currentTimeMillis() % 100000000 / 1000f; // seconds
+                ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) seconds);
+                ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set(1.0f);
+
+                ShaderUtil.drawFloatGlow(guiGraphics.pose().last().pose(),Rhyme.space("textures/gui/pixel_glow.png"),46.9f,63.88f);
+                guiGraphics.setColor(1,1,1, 1.0f);
+                guiGraphics.pose().popPose();
+            }
         }
     }
 

@@ -14,16 +14,16 @@ public class ShaderUtil {
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
         RenderSystem.setShaderTexture(0, texture);
-        ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set(System.currentTimeMillis() % 10000000 / 1000f);
-        ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set(1.0f);
 
         RenderSystem.setShader(()->ModRenderTypes.Shaders.rectPolar);
 
         BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder.addVertex(pose, 0, 0, 0).setUv(0, 0);
-        bufferbuilder.addVertex(pose, 0, w, 0).setUv(0, 1);
-        bufferbuilder.addVertex(pose, h, w, 0).setUv(1, 1);
-        bufferbuilder.addVertex(pose, h, 0,0).setUv(1, 0);
+        bufferbuilder.addVertex(pose, 0, h, 0).setUv(0, 1);
+        bufferbuilder.addVertex(pose, w, h, 0).setUv(1, 1);
+        bufferbuilder.addVertex(pose, w, 0,0).setUv(1, 0);
         BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
     }
 }

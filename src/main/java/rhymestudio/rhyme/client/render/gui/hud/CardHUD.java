@@ -8,7 +8,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.client.ModRenderTypes;
 import rhymestudio.rhyme.core.registry.ModAttachments;
+import rhymestudio.rhyme.mixinauxiliary.IShaderInstance;
 
 import java.awt.*;
 
@@ -46,6 +48,9 @@ public class CardHUD {
 
     public void render(GuiGraphics guiGraphics) {
 
+
+
+
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(10,10,0);
         drawSunCard(guiGraphics,0,0,30,42);
@@ -57,6 +62,11 @@ public class CardHUD {
         guiGraphics.setColor(1,1,0.5f,1);
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(10,8,0);
+
+        double seconds =  System.currentTimeMillis() % 100000000 / 1000f; // seconds
+        ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) (seconds + 0.5 + 0.1f * Math.sin(seconds * Math.PI)));
+        ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set((float) (Math.sin(seconds * Math.PI) * 0.05f + 1f));
+
         drawFloatGlow(guiGraphics.pose().last().pose(),Rhyme.space("textures/gui/float_glow.png"),30,30);
         guiGraphics.pose().popPose();
         guiGraphics.setColor(1,1,1,1);
