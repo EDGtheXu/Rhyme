@@ -2,6 +2,8 @@ package rhymestudio.rhyme.core.recipe;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -14,21 +16,37 @@ import rhymestudio.rhyme.core.registry.ModRecipes;
 public class CardUpLevelRecipe extends SmithingTransformRecipe {
     public final AmountIngredient am_template;
     public final AmountIngredient am_addition;
+
     public CardUpLevelRecipe(AmountIngredient template, Ingredient base, AmountIngredient addition, ItemStack result) {
         super(template.ingredient(), base, addition.ingredient(), result);
         this.am_template = template;
         this.am_addition = addition;
     }
+
+    @Override
     public boolean matches(SmithingRecipeInput input, Level level) {
-        if (!(this.template.test(input.template()) && this.base.test(input.base()) && this.addition.test(input.addition()))) return false;
+        if (!(this.template.test(input.template()) && this.base.test(input.base()) && this.addition.test(input.addition())))
+            return false;
         var data = input.getItem(1).getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
         var dataRes = this.getResultItem(null).getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
         return data != null && dataRes != null && data.level() == dataRes.level() - 1;
     }
+
+    @Override
+    public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider var2){
+        ItemStack result = super.assemble(input, var2);
+        int damage = result.getComponents().get(DataComponents.MAX_DAMAGE).intValue();
+        damage += 5;
+        result.set(DataComponents.MAX_DAMAGE, damage);
+        return result;
+    }
+
     @Override
     public @NotNull RecipeSerializer<CardUpLevelRecipe> getSerializer() {
         return ModRecipes.CARD_UP_LEVEL_SERIALIZER.get();
     }
+
+    @Override
     public @NotNull RecipeType<?> getType() {
         return ModRecipes.CARD_UP_LEVEL_TYPE.get();
     }

@@ -59,7 +59,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
 //            }
         var data =player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
         int consumeCount = data.ids.size() * PlantConsumeAdditionStep.get() + this.consume;
-        var flag = player.getData(ModAttachments.PLAYER_STORAGE).consumeSun(consumeCount);
+        var flag = player.getData(ModAttachments.PLAYER_STORAGE).consumeSun(player,consumeCount);
         if(!flag) {
             if(!level.isClientSide)
                 player.sendSystemMessage(Component.translatable("plantcard.not_enough_sun").withColor(0xff0000));

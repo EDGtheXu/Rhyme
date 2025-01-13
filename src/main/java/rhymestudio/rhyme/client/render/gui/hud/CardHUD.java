@@ -57,12 +57,11 @@ public class CardHUD {
         guiGraphics.pose().translate(itemInternalX,0,0);
         guiGraphics.pose().popPose();
 
-        guiGraphics.setColor(1,1,0.5f,1);
-
         if(cachedSunNumber > 1000) {
+
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(10, 8, 0);
-
+            guiGraphics.setColor(1,1,0.5f,1);
             double seconds = System.currentTimeMillis() % 100000000 / 1000f; // seconds
             ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) (seconds + 0.5 + 0.1f * Math.sin(seconds * Math.PI)));
             ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set((float) (Math.sin(seconds * Math.PI) * 0.05f + 1f));

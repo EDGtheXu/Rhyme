@@ -30,7 +30,7 @@ public class PlantShovel extends Item {
             player.playSound(ModSounds.SHOVEL.get());
             plant.discard();
         }
-        player.getData(ModAttachments.PLAYER_STORAGE.get()).consumeSun(2000);
+        player.getData(ModAttachments.PLAYER_STORAGE.get()).consumeSun(player,2000);
         return super.use(level, player, usedHand);
     }
 }
