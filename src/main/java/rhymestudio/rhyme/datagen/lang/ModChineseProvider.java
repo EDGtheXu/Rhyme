@@ -40,6 +40,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("rhyme.configuration.is_open_bgm", "打开背景音乐");
         add("rhyme.configuration.dave_drop_rate", "戴夫掉落金币比率");
         add("rhyme.configuration.plant_consume_addition_step", "额外消耗阳光/植物个");
+        add("rhyme.configuration.is_open_effect_overlay", "打开特效颜色遮罩");
 
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));

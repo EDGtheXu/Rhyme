@@ -47,15 +47,17 @@ public class GameClientEvent {
 
     }
 
+    public static Music BGM_MUSIC = new Music(ModSounds.BGM,300,3000,true);
     @SubscribeEvent
     public static void onSelectMusic(SelectMusicEvent event) {
         if(Minecraft.getInstance().level==null) return;
-        if(event.getPlayingMusic() == null && ClientConfig.isOpenBgm){
-            event.setMusic(new Music(ModSounds.BGM,300,3000,true));
-        }else if(event.getMusic()!=null && event.getMusic().getEvent() == ModSounds.BGM){
-            if(!ClientConfig.isOpenBgm){
-                event.setMusic(null);
-            }
+
+        if(event.getPlayingMusic() == null && ClientConfig.IsOpenBgm.get()){
+            event.setMusic(BGM_MUSIC);
+//            Minecraft.getInstance().getMusicManager().
+        }
+        if(Minecraft.getInstance().getMusicManager().isPlayingMusic(BGM_MUSIC) && !ClientConfig.IsOpenBgm.get()){
+            event.setMusic(null);
         }
 
     }

@@ -42,9 +42,8 @@ public class MaterialItems {
 
     public static final DeferredItem<Item> TACO = register("taco", "玉米卷",p->p.component(ModDataComponentTypes.MOD_RARITY,ModRarity.ORANGE).food(new FoodProperties(
             5,50,true,2, Optional.of(ItemStack.EMPTY), List.of(
-                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 0),0.8f),
-                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.ABSORPTION, 200, 0),0.2f),
-                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.SATURATION, 200, 0),1f)
+                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, 0),0.5f),
+                    new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.SATURATION, 50, 0),1f)
     ))));
 
 

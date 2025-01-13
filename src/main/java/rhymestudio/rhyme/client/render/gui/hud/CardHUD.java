@@ -26,6 +26,7 @@ public class CardHUD {
     private String cacheMoneyStr = "";
 
     public static int cachedMoney = 0;
+    private int cachedSunNumber = 0;
 
     private int itemInternalX0 = 40;
     private int itemInternalX = 40;
@@ -48,9 +49,6 @@ public class CardHUD {
 
     public void render(GuiGraphics guiGraphics) {
 
-
-
-
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(10,10,0);
         drawSunCard(guiGraphics,0,0,30,42);
@@ -60,17 +58,19 @@ public class CardHUD {
         guiGraphics.pose().popPose();
 
         guiGraphics.setColor(1,1,0.5f,1);
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(10,8,0);
 
-        double seconds =  System.currentTimeMillis() % 100000000 / 1000f; // seconds
-        ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) (seconds + 0.5 + 0.1f * Math.sin(seconds * Math.PI)));
-        ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set((float) (Math.sin(seconds * Math.PI) * 0.05f + 1f));
+        if(cachedSunNumber > 1000) {
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(10, 8, 0);
 
-        drawFloatGlow(guiGraphics.pose().last().pose(),Rhyme.space("textures/gui/float_glow.png"),30,30);
-        guiGraphics.pose().popPose();
-        guiGraphics.setColor(1,1,1,1);
+            double seconds = System.currentTimeMillis() % 100000000 / 1000f; // seconds
+            ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) (seconds + 0.5 + 0.1f * Math.sin(seconds * Math.PI)));
+            ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set((float) (Math.sin(seconds * Math.PI) * 0.05f + 1f));
 
+            drawFloatGlow(guiGraphics.pose().last().pose(), Rhyme.space("textures/gui/float_glow.png"), 30, 30);
+            guiGraphics.pose().popPose();
+            guiGraphics.setColor(1, 1, 1, 1);
+        }
     }
 
     public static void drawItemBar(ItemStack stack,GuiGraphics g,int x,int y){
@@ -95,8 +95,8 @@ public class CardHUD {
             lastCacheTime = time;
 //            int cacheSunNumber = Computer.getInventoryItemCount(player, MaterialItems.SUN_ITEM.get());
             var data = player.getData(ModAttachments.PLAYER_STORAGE);
-            int cacheSunNumber = data.sunCount;
-            cacheSunStr =String.valueOf(cacheSunNumber) ;
+            cachedSunNumber = data.sunCount;
+            cacheSunStr =String.valueOf(cachedSunNumber) ;
             cacheSunStrSize = cacheSunStr.length();
 
             cachedMoney = data.moneys;

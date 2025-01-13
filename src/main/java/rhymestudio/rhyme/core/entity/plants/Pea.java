@@ -9,7 +9,7 @@ import rhymestudio.rhyme.utils.Computer;
 
 public class Pea extends AbstractPlant {
 
-    public final PresetAttacks attackCallback;
+    public PresetAttacks attackCallback;
 
     public Pea(EntityType<? extends AbstractPlant> type, Level level,  PresetAttacks doAttack, Builder builder) {
         super(type, level, builder);
@@ -27,17 +27,17 @@ public class Pea extends AbstractPlant {
                 onTick(a-> {
                     if(skills.canContinue() &&
                             getTarget() != null && getTarget().isAlive() &&
-                            Computer.angle(this.getForward(), getTarget().getEyePosition().subtract(this.getEyePosition())) < 20){
+                            Computer.angle(this.calculateViewVector(this.getXRot(),this.yHeadRot), getTarget().getEyePosition().subtract(this.getEyePosition())) < Math.PI * 0.16){
                         target = getTarget();
                         skills.forceEnd();
                     }
                     });
         // tip                                                攻击持续时间        射击触发时间
-        CircleSkill<AbstractPlant>   shoot = new CircleSkill<>( "shoot", builder.attackAnimTick, builder.attackTriggerTick)
+        CircleSkill<AbstractPlant> shoot = new CircleSkill<>( "shoot", builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
                     if(target!= null && target.isAlive()){
-                        if(skills.canTrigger() || (skills.canContinue() && ((skills.tick - builder.attackTriggerTick) % 5 == 0 &&  (skills.tick - builder.attackTriggerTick) / 5 < attackCallback.shootCount)))
-                            if (attackCallback != null) attackCallback.attack.accept(this, target);
+                        if(skills.canTrigger() || (skills.canContinue() && ((skills.tick - builder.attackTriggerTick) % 3 == 0 &&  (skills.tick - builder.attackTriggerTick) / 3 < attackCallback.getShootCount(this))))
+                            if (attackCallback != null) attackCallback.getAttack(this).accept(this, target);
                     }
                 });
         this.addSkill(idle);

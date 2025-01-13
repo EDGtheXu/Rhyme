@@ -8,13 +8,16 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class ClientConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    static ModConfigSpec.BooleanValue IsOpenBgm  = BUILDER.comment("open bgm").define("is_open_bgm", true);
+    public static ModConfigSpec.BooleanValue IsOpenBgm  = BUILDER.comment("open bgm").define("is_open_bgm", true);
+    public static ModConfigSpec.BooleanValue IsOpenEffectOverLay  = BUILDER.comment("open effect overlay").define("is_open_effect_overlay", true);
 
 
     public static boolean isOpenBgm;
+    public static boolean isOpenEffectOverLay;
 
     public static void load(){
         isOpenBgm = IsOpenBgm.get();
+        isOpenEffectOverLay = IsOpenEffectOverLay.get();
     }
     public static final ModConfigSpec SPEC = BUILDER.build();
 

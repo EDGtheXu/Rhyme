@@ -64,7 +64,6 @@ public class PotatoMine extends AbstractPlant {
         CircleSkill<AbstractPlant> up = new CircleSkill<>( "up",  29, 0);
         CircleSkill<AbstractPlant> on = new CircleSkill<>( "idle_on",  999999999, 0)
                 .onTick(a-> {
-                    if(readyTime<=0){
 
                         AtomicReference<Float> minDistance = new AtomicReference<>((float) 1000000000);
                         AtomicBoolean flag = new AtomicBoolean(false);
@@ -89,7 +88,7 @@ public class PotatoMine extends AbstractPlant {
                             this.entityData.set(DATA_SPEED, 1f);
                             skills.forceEnd();
                         }
-                    }
+
                 });
         CircleSkill<AbstractPlant> boom = new CircleSkill<>( "bomb",  999999999, 20)
                 .onTick(a-> {
@@ -132,10 +131,6 @@ public class PotatoMine extends AbstractPlant {
     @Override
     public void tick() {
         super.tick();
-        if(this.readyTime > 0){
-            this.readyTime--;
-        }
-
     }
     public boolean canBeSeenAsEnemy(){
         return super.canBeSeenAsEnemy();

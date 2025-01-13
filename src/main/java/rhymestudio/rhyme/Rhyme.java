@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 
 import rhymestudio.rhyme.config.ServerConfig;
 import rhymestudio.rhyme.config.Codec.*;
+import rhymestudio.rhyme.core.attribute.ModAttributes;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.datagen.biome.ModBiomes;
 import rhymestudio.rhyme.core.registry.ModRecipes;
@@ -75,6 +76,10 @@ public class Rhyme {
         ModAttachments.TYPES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
+        ModAttributes.ATTRIBUTES_TYPES.register(modEventBus);
+
+
+
         ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
 

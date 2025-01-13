@@ -59,8 +59,8 @@ public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chom
                         }
                     }
                 });
-        CircleSkill eating = new CircleSkill( "eating", eatTime, 0);
-        CircleSkill eatingFinish = new CircleSkill( "eating_finish", 60, 0);
+        CircleSkill<AbstractPlant> eating = new CircleSkill<>( "eating", eatTime, 0);
+        CircleSkill<AbstractPlant> eatingFinish = new CircleSkill<>( "eating_finish", 60, 0);
 
         addGeoAnim(idle,true);
         addGeoAnim(attack,false);

@@ -51,6 +51,9 @@ public class ModEnglishProvider extends LanguageProvider {
         add("rhyme.configuration.is_open_bgm", "If Open Bgm");
         add("rhyme.configuration.dave_drop_rate", "Dave Drop Money Rate");
         add("rhyme.configuration.plant_consume_addition_step", "Consume Addition Sun Per Plant");
+        add("rhyme.configuration.is_open_effect_overlay", "If Open Effect Overlay");
+
+
 
 
         Rhyme.englishProviders.forEach(a->a.accept(this));

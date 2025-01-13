@@ -13,30 +13,48 @@ import rhymestudio.rhyme.core.entity.proj.ThrowableProj;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class PresetAttacks {
-    public final BiConsumer<AbstractPlant, LivingEntity> attack;
     public DeferredHolder<SoundEvent, SoundEvent> sound;
-    public int shootCount = 1;
+    public Function<AbstractPlant,Integer> shootCountSetter;
+    public Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attackSetter;
 
-    public PresetAttacks(BiConsumer<AbstractPlant, LivingEntity> attack, DeferredHolder<SoundEvent, SoundEvent> sound, int shootCount) {
-        this.attack = attack;
+
+    public BiConsumer<AbstractPlant, LivingEntity> getAttack(AbstractPlant plant){
+        return attackSetter.apply(plant);
+    }
+    public int getShootCount(AbstractPlant plant){
+        if(shootCountSetter!=null) return shootCountSetter.apply(plant);
+        return 1;
+    }
+
+    public PresetAttacks(Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attackGetter, DeferredHolder<SoundEvent, SoundEvent> sound, Function<AbstractPlant,Integer> shootCountSetter) {
+        this.attackSetter = attackGetter;
         this.sound = sound;
-        this.shootCount = shootCount;
+        this.shootCountSetter = shootCountSetter;
     }
 
     public static Builder builder() {
         return new Builder();
     }
     public static class Builder {
-        private BiConsumer<AbstractPlant, LivingEntity> attack;
+        private Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attack;
         private DeferredHolder<SoundEvent, SoundEvent> sound;
-        private int shootCount = 1;
+        private Function<AbstractPlant,Integer> shootCountSetter;
         public Builder setShootCount(int shootCount) {
-            this.shootCount = shootCount;
+            this.shootCountSetter = (p) -> shootCount;
+            return this;
+        }
+        public Builder setShootCount(Function<AbstractPlant,Integer> shootCount) {
+            this.shootCountSetter = shootCount;
             return this;
         }
         public Builder setAttack(BiConsumer<AbstractPlant, LivingEntity> attack) {
+            this.attack = (p)->attack;
+            return this;
+        }
+        public Builder setAttack(Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attack) {
             this.attack = attack;
             return this;
         }
@@ -45,7 +63,9 @@ public class PresetAttacks {
             return this;
         }
         public PresetAttacks build() {
-            return new PresetAttacks(attack, sound, shootCount);
+            var preset = new PresetAttacks(attack, sound, shootCountSetter);
+            preset.shootCountSetter = shootCountSetter;
+            return preset;
         }
     }
     /**
@@ -55,9 +75,11 @@ public class PresetAttacks {
 
         Vec3 dir;
         if(tar!=null) {
-//            Vec3 pos = tar.position().add(0,tar.getEyeHeight()/2,0);
-//            dir = pos.subtract(me.getEyePosition());
-            dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
+            Vec3 pos = tar.position().add(0,tar.getEyeHeight()/2,0);
+            dir = pos.subtract(me.getEyePosition());
+
+//            dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
+
         } else dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
         BaseProj proj1 = proj.get().create(me.level());
 //        BaseProj proj1 = new LineProj(PlantEntities.ICE_PEA_PROJ.get(), me.level(),BaseProj.TextureLib.SNOW_PEA,new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5));

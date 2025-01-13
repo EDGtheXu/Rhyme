@@ -17,6 +17,7 @@ import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.entity.plants.*;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
 import static rhymestudio.rhyme.Rhyme.add_zh_en;
@@ -39,19 +40,42 @@ public class PlantEntities {
             }).setUltimate(new CircleSkill<>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 5 == 0)
                                 ((SunFlower)e).doSun();
-                            })
-            )
+                            }))
+
             ));
 
     //      tip 豌豆类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PEA = registerCreature("pea_shooter","豌豆射手",(type, level)->
-            new Pea(type,level, builder().setAttack(PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
+            new Pea(type,level, builder().setAttack(PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()
+                    //动画
+            .setAnim(s->{
                 s.addAnimation("idle", PeaAnimation.idle,1);
                 s.addAnimation("shoot", PeaAnimation.shoot,1);
-            }).setUltimate(new CircleSkill<>("ultimate",50, 0)
+            })
+                    // 大招
+            .setUltimate(new CircleSkill<>("ultimate",50, 0)
                     .onTick(e->{ if(e.tickCount % 3 == 0)
                         PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PEA_PROJ, e.getRandom().nextFloat()*0.5f - 0.25F);
                     })
+            )
+                    //升级
+            .setCardLevelModifier(CardLevelModifier.<Pea>builder()
+                    .addModifier(1,pea->pea.attackCallback = builder()
+                            .setAttack(p->p.getRandom().nextFloat() < 0.2f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                            .build())
+                    .addModifier(2,pea->pea.attackCallback = builder()
+                            .setAttack(p->p.getRandom().nextFloat() < 0.3f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                            .setShootCount(p->p.getRandom().nextFloat() < 0.2? 2 : 1)
+                            .build())
+                    .addModifier(3,pea->pea.attackCallback = builder()
+                            .setAttack(p->p.getRandom().nextFloat() < 0.4f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                            .setShootCount(p->p.getRandom().nextFloat() < 0.3f? 2 : 1)
+                            .build())
+                    .addModifier(4,pea->pea.attackCallback = builder()
+                            .setAttack(p->p.getRandom().nextFloat() < 0.5f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                            .setShootCount(p->p.getRandom().nextIntBetweenInclusive(1,3))
+                            .build())
+                    .buildLevelModifier()
             )
             ));
 

@@ -23,7 +23,7 @@ public class EnergyBean extends CustomRarityItem {
             EntityHitResult hit = Computer.getEyeTraceHitResult(player,player.getAttributeBaseValue(Attributes.ENTITY_INTERACTION_RANGE));
             if(hit ==null) return super.use(level, player, usedHand);
             Entity e = hit.getEntity();
-            if(e instanceof AbstractPlant plant && plant.haveUltimate()){
+            if(e instanceof AbstractPlant plant && plant.haveUltimate() && !plant.isUltimating){
                 plant.triggerUltimate();
                 if(player.canBeSeenAsEnemy())
                     player.getItemInHand(usedHand).shrink(1);

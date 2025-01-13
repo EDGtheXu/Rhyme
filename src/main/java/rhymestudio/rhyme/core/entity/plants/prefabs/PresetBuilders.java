@@ -14,7 +14,7 @@ public class PresetBuilders {
             .setAttackInternalTick(20)//idle_on
 
             .setAttackTriggerTick(15)
-            .setAttackAnimTick((int) (1.5 * 20));//shoot
+            .setAttackAnimTick((int)(1.2083F * 20));//shoot
 
     public static final Supplier<AbstractPlant.Builder> NORMAL_SUNFLOWER_PLANT = () -> new AbstractPlant.Builder()
             .setAnimSpeed(5)//动画倍速

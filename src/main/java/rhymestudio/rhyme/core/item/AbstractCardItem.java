@@ -87,6 +87,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         int lvl = stack.getComponents().get(ModDataComponentTypes.CARD_QUALITY.get()).level();
         entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(Rhyme.space("card_health_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(Rhyme.space("card_attack_damage_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        entity.setCardLevel(lvl);
         level.addFreshEntity(entity);
         entity.playSound(ModSounds.PLANT.get());
         entity.setHealth(entity.getMaxHealth());

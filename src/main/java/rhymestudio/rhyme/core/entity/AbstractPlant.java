@@ -22,6 +22,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 import rhymestudio.rhyme.core.entity.ai.CircleSkills;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.goal.ShootGoal;
+import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
@@ -41,7 +43,18 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     public CircleSkills<AbstractPlant> skills = new CircleSkills<>(this);
     private CircleSkill ultimate;
     public boolean canBePush = true;
-    public boolean isUltimate = false;
+    public boolean isUltimating = false;
+    public int cardLevel = 1;
+
+
+    public void setCardLevel(int level){
+        this.cardLevel = level;
+    }
+
+    public int getCardLevel(){
+        return this.cardLevel;
+    }
+
 
     public void setOwner(Player player) {
         this.owner = player;
@@ -61,7 +74,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     public void triggerUltimate(){
         if(ultimate != null){
-            isUltimate = true;
+            isUltimating = true;
             skills.forceStart(ultimate);
         }
     }
@@ -84,6 +97,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
             animState.playAnim(skills.getCurSkillName(),tickCount);
         if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
         super.onAddedToLevel();
+        if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this,this.cardLevel);
     }
 
     public CafeAnimationState getCafeAnimState(){
@@ -94,6 +108,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     public void registerGoals(){
 
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10,true,true, this::canAttack));
+        this.goalSelector.addGoal(1,new ShootGoal(this,null));
         this.goalSelector.addGoal(5,new LookAtPlayerGoal(this, Player.class,3,0.1f){
             @Override
             public boolean canUse() {
@@ -110,7 +125,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     @Override
     public boolean hurt(DamageSource source, float damage) {
-        if(isUltimate) return false;
+        if(isUltimating) return false;
         if(source.getEntity() instanceof Player || source.getEntity() instanceof AbstractPlant){
             return false;
         }
@@ -148,7 +163,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     @Override
     public void tick(){
         if (!level().isClientSide){
-            if(ultimate != null && isUltimate && skills.getCurSkill()!=ultimate){
+            if(ultimate != null && isUltimating && skills.getCurSkill()!=ultimate){
                 // 大招开始
                 addSkill(ultimate);
                 skills.forceStart(ultimate);
@@ -159,7 +174,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
             if(last == ultimate && skills.getCurSkill() != ultimate){
                 // 大招结束
                 skills.removeSkill(ultimate);
-                isUltimate = false;
+                isUltimating = false;
             }
         }
 
@@ -232,9 +247,15 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         public int attackInternalTick = 60;
         public  int attackDamage = 1;
 
-        public CircleSkill ultimate;
+        CircleSkill ultimate;
+        CardLevelModifier cardLevelModifier;
 
         public Consumer<CafeAnimationState> anim = (state)->{};
+
+        public Builder setCardLevelModifier(CardLevelModifier cardLevelModifier) {
+            this.cardLevelModifier = cardLevelModifier;
+            return this;
+        }
 
         public Builder setUltimate(CircleSkill ultimate) {
             this.ultimate = ultimate;

@@ -36,7 +36,7 @@ public class ModTabs {
 //                    .displayItems((parameters, output) -> {
 //
 //                    })
-//                    .build()
+//                    .buildLevelModifier()
 //    );
 //
 //    public static final Supplier<CreativeModeTab> BLOCKS = TABS.register("blocks",
@@ -46,7 +46,7 @@ public class ModTabs {
 //                    .displayItems((parameters, output) -> {
 //
 //                    })
-//                    .build()
+//                    .buildLevelModifier()
 //    );
 //
 //    public static final Supplier<CreativeModeTab> ARMOR = TABS.register("armors",
@@ -56,7 +56,7 @@ public class ModTabs {
 //                    .displayItems((parameters, output) -> {
 //
 //                    })
-//                    .build()
+//                    .buildLevelModifier()
 //    );
 
 

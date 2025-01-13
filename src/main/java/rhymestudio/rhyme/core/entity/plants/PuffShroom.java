@@ -48,7 +48,7 @@ public class PuffShroom extends AbstractPlant {
                 a->{},
                 a->{
                     if(skills.canTrigger() && target!= null && target.isAlive()){
-                        if(attackCallback!= null) attackCallback.attack.accept(this,target);
+                        if(attackCallback!= null) attackCallback.getAttack(this).accept(this,target);
                     }
                 },
                 a->{skills.forceStartIndex(1);}
