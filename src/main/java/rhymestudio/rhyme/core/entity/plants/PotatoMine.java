@@ -60,9 +60,9 @@ public class PotatoMine extends AbstractPlant {
     @Override
     public void addSkills() {
         super.addSkills();
-        CircleSkill idle = new CircleSkill( "idle", readyTime, 0);
-        CircleSkill up = new CircleSkill( "up",  29, 0);
-        CircleSkill on = new CircleSkill( "idle_on",  999999999, 0)
+        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle", readyTime, 0);
+        CircleSkill<AbstractPlant> up = new CircleSkill<>( "up",  29, 0);
+        CircleSkill<AbstractPlant> on = new CircleSkill<>( "idle_on",  999999999, 0)
                 .onTick(a-> {
                     if(readyTime<=0){
 
@@ -91,7 +91,7 @@ public class PotatoMine extends AbstractPlant {
                         }
                     }
                 });
-        CircleSkill boom = new CircleSkill( "bomb",  999999999, 20)
+        CircleSkill<AbstractPlant> boom = new CircleSkill<>( "bomb",  999999999, 20)
                 .onTick(a-> {
                     if(skills.canTrigger()){
                         playSound(ModSounds.POTATO_MINE.get());

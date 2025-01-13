@@ -27,9 +27,9 @@ public interface IFSMGeoMob<T extends AbstractPlant> extends GeoEntity {
     default void addGeoAnim(CircleSkill skill, boolean loop){
         getSelf().addSkill(skill);
         if(loop) {
-            getAnimationMap().put(skill.skill, RawAnimation.begin().thenPlay(skill.skill));
+            getAnimationMap().put(skill.name, RawAnimation.begin().thenPlay(skill.name));
         } else {
-            getAnimationMap().put(skill.skill, RawAnimation.begin().thenLoop(skill.skill));
+            getAnimationMap().put(skill.name, RawAnimation.begin().thenLoop(skill.name));
         }
     }
 

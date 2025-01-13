@@ -23,6 +23,7 @@ public class MaterialItems {
     public static final DeferredRegister.Items MATERIALS = DeferredRegister.createItems(Rhyme.MODID);
 
 //    public static final DeferredItem<Item> SUN_ITEM = register("sun_item","阳光");
+
     public static final DeferredItem<Item> SOLID_SUN =register("solid_sun","固态阳光",ModRarity.BLUE);
     public static final DeferredItem<Item> GENERAL_SEED =register("general_seed","通用种子");
     public static final DeferredItem<Item> PLANT_GENE =register("plant_gene","植物基因");

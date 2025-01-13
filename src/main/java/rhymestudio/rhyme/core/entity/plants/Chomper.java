@@ -14,12 +14,15 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chomper> {
     int eatTime;
     int killBlood;
+    public List<LivingEntity> ultimateTargets = new ArrayList<>();
 
     /**
      * @param eatTime 咀嚼时间
@@ -36,7 +39,7 @@ public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chom
     public void addSkills() {
         super.addSkills();
         this.entityData.set(DATA_CAFE_POSE_NAME, "misc.idle");
-        CircleSkill idle = new CircleSkill( "misc.idle",  999999999, 0)
+        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "misc.idle",  999999999, 0)
                 .onTick(a-> {
                     if(skills.canContinue() &&
                             getTarget() != null && getTarget().isAlive() &&
@@ -45,7 +48,7 @@ public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chom
                         skills.forceEnd();
                     }
                 });
-        CircleSkill  attack = new CircleSkill( "attack.strike", 30, 25)
+        CircleSkill<AbstractPlant>  attack = new CircleSkill<>( "attack.strike", 30, 25)
                 .onInit(a-> this.attackAnim = builder.attackAnimTick)
                 .onTick(a->{
                     if(skills.canTrigger() ){

@@ -17,16 +17,21 @@ public class SunFlower extends AbstractPlant {
 
     }
 
+    public void doSun(){
+        SunItemEntity entity = new SunItemEntity(level(), position().add(0,0.5,0));
+        entity.setDeltaMovement(random.nextFloat()*0.05f,0.05f,random.nextFloat()*0.05f);
+        entity.setItem(new ItemStack(MaterialItems.SOLID_SUN.get()));
+        level().addFreshEntity(entity);
+    }
+
     @Override
     public void addSkills() {
         super.addSkills();
-        CircleSkill idleSkill = new CircleSkill("idle",builder.attackInternalTick,0);
-        CircleSkill sunSkill = new CircleSkill("sun",builder.attackAnimTick, builder.attackTriggerTick)
+        CircleSkill<AbstractPlant> idleSkill = new CircleSkill<>("idle",builder.attackInternalTick,0);
+        CircleSkill<AbstractPlant> sunSkill = new CircleSkill<>("sun",builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
                     if(skills.canTrigger()){
-                        SunItemEntity entity = new SunItemEntity(level(), position().add(0,0.5,0));
-                        entity.setItem(new ItemStack(MaterialItems.SOLID_SUN.get()));
-                        level().addFreshEntity(entity);
+                        doSun();
                     }
                 });
         addSkill(idleSkill);

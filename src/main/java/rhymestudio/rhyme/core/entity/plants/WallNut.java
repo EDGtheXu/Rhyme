@@ -17,21 +17,21 @@ public class WallNut extends AbstractPlant {
     @Override
     public void addSkills() {
         super.addSkills();
-        CircleSkill idle1 = new CircleSkill( "idle1",  999999999, 0)
+        CircleSkill<AbstractPlant> idle1 = new CircleSkill<>( "idle1",  999999999, 0)
                 .onTick(a-> {
                     doSmth();
                     if(this.getHealth() / this.getMaxHealth() < 0.666){
                         skills.forceEnd();
                     }
                 });
-        CircleSkill idle2 = new CircleSkill( "idle2",  999999999, 0)
+        CircleSkill<AbstractPlant>idle2 = new CircleSkill<>( "idle2",  999999999, 0)
                 .onTick(a-> {
                     doSmth();
                     if(this.getHealth() / this.getMaxHealth() < 0.333){
                         skills.forceEnd();
                     }
                 });
-        CircleSkill idle3 = new CircleSkill( "idle3",  999999999, 0)
+        CircleSkill<AbstractPlant> idle3 = new CircleSkill<>( "idle3",  999999999, 0)
                 .onTick(a-> doSmth());
         this.addSkill(idle1);
         this.addSkill(idle2);

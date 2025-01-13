@@ -9,7 +9,7 @@ import rhymestudio.rhyme.utils.Computer;
 
 public class Pea extends AbstractPlant {
 
-    private final PresetAttacks attackCallback;
+    public final PresetAttacks attackCallback;
 
     public Pea(EntityType<? extends AbstractPlant> type, Level level,  PresetAttacks doAttack, Builder builder) {
         super(type, level, builder);
@@ -23,7 +23,7 @@ public class Pea extends AbstractPlant {
     public void addSkills() {
         super.addSkills();
         //tip                                                  idle持续时间        触发攻击时间
-        CircleSkill  idle = new CircleSkill( "idle",  999999999, builder.attackInternalTick).
+        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle",  999999999, builder.attackInternalTick).
                 onTick(a-> {
                     if(skills.canContinue() &&
                             getTarget() != null && getTarget().isAlive() &&
@@ -33,7 +33,7 @@ public class Pea extends AbstractPlant {
                     }
                     });
         // tip                                                攻击持续时间        射击触发时间
-        CircleSkill  shoot = new CircleSkill( "shoot", builder.attackAnimTick, builder.attackTriggerTick)
+        CircleSkill<AbstractPlant>   shoot = new CircleSkill<>( "shoot", builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
                     if(target!= null && target.isAlive()){
                         if(skills.canTrigger() || (skills.canContinue() && ((skills.tick - builder.attackTriggerTick) % 5 == 0 &&  (skills.tick - builder.attackTriggerTick) / 5 < attackCallback.shootCount)))

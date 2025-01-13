@@ -6,19 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CircleSkills<T extends AbstractPlant> {
-    public AbstractPlant owner;
-    protected final List<CircleSkill> bossSkills = new ArrayList<>();
+    public T owner;
+    protected final List<CircleSkill<T>> bossSkills = new ArrayList<>();
 
 
     public int tick = 0;
     public int index = 0;
     public boolean ifStateInit = false;
 
-    public CircleSkills(AbstractPlant owner){ this.owner = owner;}
+    public CircleSkills(T owner){ this.owner = owner;}
 
     public int count(){return bossSkills.size();};
 
-    public boolean pushSkill(CircleSkill skill){
+
+
+    public boolean pushSkill(CircleSkill<T> skill){
         bossSkills.add(skill);
 
         if(bossSkills.size()==1) tick = 0;
@@ -47,19 +49,35 @@ public class CircleSkills<T extends AbstractPlant> {
         //状态结束
         if(bossSkills.get(lastIndex).stateOver!=null) bossSkills.get(lastIndex).stateOver.accept(owner);
 
-        //初次进入状态
-        if(bossSkills.get(index).stateInit!=null) bossSkills.get(index).stateInit.accept(owner);
-        owner.getEntityData().set(AbstractPlant.DATA_CAFE_POSE_NAME,getCurSkill());
+
+        owner.getEntityData().set(AbstractPlant.DATA_CAFE_POSE_NAME, getCurSkillName());
 
     }
     /** 强制跳转状态 **/
     public void forceStartIndex(int index){
         tick = 0;
+
         this.index = index;
-        owner.getEntityData().set(AbstractPlant.DATA_CAFE_POSE_NAME,getCurSkill());
-        owner.animState.playAnim(bossSkills.get(index).skill,owner.tickCount);
+        //初次进入状态
+        if(bossSkills.get(index).stateInit!=null) bossSkills.get(index).stateInit.accept(owner);
+
+        owner.getEntityData().set(AbstractPlant.DATA_CAFE_POSE_NAME, getCurSkillName());
+        owner.animState.playAnim(bossSkills.get(index).name,owner.tickCount);
     }
 
+    public void forceStart(CircleSkill<T> skill){
+        int index = bossSkills.indexOf(skill);
+        if(index!=-1) forceStartIndex(index);
+    }
+
+    public void forceStart(String skill){
+        for(CircleSkill<T> s:bossSkills){
+            if(s.name.equals(skill)){
+                forceStart(s);
+                return;
+            }
+        }
+    }
 
     /** tick == triggerTime **/
     public boolean canTrigger(){
@@ -71,16 +89,25 @@ public class CircleSkills<T extends AbstractPlant> {
         if(bossSkills.isEmpty()) return false;
         return bossSkills.get(index).timeTrigger < this.tick;
     }
-    public String getCurSkill(){
+    public CircleSkill<T> getCurSkill(){
         if(!bossSkills.isEmpty())
-            return bossSkills.get(index).skill;
+            return bossSkills.get(index);
+        return null;
+    }
+    public String getCurSkillName(){
+        if(!bossSkills.isEmpty())
+            return bossSkills.get(index).name;
         return "";
+    }
+    public void removeSkill(CircleSkill<T> skill){
+        bossSkills.remove(skill);
     }
     public int getCurAnimFullTick(){
         if(!bossSkills.isEmpty())
             return bossSkills.get(index).timeContinue;
         return -1;
     }
+
 
 
 

@@ -28,12 +28,12 @@ public class PuffShroom extends AbstractPlant {
     public void addSkills() {
         super.addSkills();
 //        this.animState.playAnim("sleep",tickCount);
-        CircleSkill sleep = new CircleSkill( "sleep",  999999999, 0)
+        CircleSkill<AbstractPlant> sleep = new CircleSkill<>( "sleep",  999999999, 0)
                 .onTick(a->{
                     if(!level().isClientSide() && level().isNight())
                         skills.forceEnd();
                 });
-        CircleSkill idle = new CircleSkill( "idle",  999999999, builder.attackInternalTick)
+        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle",  999999999, builder.attackInternalTick)
                 .onTick(a-> {
                     if(!level().isClientSide() && !level().isNight())
                         skills.forceStartIndex(0);
@@ -44,7 +44,7 @@ public class PuffShroom extends AbstractPlant {
                         skills.forceEnd();
                     }
                 });
-        CircleSkill  shoot = new CircleSkill( "shoot", builder.attackAnimTick, builder.attackTriggerTick,
+        CircleSkill<AbstractPlant>  shoot = new CircleSkill<>( "shoot", builder.attackAnimTick, builder.attackTriggerTick,
                 a->{},
                 a->{
                     if(skills.canTrigger() && target!= null && target.isAlive()){

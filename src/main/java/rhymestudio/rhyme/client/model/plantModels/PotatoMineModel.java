@@ -12,9 +12,9 @@ import net.minecraft.client.model.geom.builders.*;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.model.AbstractPlantModel;
-import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.plants.PotatoMine;
 
-public class PotatoMineModel extends AbstractPlantModel<AbstractPlant> {
+public class PotatoMineModel extends AbstractPlantModel<PotatoMine> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Rhyme.space( "potato_mine_model"), "main");
 	private final ModelPart all;
@@ -96,7 +96,7 @@ public class PotatoMineModel extends AbstractPlantModel<AbstractPlant> {
 
 	float ageInTicksO = 0;
 	@Override
-	public void setupAnim(@NotNull AbstractPlant entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@NotNull PotatoMine entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		String pose = entity.getCafeAnimState().curName;
 		if(pose.equals("up" )&& entity.tickCount - entity.getCafeAnimState().tick== 30 && ageInTicksO + 1f > ageInTicks){
 			return;

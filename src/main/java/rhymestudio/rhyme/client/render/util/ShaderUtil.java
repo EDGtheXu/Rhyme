@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import rhymestudio.rhyme.client.ModRenderTypes;
-import rhymestudio.rhyme.mixinauxiliary.IShaderInstance;
 
 public class ShaderUtil {
 

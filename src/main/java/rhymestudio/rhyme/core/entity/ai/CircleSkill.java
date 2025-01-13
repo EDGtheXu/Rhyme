@@ -1,42 +1,38 @@
 package rhymestudio.rhyme.core.entity.ai;
 
-import net.minecraft.world.entity.Mob;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 
 import java.util.function.Consumer;
 
-public class CircleSkill {
+public class CircleSkill<T extends AbstractPlant> {
 
-
-    private static final Logger log = LoggerFactory.getLogger(CircleSkill.class);
-    public String skill;
+    public String name;
     public int timeContinue;
     public int timeTrigger;
 
-    public Consumer<Mob> stateInit;
-    public Consumer<Mob> stateTick;
-    public Consumer<Mob> stateOver;
+    public Consumer<T> stateInit;
+    public Consumer<T> stateTick;
+    public Consumer<T> stateOver;
 
     /**
-     * @param skill 动画名称
+     * @param name 动画名称
      * @param timeContinue 状态持续时间
      * @param timeTrigger 逻辑触发时间
      */
-    public CircleSkill(String skill, int timeContinue, int timeTrigger){
-        this.skill = skill;
+    public CircleSkill(String name, int timeContinue, int timeTrigger){
+        this.name = name;
         this.timeContinue = timeContinue;
         this.timeTrigger = timeTrigger;
 
     }
 
     public CircleSkill(String animName, int timeContinue, int timeTrigger,
-                       Consumer<Mob> stateInit,
-                       Consumer<Mob> stateTick,
-                       Consumer<Mob> stateOver
+                       Consumer<T> stateInit,
+                       Consumer<T> stateTick,
+                       Consumer<T> stateOver
     ){
-        this.skill = animName;
+        this.name = animName;
         this.timeContinue = timeContinue;
         this.timeTrigger = timeTrigger;
 
@@ -45,15 +41,15 @@ public class CircleSkill {
         this.stateOver = stateOver;
     }
 
-    public CircleSkill onTick (Consumer<Mob> stateTick){
+    public CircleSkill<T> onTick (Consumer<T> stateTick){
         this.stateTick = stateTick;
         return this;
     };
-    public CircleSkill onInit (Consumer<Mob> stateInit){
+    public CircleSkill<T> onInit (Consumer<T> stateInit){
         this.stateInit = stateInit;
         return this;
     };
-    public CircleSkill onOver (Consumer<Mob> stateOver){
+    public CircleSkill<T> onOver (Consumer<T> stateOver){
         this.stateOver = stateOver;
         return this;
     };

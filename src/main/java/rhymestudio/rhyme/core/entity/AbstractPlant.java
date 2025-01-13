@@ -19,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.joml.Vector3f;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 import rhymestudio.rhyme.core.entity.ai.CircleSkills;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
@@ -32,12 +31,17 @@ import java.util.function.Consumer;
 
 public abstract class AbstractPlant extends Mob implements ICafeMob{
 
+    public static final EntityDataAccessor<String> DATA_CAFE_POSE_NAME = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.STRING);
+
     public String namePath;
     public Player owner;
     public Builder builder;
     public String lastAnimName = "idle";
     public CafeAnimationState animState = new CafeAnimationState(this);
     public CircleSkills<AbstractPlant> skills = new CircleSkills<>(this);
+    private CircleSkill ultimate;
+    public boolean canBePush = true;
+    public boolean isUltimate = false;
 
     public void setOwner(Player player) {
         this.owner = player;
@@ -52,19 +56,32 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
         this.builder = builder;
         if(level.isClientSide) builder.anim.accept(animState);
+        else this.ultimate = builder.ultimate;
+    }
+
+    public void triggerUltimate(){
+        if(ultimate != null){
+            isUltimate = true;
+            skills.forceStart(ultimate);
+        }
+    }
+
+    public boolean haveUltimate(){
+        return ultimate != null;
     }
 
     public boolean isPushable(){
 
-        return !level().getEntities(this,this.getBoundingBox(),e->e instanceof AbstractPlant).isEmpty();
+        return !level().getEntities(this,this.getBoundingBox(),e->e instanceof AbstractPlant).isEmpty() && canBePush;
     }
 
     public void onAddedToLevel(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.health);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.attackDamage);
         addSkills();
+        skills.forceStartIndex(0);
         if(level().isClientSide)
-            animState.playAnim(skills.getCurSkill(),tickCount);
+            animState.playAnim(skills.getCurSkillName(),tickCount);
         if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
         super.onAddedToLevel();
     }
@@ -75,7 +92,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     @Override
     public void registerGoals(){
-        //this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, LivingEntity.class, 20.0F));
+
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10,true,true, this::canAttack));
         this.goalSelector.addGoal(5,new LookAtPlayerGoal(this, Player.class,3,0.1f){
             @Override
@@ -88,11 +105,12 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
                 return (getTarget()==null || !getTarget().isAlive())&& super.canUse();
             }
         });
-        //this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Slime.class, true));
+
     }
 
     @Override
     public boolean hurt(DamageSource source, float damage) {
+        if(isUltimate) return false;
         if(source.getEntity() instanceof Player || source.getEntity() instanceof AbstractPlant){
             return false;
         }
@@ -113,6 +131,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         return super.getHurtSound(source);
     }
 
+
     @Override
     public boolean canAttack(LivingEntity target) {
         if(target.isAlive() && (
@@ -128,8 +147,21 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     @Override
     public void tick(){
+        if (!level().isClientSide){
+            if(ultimate != null && isUltimate && skills.getCurSkill()!=ultimate){
+                // 大招开始
+                addSkill(ultimate);
+                skills.forceStart(ultimate);
+            }
+            CircleSkill last = skills.getCurSkill();
+            skills.tick();
 
-        if (!level().isClientSide) skills.tick();
+            if(last == ultimate && skills.getCurSkill() != ultimate){
+                // 大招结束
+                skills.removeSkill(ultimate);
+                isUltimate = false;
+            }
+        }
 
         super.tick();
         if(this.getTarget()!=null && getTarget().isAlive()){
@@ -142,21 +174,13 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     }
 
     public void addSkill(CircleSkill bossSkill) {skills.pushSkill(bossSkill);}
-
     public void addSkillNoAnim(CircleSkill bossSkill) {skills.pushSkill(bossSkill);}
 
 
-    public static final EntityDataAccessor<String> DATA_CAFE_POSE_NAME = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> DATA_SKILL_TICK = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Vector3f> DATA_ROTATE = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.VECTOR3);
     // 动画数据同步
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_SKILL_INDEX, 0);
-        builder.define(DATA_SKILL_TICK, 0);
-        builder.define(DATA_ROTATE, new Vector3f());
         builder.define(DATA_CAFE_POSE_NAME, "idle");
     }
 
@@ -193,6 +217,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     }
 
 
+
+
     public static class Builder{
         //默认参数（豌豆）
         public  int health = 20;
@@ -206,7 +232,14 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         public int attackInternalTick = 60;
         public  int attackDamage = 1;
 
+        public CircleSkill ultimate;
+
         public Consumer<CafeAnimationState> anim = (state)->{};
+
+        public Builder setUltimate(CircleSkill ultimate) {
+            this.ultimate = ultimate;
+            return this;
+        }
 
         public Builder setProjSpeed(float projSpeed) {
             this.projSpeed = projSpeed;

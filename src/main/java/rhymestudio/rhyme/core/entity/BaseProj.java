@@ -27,7 +27,6 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.particle.options.BrokenProjOptions;
 import rhymestudio.rhyme.core.registry.ModEffects;
 import rhymestudio.rhyme.datagen.tag.ModTags;
-import rhymestudio.rhyme.mixinauxiliary.ILivingEntity;
 import rhymestudio.rhyme.network.s2c.ProjHitPacket;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     }
 
     public float getDamage() {return damage;}
-    public void setDamage(int damage) {this.damage = damage;}
+    public void addDamage(int damage) {this.damage += damage;}
     public void setPenetrate(int penetration){this.penetration = penetration;}
     public void setTexture(ResourceLocation texture){this.texture = texture;}
     public ResourceLocation getTexture(){return texture;}
