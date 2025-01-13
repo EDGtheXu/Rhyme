@@ -2,6 +2,7 @@ package rhymestudio.rhyme.core.item;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -66,9 +67,12 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
             return InteractionResultHolder.fail(itemstack);
         }
         if(!summon(player, level, itemstack)) return InteractionResultHolder.fail(itemstack);
-        itemstack.setDamageValue(itemstack.getDamageValue() + 1);
-        if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
-            itemstack.shrink(1);
+        if(itemstack.get(DataComponents.UNBREAKABLE)==null){
+            itemstack.setDamageValue(itemstack.getDamageValue() + 1);
+            if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
+                itemstack.shrink(1);
+        }
+
         return InteractionResultHolder.success(itemstack);
     }
 
@@ -115,7 +119,8 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         tooltipComponents.add(Component.translatable("plantcard.tooltip.consumed_sun").append(": "+this.consume + " + "+consumeCount).withColor(0xffff00));
         float percent = (float)stack.getDamageValue()/(float)stack.getMaxDamage();
         int color = (int)((1-percent)*0x0000ff)<<8 | (int)(percent*0x0000ff)<<16;
-        tooltipComponents.add(Component.translatable("plantcard.tooltip.damage").append(": ")
+        if(stack.get(DataComponents.UNBREAKABLE)==null)
+            tooltipComponents.add(Component.translatable("plantcard.tooltip.damage").append(": ")
                 .append(Component.literal((stack.getMaxDamage()-stack.getDamageValue())+"/"+stack.getMaxDamage()).withColor(color)));
 
     }

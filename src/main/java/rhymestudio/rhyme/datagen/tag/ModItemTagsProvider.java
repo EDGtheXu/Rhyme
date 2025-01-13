@@ -9,6 +9,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import rhymestudio.rhyme.core.registry.items.PlantItems;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,5 +23,8 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(ModTags.Items.DAVE_FOOD).add(Items.PUMPKIN_PIE);
+
+        PlantItems.PLANTS.getEntries().forEach(e->tag(ModTags.Items.CARD).add(e.get().asItem()));
+
     }
 }

@@ -15,6 +15,10 @@ import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+
+/**
+ * 弹幕预设，调整发射初始位置、弹幕类型
+ */
 public class PresetAttacks {
     public DeferredHolder<SoundEvent, SoundEvent> sound;
     public Function<AbstractPlant,Integer> shootCountSetter;
@@ -77,9 +81,7 @@ public class PresetAttacks {
         if(tar!=null) {
             Vec3 pos = tar.position().add(0,tar.getEyeHeight()/2,0);
             dir = pos.subtract(me.getEyePosition());
-
 //            dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
-
         } else dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
         BaseProj proj1 = proj.get().create(me.level());
 //        BaseProj proj1 = new LineProj(PlantEntities.ICE_PEA_PROJ.get(), me.level(),BaseProj.TextureLib.SNOW_PEA,new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5));
@@ -97,11 +99,8 @@ public class PresetAttacks {
     public static final BiConsumer<AbstractPlant, LivingEntity> SNOW_PEA_SHOOT = (me, tar) -> {
         PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.ICE_PEA_PROJ, 0.1f);
     };
-    //双豌豆
-    public static final BiConsumer<AbstractPlant, LivingEntity> DOUBLE_PEA_SHOOT = (me, tar) -> {
-        PEA_SHOOT.accept(me, tar);
 
-    };
+
 
     //小喷菇
     public static final BiConsumer<AbstractPlant, LivingEntity> SPORE_SHOOT = (me, tar) -> {

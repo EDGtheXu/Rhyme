@@ -42,19 +42,12 @@ public class CardUpLevelMenu extends ItemCombinerMenu {
     }
 
     protected ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
-        return ItemCombinerMenuSlotDefinition.create().withSlot(0, 8, 48, (p_266643_) -> {
-            return this.recipes.stream().anyMatch((p_300804_) -> {
-                return ((SmithingRecipe)p_300804_.value()).isTemplateIngredient(p_266643_);
-            });
-        }).withSlot(1, 26, 48, (p_286208_) -> {
-            return this.recipes.stream().anyMatch((p_300802_) -> {
-                return ((SmithingRecipe)p_300802_.value()).isBaseIngredient(p_286208_);
-            });
-        }).withSlot(2, 44, 48, (p_286207_) -> {
-            return this.recipes.stream().anyMatch((p_300798_) -> {
-                return ((SmithingRecipe)p_300798_.value()).isAdditionIngredient(p_286207_);
-            });
-        }).withResultSlot(3, 98, 48).build();
+        return ItemCombinerMenuSlotDefinition.create()
+                .withSlot(0, 8, 48, slot -> this.recipes.stream().anyMatch(it -> (it.value()).isAdditionIngredient(slot)))
+                .withSlot(1, 26, 48, slot -> this.recipes.stream().anyMatch(it-> (it.value()).isBaseIngredient(slot)))
+                .withSlot(2, 44, 48, slot -> this.recipes.stream().anyMatch(it -> (it.value()).isAddition1Ingredient(slot)))
+                .withSlot(3, 71, 28, slot -> this.recipes.stream().anyMatch(it -> (it.value()).isTemplateIngredient(slot)))
+                .withResultSlot(4, 98, 48).build();
     }
 
     protected boolean isValidBlock(BlockState state) {
@@ -62,7 +55,7 @@ public class CardUpLevelMenu extends ItemCombinerMenu {
     }
 
     protected boolean mayPickup(Player player, boolean hasStack) {
-        return this.selectedRecipe != null && ((SmithingRecipe)this.selectedRecipe.value()).matches(this.createRecipeInput(), this.level);
+        return this.selectedRecipe != null && (this.selectedRecipe.value()).matches(this.createRecipeInput(), this.level);
     }
 
     protected void onTake(Player player, ItemStack stack) {
@@ -71,45 +64,46 @@ public class CardUpLevelMenu extends ItemCombinerMenu {
         this.shrinkStackInSlot(0);
         this.shrinkStackInSlot(1);
         this.shrinkStackInSlot(2);
+        this.shrinkStackInSlot(3);
         this.access.execute((level, pos) -> {
             level.levelEvent(1044, pos, 0);
         });
     }
 
     private List<ItemStack> getRelevantItems() {
-        return List.of(this.inputSlots.getItem(0), this.inputSlots.getItem(1), this.inputSlots.getItem(2));
+        return List.of(this.inputSlots.getItem(0), this.inputSlots.getItem(1), this.inputSlots.getItem(2), this.inputSlots.getItem(3));
     }
 
-    private SmithingRecipeInput createRecipeInput() {
-        return new SmithingRecipeInput(this.inputSlots.getItem(0), this.inputSlots.getItem(1), this.inputSlots.getItem(2));
+    private CardUpLevelRecipe.CardUpLevelRecipeInput createRecipeInput() {
+        return new CardUpLevelRecipe.CardUpLevelRecipeInput(this.inputSlots.getItem(0), this.inputSlots.getItem(1), this.inputSlots.getItem(2),this.inputSlots.getItem(3));
     }
 
     private void shrinkStackInSlot(int index) {
         ItemStack itemstack = this.inputSlots.getItem(index);
         if (!itemstack.isEmpty()) {
-            CardUpLevelRecipe tran = selectedRecipe.value();
+            CardUpLevelRecipe recipe = selectedRecipe.value();
             if (index == 0) {
-                itemstack.shrink(tran.am_template.amount());
+                itemstack.shrink(recipe.am_addition.amount());
             } else if (index == 1) {
-                itemstack.shrink(tran.base.getItems()[0].getCount());
+                itemstack.shrink(recipe.base.getItems()[0].getCount());
             } else if (index == 2) {
-                itemstack.shrink(tran.am_addition.amount());
+                itemstack.shrink(recipe.am_addition1.amount());
+            } else if(index == 3){
+                itemstack.shrink(recipe.am_template.amount());
             }
 
             this.inputSlots.setItem(index, itemstack);
-
         }
-
     }
 
     public void createResult() {
-        SmithingRecipeInput smithingrecipeinput = this.createRecipeInput();
-        List<RecipeHolder<CardUpLevelRecipe>> list = this.level.getRecipeManager().getRecipesFor(ModRecipes.CARD_UP_LEVEL_TYPE.get(), smithingrecipeinput, this.level);
+        CardUpLevelRecipe.CardUpLevelRecipeInput input = this.createRecipeInput();
+        List<RecipeHolder<CardUpLevelRecipe>> list = this.level.getRecipeManager().getRecipesFor(ModRecipes.CARD_UP_LEVEL_TYPE.get(), input, this.level);
         if (list.isEmpty()) {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
             RecipeHolder<CardUpLevelRecipe> recipeholder = list.get(0);
-            ItemStack itemstack = ((SmithingRecipe)recipeholder.value()).assemble(smithingrecipeinput, this.level.registryAccess());
+            ItemStack itemstack = recipeholder.value().assemble(input, this.level.registryAccess());
             if (itemstack.isItemEnabled(this.level.enabledFeatures())) {
                 this.selectedRecipe = recipeholder;
                 this.resultSlots.setRecipeUsed(recipeholder);
@@ -123,13 +117,15 @@ public class CardUpLevelMenu extends ItemCombinerMenu {
         return this.findSlotToQuickMoveTo(stack).orElse(0);
     }
 
-    private static OptionalInt findSlotMatchingIngredient(SmithingRecipe recipe, ItemStack stack) {
-        if (recipe.isTemplateIngredient(stack)) {
-            return OptionalInt.of(0);
-        } else if (recipe.isBaseIngredient(stack)) {
+    private static OptionalInt findSlotMatchingIngredient(CardUpLevelRecipe recipe, ItemStack stack) {
+        if (recipe.isBaseIngredient(stack)) {
             return OptionalInt.of(1);
+        } else if (recipe.isAddition1Ingredient(stack)) {
+            return OptionalInt.of(2);
+        }else if (recipe.isTemplateIngredient(stack)) {
+            return OptionalInt.of(3);
         } else {
-            return recipe.isAdditionIngredient(stack) ? OptionalInt.of(2) : OptionalInt.empty();
+            return recipe.isAdditionIngredient(stack) ? OptionalInt.of(0) : OptionalInt.empty();
         }
     }
 
@@ -142,10 +138,9 @@ public class CardUpLevelMenu extends ItemCombinerMenu {
     }
 
     private OptionalInt findSlotToQuickMoveTo(ItemStack stack) {
-        return this.recipes.stream().flatMapToInt((p_300800_) -> {
-            return findSlotMatchingIngredient(p_300800_.value(), stack).stream();
-        }).filter((p_294045_) -> {
-            return !this.getSlot(p_294045_).hasItem();
-        }).findFirst();
+        return this.recipes.stream()
+                .flatMapToInt((recipeHolder) -> findSlotMatchingIngredient(recipeHolder.value(), stack).stream())
+                .filter((i) -> !this.getSlot(i).hasItem())
+                .findFirst();
     }
 }

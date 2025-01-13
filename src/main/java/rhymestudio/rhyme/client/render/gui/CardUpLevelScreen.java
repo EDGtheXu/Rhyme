@@ -62,7 +62,7 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderOnboardingTooltips(guiGraphics, mouseX, mouseY);
+
 
         if (entity != null) {
             guiGraphics.pose().pushPose();
@@ -77,8 +77,8 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
             Minecraft.getInstance().getEntityRenderDispatcher().render(entity,0,0,0,0,1f,guiGraphics.pose(),guiGraphics.bufferSource(),15728880);
             guiGraphics.pose().popPose();
 
-            if(menu.slots.get(3).hasItem()){
-                var data = menu.slots.get(3).getItem().getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
+            if(menu.slots.get(4).hasItem()){
+                var data = menu.slots.get(4).getItem().getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
                 if(data!= null){
                     int color = data.color();
                     float r = (float) ((color >> 16) & 0xFF) / 255.0F;
@@ -88,7 +88,7 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
                 }
 
                 guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate((float)(this.leftPos+121.5 ), (float)(this.topPos+10), 0);
+                guiGraphics.pose().translate((float)(this.leftPos+121.5 ), (float)(this.topPos+10), 1);
                 double seconds =  System.currentTimeMillis() % 100000000 / 1000f; // seconds
                 ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) seconds);
                 ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set(1.0f);
@@ -98,6 +98,9 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
                 guiGraphics.pose().popPose();
             }
         }
+//        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.renderOnboardingTooltips(guiGraphics, mouseX, mouseY);
+
     }
 
     @Override
@@ -134,6 +137,7 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
         return this.menu.getSlot(0).hasItem()
                 && this.menu.getSlot(1).hasItem()
                 && this.menu.getSlot(2).hasItem()
+                && this.menu.getSlot(3).hasItem()
                 && !this.menu.getSlot(this.menu.getResultSlot()).hasItem();
     }
 }
