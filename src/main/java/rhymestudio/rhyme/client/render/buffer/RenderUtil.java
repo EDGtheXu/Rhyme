@@ -1,10 +1,10 @@
 package rhymestudio.rhyme.client.render.buffer;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.core.BlockPos;
 
 public class RenderUtil {
-    public static void renderDebugBlock(BufferBuilder buffer, BlockPos pos, float size, int r, int g, int b, int a){
+    public static void renderDebugBlock(VertexConsumer buffer, BlockPos pos, float size, int r, int g, int b, int a){
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();

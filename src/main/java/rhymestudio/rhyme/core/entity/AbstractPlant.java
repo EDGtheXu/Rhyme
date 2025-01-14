@@ -108,6 +108,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     public void registerGoals(){
 
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10,true,true, this::canAttack));
+
         this.goalSelector.addGoal(1,new ShootGoal(this,null));
         this.goalSelector.addGoal(5,new LookAtPlayerGoal(this, Player.class,3,0.1f){
             @Override

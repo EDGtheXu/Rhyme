@@ -12,7 +12,7 @@ import org.joml.Matrix4f;
  * 用于管理缓冲区的抽象类
  */
 public abstract class AbstractBufferManager {
-    private VertexBuffer vertexBuffer;
+    protected VertexBuffer vertexBuffer;
     long lastRefreshTime = 0;
     final int refreshInterval;
 

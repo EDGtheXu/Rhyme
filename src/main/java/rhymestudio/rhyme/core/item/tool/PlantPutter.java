@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.EntitySaverComponent;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
+import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.utils.Computer;
 
 import java.util.List;
@@ -24,16 +25,19 @@ public class PlantPutter extends PlantShovel {
         super(properties);
     }
 
-
     @Override
     protected void doOnDetect(Entity entity, Level level, Player player, ItemStack itemStack){
 
         var data = itemStack.get(ModDataComponentTypes.ITEM_ENTITY_TAG);
         if(data == null){
+
             CompoundTag tag = new CompoundTag();
             entity.save(tag);
             itemStack.set(ModDataComponentTypes.ITEM_ENTITY_TAG.get(), new EntitySaverComponent(tag, BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())));
             entity.discard();
+            player.playSound(ModSounds.SHOVEL.get());
+            if(player.canBeSeenAsEnemy())
+                player.getCooldowns().addCooldown(this, 20 * 15);
         }
 
 //        player.playSound(ModSounds.SHOVEL.get());
@@ -58,11 +62,12 @@ public class PlantPutter extends PlantShovel {
 
             e.load(tag);
 
-
-
             e.setPos(Computer.getBlockPosCenter(pos,player.getRandom()));
             level.addFreshEntity(e);
             itemStack.remove(ModDataComponentTypes.ITEM_ENTITY_TAG.get());
+            player.playSound(ModSounds.PLANT.get());
+            if(player.canBeSeenAsEnemy())
+                player.getCooldowns().addCooldown(this, 20 * 15);
         }
     }
 

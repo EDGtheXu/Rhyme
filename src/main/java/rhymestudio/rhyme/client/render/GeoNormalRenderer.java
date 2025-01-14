@@ -15,12 +15,17 @@ import rhymestudio.rhyme.core.entity.AbstractPlant;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.util.Color;
+
+import static net.minecraft.client.renderer.entity.LivingEntityRenderer.getOverlayCoords;
 
 public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRenderer<T> {
     boolean ifRotX = false;
     float scale;
     float offsetY;
     boolean energy = false;
+    public int consumedOverlay = -1;
+    public Color consumedColor;
     public GeoNormalRenderer(EntityRendererProvider.Context renderManager, String name, boolean ifRotX) {
         this(renderManager, name, ifRotX,1,0);
     }
@@ -55,6 +60,9 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             energy = false;
         }
+
+        consumedOverlay = -1;
+        consumedColor = null;
     }
 
     public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
@@ -66,6 +74,14 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
         }else{
             return super.getRenderType(animatable, texture, bufferSource, partialTick);
         }
+    }
+
+    public int getPackedOverlay(T animatable, float u, float partialTick) {
+        return consumedOverlay == -1? getOverlayCoords(animatable, u) : consumedOverlay;
+    }
+
+    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+        return consumedColor==null? super.getRenderColor(animatable, partialTick, packedLight) : consumedColor;
     }
 
 }

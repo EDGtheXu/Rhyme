@@ -9,6 +9,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.SelectMusicEvent;
+import rhymestudio.rhyme.client.render.buffer.DebugEntityHelper;
 import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.client.animate.ExpertColorAnimation;
 import rhymestudio.rhyme.client.animate.MasterColorAnimation;
@@ -40,6 +41,9 @@ public class GameClientEvent {
 //            //PostUtil.postProcess();
 //
 //        }
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
+            DebugEntityHelper.Singleton().render(event);
+        }
     }
     @SubscribeEvent
     public static void onTickEnd(ClientTickEvent.Pre event) {
