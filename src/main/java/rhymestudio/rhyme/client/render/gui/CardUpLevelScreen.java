@@ -24,6 +24,7 @@ import software.bernie.geckolib.animatable.GeoEntity;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.List;
 import java.util.Optional;
 
 public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
@@ -31,7 +32,7 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable("card_up_level.missing_base_tooltip");
     private static final Component ERROR_TOOLTIP = Component.translatable("card_up_level.error_tooltip");
 
-    private final CyclingSlotBackground templateIcon = new CyclingSlotBackground(0);
+    private final CyclingSlotBackground templateIcon = new CyclingSlotBackground(3);
     private final CyclingSlotBackground baseIcon = new CyclingSlotBackground(1);
     private final CyclingSlotBackground additionalIcon = new CyclingSlotBackground(2);
 
@@ -59,6 +60,22 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
         }
     }
 
+    protected void containerTick() {
+        super.containerTick();
+        this.templateIcon.tick(List.of(
+                ResourceLocation.withDefaultNamespace("item/iron_ingot"),
+                ResourceLocation.withDefaultNamespace("item/gold_ingot"),
+                ResourceLocation.withDefaultNamespace("item/diamond"),
+                ResourceLocation.withDefaultNamespace("item/emerald")
+                ));
+        this.baseIcon.tick(List.of(
+                Rhyme.space("item/quality/card_quality_0"),
+                Rhyme.space("item/quality/card_quality_1"),
+                Rhyme.space("item/quality/card_quality_2"),
+                Rhyme.space("item/quality/card_quality_3")
+        ));
+    }
+
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -76,27 +93,6 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
             Lighting.setupForEntityInInventory();
             Minecraft.getInstance().getEntityRenderDispatcher().render(entity,0,0,0,0,1f,guiGraphics.pose(),guiGraphics.bufferSource(),15728880);
             guiGraphics.pose().popPose();
-
-            if(menu.slots.get(4).hasItem()){
-                var data = menu.slots.get(4).getItem().getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
-                if(data!= null){
-                    int color = data.color();
-                    float r = (float) ((color >> 16) & 0xFF) / 255.0F;
-                    float g = (float) ((color >> 8) & 0xFF) / 255.0F;
-                    float b = (float) (color & 0xFF) / 255.0F;
-                    guiGraphics.setColor(r, g, b, 1.0f);
-                }
-
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate((float)(this.leftPos+121.5 ), (float)(this.topPos+10), 1);
-                double seconds =  System.currentTimeMillis() % 100000000 / 1000f; // seconds
-                ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) seconds);
-                ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set(1.0f);
-
-                ShaderUtil.drawFloatGlow(guiGraphics.pose().last().pose(),Rhyme.space("textures/gui/pixel_glow.png"),46.9f,63.88f);
-                guiGraphics.setColor(1,1,1, 1.0f);
-                guiGraphics.pose().popPose();
-            }
         }
 //        this.renderTooltip(guiGraphics, mouseX, mouseY);
         this.renderOnboardingTooltips(guiGraphics, mouseX, mouseY);
@@ -106,9 +102,35 @@ public class CardUpLevelScreen extends ItemCombinerScreen<CardUpLevelMenu> {
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+        guiGraphics.setColor(0.6f,0.6f,0.6f, 0.4f);
+
         this.templateIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
         this.baseIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
         this.additionalIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
+
+        guiGraphics.setColor(1.0f, 1.0f, 1.0f, 1f);
+
+        if(menu.slots.get(4).hasItem()){
+            var data = menu.slots.get(4).getItem().getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
+            if(data!= null){
+                int color = data.color();
+                float r = (float) ((color >> 16) & 0xFF) / 255.0F;
+                float g = (float) ((color >> 8) & 0xFF) / 255.0F;
+                float b = (float) (color & 0xFF) / 255.0F;
+                guiGraphics.setColor(r, g, b, 1.0f);
+            }
+
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate((float)(this.leftPos+121.5 ), (float)(this.topPos+10), 1);
+            double seconds =  System.currentTimeMillis() % 100000000 / 1000f; // seconds
+            ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Time().set((float) seconds);
+            ((IShaderInstance) ModRenderTypes.Shaders.rectPolar).getRhyme$Radius().set(1.0f);
+
+            ShaderUtil.drawFloatGlow(guiGraphics.pose().last().pose(),Rhyme.space("textures/gui/pixel_glow.png"),46.9f,63.88f);
+            guiGraphics.setColor(1,1,1, 1.0f);
+            guiGraphics.pose().popPose();
+        }
+
 
     }
 

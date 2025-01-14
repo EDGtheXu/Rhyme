@@ -14,11 +14,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
@@ -31,6 +28,8 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 import java.util.List;
 
 import static rhymestudio.rhyme.config.ServerConfig.PlantConsumeAdditionStep;
+import static rhymestudio.rhyme.utils.Computer.getBlockPosCenter;
+import static rhymestudio.rhyme.utils.Computer.getEyeBlockHitResult;
 
 public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem {
     public DeferredHolder<EntityType<?>, EntityType<T>> entityType;
@@ -77,17 +76,17 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
     }
 
     public boolean summon(Player player, Level level,ItemStack stack){
-        final BlockHitResult result = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
-        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
-        final BlockPos pos = raytraceResult.getBlockPos();
+        final BlockPos pos = getEyeBlockHitResult(player);
 
-        if(!level.getBlockState(pos.below()).is(BlockTags.DIRT)) return false;
-        if(!level.getBlockState(pos).is(BlockTags.AIR)) return false;
-        if(!level.getEntities(player,new AABB(pos).inflate(-0.2f)).isEmpty()) return false;
+        if(!canPutPlant(level, player, pos)){
+            if(!level.isClientSide)
+                player.sendSystemMessage(Component.translatable("plantcard.cannot_put_plant").withColor(0xff0000));
+            return false;
+        }
 
         var entity = entityType.get().create(level);
         entity.setOwner(player);
-        entity.setPos(new Vec3(pos.getX() + 0.5+player.getRandom().nextFloat()*0.1f, pos.getY(), pos.getZ() + 0.5+player.getRandom().nextFloat()*0.1f));
+        entity.setPos(getBlockPosCenter(pos,player.getRandom()));
         int lvl = stack.getComponents().get(ModDataComponentTypes.CARD_QUALITY.get()).level();
         entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(Rhyme.space("card_health_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(Rhyme.space("card_attack_damage_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
@@ -125,6 +124,13 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
 
     }
 
+    public static boolean canPutPlant(Level level, Player player, BlockPos pos){
+        if(!level.getBlockState(pos.below()).is(BlockTags.DIRT)) return false;
+        if(!level.getBlockState(pos).is(BlockTags.AIR)) return false;
+        if(!level.getEntities(player,new AABB(pos).inflate(-0.2f)).isEmpty()) return false;
+        return true;
+    }
+
     public static <T extends AbstractPlant> Builder<T> builder(DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume){
         return new Builder<>(entityType, consume);
     }
@@ -156,7 +162,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         public AbstractCardItem<T> build(){
             return new AbstractCardItem<>(properties.durability(durability), entityType, consume).setCd(cd);
         }
-
-
     }
+
+
 }

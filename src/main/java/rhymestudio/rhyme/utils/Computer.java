@@ -3,17 +3,22 @@ package rhymestudio.rhyme.utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static net.minecraft.world.item.Item.getPlayerPOVHitResult;
 
 public class Computer {
 
@@ -48,6 +53,18 @@ public class Computer {
         Vec3 from = player.getEyePosition();
         Vec3 to = player.getEyePosition().add(player.getLookAngle().scale(distance));
         return ProjectileUtil.getEntityHitResult(player.level(), player, from, to, aabb, e-> e instanceof AbstractPlant, 0.1F);
+    }
+
+    public static BlockPos getEyeBlockHitResult(Player player){
+        final BlockHitResult result = getPlayerPOVHitResult(player.level(), player, ClipContext.Fluid.SOURCE_ONLY);
+        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
+        final BlockPos pos = raytraceResult.getBlockPos();
+        return pos;
+    }
+
+    public static Vec3 getBlockPosCenter(BlockPos pos, RandomSource random){
+        return  new Vec3(pos.getX() + 0.5+random.nextFloat()*0.1f, pos.getY(), pos.getZ() + 0.5+random.nextFloat()*0.1f);
+
     }
 
     public static void playSound(Entity entity, DeferredHolder<SoundEvent,SoundEvent> sound, float volume, BlockPos pos){

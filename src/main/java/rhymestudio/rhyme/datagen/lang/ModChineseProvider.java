@@ -25,6 +25,10 @@ public class ModChineseProvider extends LanguageProvider {
         add("plantcard.summon_success","你种植了 ");
         add("plantcard.tooltip.damage","使用次数");
         add("plantcard.not_enough_sun","你没有足够阳光");
+        add("plantcard.cannot_put_plant","你不能把植物种在哪里！");
+
+        add("tooltip.rhyme.plant_putter.entity_picked","已捡起植物：");
+
 
         add("container.rhyme.sun_creator", "光萃台");
 

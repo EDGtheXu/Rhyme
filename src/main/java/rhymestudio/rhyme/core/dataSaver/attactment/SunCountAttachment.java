@@ -12,12 +12,20 @@ import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
 import rhymestudio.rhyme.utils.Computer;
 
 public class SunCountAttachment implements INBTSerializable<CompoundTag> {
+
+    private static int MAX_SUN_COUNT = 2000;
     public int sunCount = 0;
-    public int x,y,z;
     public int moneys = 0;
+    public int additionalSunCount = 0;
+
+    public int x,y,z;
 
     public void sendSunCountUpdate(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player,new SunCountPacketS2C(sunCount, moneys));
+        PacketDistributor.sendToPlayer(player,new SunCountPacketS2C(sunCount, moneys , additionalSunCount));
+    }
+
+    public int getMaxSunCount() {
+        return MAX_SUN_COUNT + additionalSunCount;
     }
 
     @Override

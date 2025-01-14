@@ -11,6 +11,7 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
 import rhymestudio.rhyme.core.item.tool.EnergyBean;
+import rhymestudio.rhyme.core.item.tool.PlantPutter;
 import rhymestudio.rhyme.core.item.tool.PlantShovel;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
@@ -40,6 +41,10 @@ public class ToolItems {
         .build())
 
 ));
+    public static final DeferredItem<Item> PLANT_PUTTER = register("plant_putter", "手推车", () -> new  PlantPutter(new Item.Properties().stacksTo(1)));
+
+
+
 
 
 

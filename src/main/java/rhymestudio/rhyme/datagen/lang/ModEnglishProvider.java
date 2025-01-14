@@ -34,6 +34,12 @@ public class ModEnglishProvider extends LanguageProvider {
         add("plantcard.summon_success","You Plant One ");
         add("plantcard.tooltip.damage","Use Remaining");
         add("plantcard.not_enough_sun","Not Enough Sun");
+        add("plantcard.cannot_put_plant","You Cannot Put Plant Here!");
+
+        add("tooltip.rhyme.plant_putter.entity_picked","Entity Picked: ");
+
+
+
 
 
         add("container.rhyme.card_up_level", "Card Up Level");

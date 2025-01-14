@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 
-public record SunCountPacketS2C(int count,int money) implements CustomPacketPayload {
+public record SunCountPacketS2C(int count,int money, int additionSunCount) implements CustomPacketPayload {
     public int count() {
         return count;
     }
@@ -19,6 +19,7 @@ public record SunCountPacketS2C(int count,int money) implements CustomPacketPayl
     public static final StreamCodec<ByteBuf, SunCountPacketS2C> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, SunCountPacketS2C::count,
             ByteBufCodecs.INT, SunCountPacketS2C::money,
+            ByteBufCodecs.INT, SunCountPacketS2C::additionSunCount,
             SunCountPacketS2C::new
     );
 
@@ -30,8 +31,10 @@ public record SunCountPacketS2C(int count,int money) implements CustomPacketPayl
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().isLocalPlayer()) {
-                context.player().getData(ModAttachments.PLAYER_STORAGE).sunCount = count;
-                context.player().getData(ModAttachments.PLAYER_STORAGE).moneys = money;
+                var data = context.player().getData(ModAttachments.PLAYER_STORAGE);
+                data.sunCount = count;
+                data.moneys = money;
+                data.additionalSunCount = additionSunCount;
             }
         }).exceptionally(e -> {
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));

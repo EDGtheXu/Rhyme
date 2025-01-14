@@ -115,7 +115,7 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
             if (entity.takeXpDelay == 0 && entity instanceof ServerPlayer serverplayer ) {
                 var data = serverplayer.getData(ModAttachments.PLAYER_STORAGE);
                 data.sunCount += this.getItem().getCount() * 25;
-                data.sunCount = Math.min(data.sunCount, 2000);
+                data.sunCount = Math.min(data.sunCount, data.getMaxSunCount());
                 data.sendSunCountUpdate(serverplayer);
                 playSound(ModSounds.POINTS.get());
             }

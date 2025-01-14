@@ -1,6 +1,7 @@
 package rhymestudio.rhyme.core.entity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -46,6 +47,13 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     public boolean isUltimating = false;
     public int cardLevel = 1;
 
+    public <T extends AbstractPlant> AbstractPlant(EntityType<T> tEntityType, Level level,Builder builder) {
+        super(tEntityType, level);
+        this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
+        this.builder = builder;
+        if(level.isClientSide) builder.anim.accept(animState);
+        else this.ultimate = builder.ultimate;
+    }
 
     public void setCardLevel(int level){
         this.cardLevel = level;
@@ -62,14 +70,6 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     protected void addSkills(){
 
-    }
-
-    public <T extends AbstractPlant> AbstractPlant(EntityType<T> tEntityType, Level level,Builder builder) {
-        super(tEntityType, level);
-        this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
-        this.builder = builder;
-        if(level.isClientSide) builder.anim.accept(animState);
-        else this.ultimate = builder.ultimate;
     }
 
     public void triggerUltimate(){
@@ -97,7 +97,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
             animState.playAnim(skills.getCurSkillName(),tickCount);
         if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
         super.onAddedToLevel();
-        if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this,this.cardLevel);
+        if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
     }
 
     public CafeAnimationState getCafeAnimState(){
@@ -199,10 +199,17 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         builder.define(DATA_CAFE_POSE_NAME, "idle");
     }
 
+
     @Override
-    public boolean ignoreExplosion(Explosion e){
-//        return true;
-        return e.getIndirectSourceEntity() instanceof AbstractPlant || super.ignoreExplosion(e);
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.cardLevel = compound.getInt("cardLevel");
+    }
+
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("cardLevel",this.cardLevel);
+
     }
 
     @Override
@@ -213,6 +220,12 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
         }
         super.onSyncedDataUpdated(key);
+    }
+
+    @Override
+    public boolean ignoreExplosion(Explosion e){
+//        return true;
+        return e.getIndirectSourceEntity() instanceof AbstractPlant || super.ignoreExplosion(e);
     }
 
     @Override
