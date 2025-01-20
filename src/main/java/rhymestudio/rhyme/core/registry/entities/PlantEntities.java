@@ -4,11 +4,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Monster;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
@@ -106,12 +106,12 @@ public class PlantEntities {
             new Pea(type,level, builder().setAttack(THROWN_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAttackDamage(10).setAnim(s->{
                 s.addAnimation("idle", CabbageAnimation.idle);
                 s.addAnimation("shoot", CabbageAnimation.shoot);
-            }).setUltimate(new CircleSkill<>("ultimate",80, 10)
+            }).setUltimate(new CircleSkill<>("ultimate",50, 10)
                     .onInit(e->e.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(Rhyme.space("energy"),100, AttributeModifier.Operation.ADD_VALUE)))
                     .onTick(e->{ if(e.skills.canTrigger()){
-                        level.getEntities(e,e.getBoundingBox().inflate(20),target->target instanceof Monster).forEach(tar->{
-                            if(tar instanceof Monster monster)
-                                THROWN_PEA_SHOOT.accept(e,monster);
+                        level.getEntities(e,e.getBoundingBox().inflate(20),target->target instanceof LivingEntity liv &&  e.canAttack(liv)).forEach(tar->{
+                            if(tar instanceof LivingEntity liv)
+                                THROWN_PEA_SHOOT.accept(e, liv);
                         });
                     }})
                     .onOver(e-> (e.getAttribute(Attributes.ATTACK_DAMAGE)).removeModifier(Rhyme.space("energy")))
@@ -158,7 +158,7 @@ public class PlantEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Chomper>> CHOMPER = registerCreature("chomper","大嘴花",(type, level)->
             new Chomper(type,level, 20 * 15,200,NORMAL_PEA_PLANT.get()
                     .setUltimate(ChomperSkill)
-            ),1.1F,2.1F);
+            ),0.85F,1.95F);
 
 
 

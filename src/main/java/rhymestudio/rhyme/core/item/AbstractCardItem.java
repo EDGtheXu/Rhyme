@@ -9,6 +9,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -127,7 +128,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
     public static boolean canPutPlant(Level level, Player player, BlockPos pos){
         if(!level.getBlockState(pos.below()).is(BlockTags.DIRT)) return false;
         if(!level.getBlockState(pos).is(BlockTags.AIR)) return false;
-        if(!level.getEntities(player,new AABB(pos).inflate(-0.2f)).isEmpty()) return false;
+        if(!level.getEntities(player,new AABB(pos).inflate(-0.2f),e->e instanceof LivingEntity).isEmpty()) return false;
         return true;
     }
 

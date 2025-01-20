@@ -97,9 +97,11 @@ public class DebugEntityHelper{
             VertexConsumer vertexconsumer = buf.getBuffer(rendertype);
             poseStack.pushPose();
             poseStack.translate(e.getX() - playerPos.x(), e.getY() - playerPos.y(), e.getZ() - playerPos.z());
-            poseStack.scale(1,-1,1);
+//            poseStack.scale(1,-1,1);
+            poseStack.translate(0,-1f,0);
+            poseStack.scale(renderer.scale,-renderer.scale,renderer.scale);
+            poseStack.translate(0,-renderer.scale,0);
             poseStack.mulPose(new Quaternionf().rotateY((float) Math.PI));
-
             model.renderToBuffer(poseStack, vertexconsumer, 15728880,
                     OverlayTexture.pack(OverlayTexture.u(0.6f), 15), color.getRGB());
             poseStack.popPose();

@@ -12,10 +12,9 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -32,9 +31,10 @@ import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
 
 import java.util.function.Consumer;
 
-public abstract class AbstractPlant extends Mob implements ICafeMob{
+public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
 
     public static final EntityDataAccessor<String> DATA_CAFE_POSE_NAME = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> DATA_CARD_LVL = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.INT);
 
     public String namePath;
     public Player owner;
@@ -45,7 +45,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     private CircleSkill ultimate;
     public boolean canBePush = true;
     public boolean isUltimating = false;
-    public int cardLevel = 1;
+    private int cardLevel = 0;
 
     public <T extends AbstractPlant> AbstractPlant(EntityType<T> tEntityType, Level level,Builder builder) {
         super(tEntityType, level);
@@ -57,6 +57,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     public void setCardLevel(int level){
         this.cardLevel = level;
+        this.entityData.set(DATA_CARD_LVL, level);
     }
 
     public int getCardLevel(){
@@ -106,21 +107,24 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     @Override
     public void registerGoals(){
+        this.targetSelector.addGoal(0,new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10,true,true, this::canAttack));
 
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10,true,true, this::canAttack));
 
         this.goalSelector.addGoal(1,new ShootGoal(this,null));
         this.goalSelector.addGoal(5,new LookAtPlayerGoal(this, Player.class,3,0.1f){
             @Override
             public boolean canUse() {
-                return (getTarget()==null || !getTarget().isAlive())&& super.canUse();
+                return (getTarget()==null || !getTarget().isAlive()) && super.canUse();
             }});
         this.goalSelector.addGoal(6,new RandomLookAroundGoal(this){
             @Override
             public boolean canUse() {
-                return (getTarget()==null || !getTarget().isAlive())&& super.canUse();
+                return (getTarget()==null || !getTarget().isAlive()) && super.canUse();
             }
         });
+
+
 
     }
 
@@ -150,15 +154,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        if(target.isAlive() && (
-                target instanceof Monster
-                        || target instanceof Slime
-                        || (target instanceof NeutralMob  && !(target instanceof IronGolem))
-                )
-        ) return true;
+        return target.isAlive() && target instanceof Enemy && target.canBeSeenAsEnemy();
 //        if(!target.isAlive()) {setTarget(null);return false;}
-        if(target instanceof AbstractPlant || target instanceof Player)return false;
-        return false;
     }
 
     @Override
@@ -182,8 +179,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         super.tick();
         if(this.getTarget()!=null && getTarget().isAlive()){
             if(builder.shouldRotHead){
-                this.lookControl.setLookAt(getTarget());
-                this.lookAt(getTarget(),360,85);
+//                this.lookControl.setLookAt(getTarget());
+//                this.lookAt(getTarget(),360,85);
             }
             this.setYBodyRot(this.yHeadRot);
         }
@@ -198,6 +195,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_CAFE_POSE_NAME, "idle");
+        builder.define(DATA_CARD_LVL, 0);
     }
 
 
@@ -218,7 +216,8 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
             String name = entityData.get(DATA_CAFE_POSE_NAME);
             this.animState.playAnim(name, this.tickCount);
-
+        } else if(level().isClientSide() && DATA_CARD_LVL.equals(key)){
+            this.cardLevel = entityData.get(DATA_CARD_LVL);
         }
         super.onSyncedDataUpdated(key);
     }
@@ -253,7 +252,7 @@ public abstract class AbstractPlant extends Mob implements ICafeMob{
         public  int health = 20;
         public  float animSpeed = 1;
         public float projSpeed = 1;
-        private boolean shouldRotHead = true;
+        public boolean shouldRotHead = true;
 
         public  int attackTriggerTick = 20;
         public  int attackAnimTick = 30;

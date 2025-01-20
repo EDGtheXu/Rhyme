@@ -10,7 +10,7 @@ import rhymestudio.rhyme.Rhyme;
 public class FrozenEffect extends MobEffect {
 
     public FrozenEffect(MobEffectCategory pCategory, int pColor) {
-        super(pCategory, 0);
+        super(pCategory, pColor);
         addAttributeModifier(Attributes.MOVEMENT_SPEED, Rhyme.space("frozen"),-0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
     }
 

@@ -3,6 +3,7 @@ package rhymestudio.rhyme.core.entity.zombies.prefab;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 
@@ -26,6 +27,7 @@ public abstract class AbstractPrefab {
                 .addTarget((t,e)->{
                     t.addGoal(1, new HurtByTargetGoal(e));
                     t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
+                    t.addGoal(3, new NearestAttackableTargetGoal<>(e, IronGolem.class,false, LivingEntity::canBeSeenAsEnemy));
                 })
         ;
     }

@@ -3,14 +3,18 @@ package rhymestudio.rhyme.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import rhymestudio.rhyme.client.model.GeoNormalModel;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -53,6 +57,26 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
     @Override
     public void render(T entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+
+        if(entity instanceof AbstractPlant plant&& Minecraft.getInstance().player.distanceTo(entity) < 2){
+            poseStack.pushPose();
+            poseStack.translate(0, 1, 0);
+            poseStack.scale(0.02f, -0.02f, 0.02f);
+            poseStack.translate(0, -15 - (entity.getEyeHeight()-1) * 50,0);
+            float f = Minecraft.getInstance().player.yHeadRot;
+            Quaternionf q = new Quaternionf().rotateY(-(float) Math.toRadians(f + 180));
+            q = q.rotateX((float) Math.toRadians(Minecraft.getInstance().player.getXRot()));
+            poseStack.mulPose(q);
+            poseStack.translate(-10, 0,0);
+
+
+            int lvl = plant.getCardLevel();
+            CardQualityComponent quality = CardQualityComponent.of(lvl);
+            int color = quality.color();
+            Minecraft.getInstance().font.drawInBatch("lvl:"+lvl,0,0,color,false,poseStack.last().pose(),buffer, Font.DisplayMode.SEE_THROUGH,0xf000f0,packedLight);
+
+            poseStack.popPose();
+        }
 
         if(entity.getEntityData().get(AbstractPlant.DATA_CAFE_POSE_NAME).equals("ultimate")) {
             energy = true;
