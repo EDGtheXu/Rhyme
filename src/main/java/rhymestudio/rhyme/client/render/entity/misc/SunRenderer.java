@@ -5,13 +5,14 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
+import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.model.GeoNormalModel;
 import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class SunRenderer extends GeoEntityRenderer<SunItemEntity> {
     public SunRenderer(EntityRendererProvider.Context context) {
-        super(context, new GeoNormalModel<>("sun"));
+        super(context, new GeoNormalModel<>(Rhyme.space("sun")));
     }
 
     public void render(SunItemEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {

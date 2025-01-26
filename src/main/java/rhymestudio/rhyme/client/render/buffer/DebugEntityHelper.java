@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Quaternionf;
-import rhymestudio.rhyme.client.render.GeoNormalRenderer;
+import rhymestudio.rhyme.client.render.GeoPlantRenderer;
 import rhymestudio.rhyme.client.render.entity.BasePlantRenderer;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.item.AbstractCardItem;
@@ -109,7 +109,7 @@ public class DebugEntityHelper{
             poseStack.pushPose();
             poseStack.translate(e.getX() - playerPos.x(), e.getY() - playerPos.y() - 1.5f , e.getZ() - playerPos.z());
 
-            if(renderer instanceof GeoNormalRenderer<?> normalRenderer) {
+            if(renderer instanceof GeoPlantRenderer<?> normalRenderer) {
                 normalRenderer.consumedOverlay = OverlayTexture.pack(OverlayTexture.u(0.6f), 15);
                 normalRenderer.consumedColor = software.bernie.geckolib.util.Color.ofOpaque(color.getRGB());
             }

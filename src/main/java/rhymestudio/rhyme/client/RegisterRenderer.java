@@ -16,12 +16,12 @@ import rhymestudio.rhyme.client.model.proj.CabbageProjModel;
 import rhymestudio.rhyme.client.model.proj.PeaProjModel;
 import rhymestudio.rhyme.client.model.zombieModels.NormalZombieModel;
 import rhymestudio.rhyme.client.render.GeoNormalRenderer;
+import rhymestudio.rhyme.client.render.GeoPlantRenderer;
 import rhymestudio.rhyme.client.render.entity.BasePlantRenderer;
 
 import rhymestudio.rhyme.client.render.entity.misc.SunRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.HelmetEntityRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.ModelPartRenderer;
-import rhymestudio.rhyme.client.render.entity.npc.CrazyDaveRenderer;
 import rhymestudio.rhyme.client.render.entity.proj.ProjRenderer;
 import rhymestudio.rhyme.client.render.entity.zombie.NormalZombieRenderer;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
@@ -52,11 +52,11 @@ public class RegisterRenderer {
         registerOne(event,POTATO_MINE.get(),getRenderSup(PotatoMineModel.class),0,1f);
 
 //        registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);
-        event.registerEntityRenderer(PUFF_SHROOM.get(), c -> new GeoNormalRenderer<>(c, PUFF_SHROOM.get(),false));
-        event.registerEntityRenderer(SUN_SHROOM.get(), c -> new GeoNormalRenderer<>(c, SUN_SHROOM.get(),false));
+        event.registerEntityRenderer(PUFF_SHROOM.get(), c -> new GeoPlantRenderer<>(c, PUFF_SHROOM.getId(),false));
+        event.registerEntityRenderer(SUN_SHROOM.get(), c -> new GeoPlantRenderer<>(c, SUN_SHROOM.getId(),false));
         registerOne(event,CABBAGE_PULT.get(),getRenderSup(CabbageModel.class));
 
-        event.registerEntityRenderer(CHOMPER.get(), c -> new GeoNormalRenderer<>(c, CHOMPER.get(),false));
+        event.registerEntityRenderer(CHOMPER.get(), c -> new GeoPlantRenderer<>(c, CHOMPER.getId(),false));
 
 
 
@@ -77,7 +77,7 @@ public class RegisterRenderer {
         // 其他
         event.registerEntityRenderer(MiscEntities.HELMET_ENTITY.get(),HelmetEntityRenderer::new);
         event.registerEntityRenderer(MODEL_PART_ENTITY.get(), ModelPartRenderer::new);
-        event.registerEntityRenderer(CRAZY_DAVE.get(), CrazyDaveRenderer::new);
+        event.registerEntityRenderer(CRAZY_DAVE.get(), c -> new GeoNormalRenderer<>(c, CRAZY_DAVE.getId()));
 
     }
 

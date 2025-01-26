@@ -8,7 +8,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import rhymestudio.rhyme.client.model.CrazyDaveModel;
 import rhymestudio.rhyme.client.model.plantModels.*;
 import rhymestudio.rhyme.client.model.proj.CabbageProjModel;
 import rhymestudio.rhyme.client.model.proj.PeaProjModel;
@@ -43,7 +42,7 @@ public class RegisterModel {
         register(evt, NormalZombieModel.class);
 
         // 疯狂戴夫模型
-        register(evt, CrazyDaveModel.class);
+//        register(evt, CrazyDaveModel.class);
     }
 
 
