@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity;
 
+import net.minecraft.world.entity.Entity;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.entity.plants.Chomper;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -24,14 +25,10 @@ import static rhymestudio.rhyme.core.entity.AbstractPlant.DATA_CAFE_POSE_NAME;
 public interface IFSMGeoMob<T extends AbstractPlant> extends GeoEntity {
     Map<String, RawAnimation> getAnimationMap();
 
-    default void addGeoAnim(CircleSkill skill, boolean loop){
-        getSelf().addSkill(skill);
-        if(loop) {
-            getAnimationMap().put(skill.name, RawAnimation.begin().thenPlay(skill.name));
-        } else {
-            getAnimationMap().put(skill.name, RawAnimation.begin().thenLoop(skill.name));
-        }
-    }
+//    default void addGeoAnim(CircleSkill skill){
+//        getSelf().addSkill(skill);
+//        getAnimationMap().put(skill.name, RawAnimation.begin().thenPlay(skill.name));
+//    }
 
 
     default T getSelf(){
@@ -40,7 +37,7 @@ public interface IFSMGeoMob<T extends AbstractPlant> extends GeoEntity {
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(DefaultAnimations.genericIdleController(this));
         controllers.add(new AnimationController<>(this, "skills_controller",20, state -> {
-            Chomper entity =  (Chomper) state.getData(DataTickets.ENTITY);
+            Entity entity = state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
             if (getSelf().skills.count() == 0) return PlayState.STOP;
             String name = getSelf().getEntityData().get(DATA_CAFE_POSE_NAME);

@@ -1,16 +1,20 @@
 package rhymestudio.rhyme.core.entity.plants.prefabs;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.BaseProj;
+import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.entity.proj.LineProj;
 import rhymestudio.rhyme.core.entity.proj.ThrowableProj;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
+import rhymestudio.rhyme.core.registry.items.MaterialItems;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -79,7 +83,7 @@ public class PresetAttacks {
 
         Vec3 dir;
         if(tar!=null) {
-            Vec3 pos = tar.position().add(0,tar.getEyeHeight()/2,0);
+            Vec3 pos = tar.position().add(0,tar.getEyeHeight()* 0.75f,0);
             dir = pos.subtract(me.getEyePosition());
 //            dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
         } else dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
@@ -141,4 +145,13 @@ public class PresetAttacks {
         void accept(A a, B b, C c, D d, E e);
     }
 
+    // 其他静态方法
+    public static void produceSun(AbstractPlant plant, int count){
+        SunItemEntity entity = new SunItemEntity(plant.level(), plant.position().add(0,0.5,0));
+        entity.setDeltaMovement(plant.getRandom().nextFloat()*0.05f,0.05f,plant.getRandom().nextFloat()*0.05f);
+        ItemStack stack = new ItemStack(MaterialItems.SOLID_SUN.get());
+        stack.set(DataComponents.MAX_DAMAGE, count);
+        entity.setItem(stack);
+        plant.level().addFreshEntity(entity);
+    }
 }

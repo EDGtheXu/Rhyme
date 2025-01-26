@@ -21,7 +21,6 @@ public class Pea extends AbstractPlant {
 
     @Override
     public void addSkills() {
-        super.addSkills();
         //tip                                                  idle持续时间        触发攻击时间
         CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle",  999999999, builder.attackInternalTick).
                 onTick(a-> {

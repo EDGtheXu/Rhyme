@@ -13,11 +13,14 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.animation.plantAnimations.*;
+import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.entity.plants.*;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
+import rhymestudio.rhyme.core.entity.plants.shroom.PuffShroom;
+import rhymestudio.rhyme.core.entity.plants.shroom.SunShroom;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
 import static rhymestudio.rhyme.Rhyme.add_zh_en;
@@ -39,7 +42,7 @@ public class PlantEntities {
                 s.addAnimation("sun", SunflowerAnimation.sun,1);
             }).setUltimate(new CircleSkill<>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 5 == 0)
-                                ((SunFlower)e).doSun();
+                                produceSun(e, 25);
                             }))
 
             ));
@@ -133,16 +136,16 @@ public class PlantEntities {
 
     //      tip 土豆雷类
     public static final DeferredHolder<EntityType<?>, EntityType<PotatoMine>> POTATO_MINE = registerCreature("potato_mine","土豆雷",(type, level)->
-            new PotatoMine(type,level, 15 * 20,1,EXPLORE_PLANT.apply(1800).setAnim(s->{
+            new PotatoMine(type,level, 15 * 20,1,EXPLORE_PLANT.apply(250).setAnim(s->{
                 s.addAnimation("idle", PotatoMineAnimation.idle);
                 s.addAnimation("up", PotatoMineAnimation.up);
                 s.addAnimation("idle_on", PotatoMineAnimation.idle_on);
                 s.addAnimation("bomb", PotatoMineAnimation.bomb);
             }).setUltimate(PotatoEnergy)
-            ),1f,0.5f);
+            ),0.85f,0.5f);
 
     //      tip 蘑菇类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
             new PuffShroom(type,level, builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("sleep", PuffShroomAnimation.sleeping,1);
                 s.addAnimation("idle", PuffShroomAnimation.idle,1);
@@ -152,6 +155,14 @@ public class PlantEntities {
                         PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
                     })
             )),0.5f,0.5f);
+
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> SUN_SHROOM = registerCreature("sun_shroom","阳光菇",(type, level)->
+            new SunShroom(type,level,NORMAL_SUNFLOWER_PLANT.get()
+                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                            .onTick(e->{ if(e.tickCount % 5 == 0)
+                                produceSun(e, 25);
+                            })
+                    )),0.5f,0.5f);
 
 
     //      tip 大嘴花类

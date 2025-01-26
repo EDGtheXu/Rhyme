@@ -47,8 +47,8 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     public boolean isUltimating = false;
     private int cardLevel = 0;
 
-    public <T extends AbstractPlant> AbstractPlant(EntityType<T> tEntityType, Level level,Builder builder) {
-        super(tEntityType, level);
+    public <T extends AbstractPlant> AbstractPlant(EntityType<T> entityType, Level level, Builder builder) {
+        super(entityType, level);
         this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
         this.builder = builder;
         if(level.isClientSide) builder.anim.accept(animState);
@@ -69,9 +69,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         this.owner = player;
     }
 
-    protected void addSkills(){
-
-    }
+    protected abstract void addSkills();
 
     public void triggerUltimate(){
         if(ultimate != null){
@@ -108,10 +106,21 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     @Override
     public void registerGoals(){
         this.targetSelector.addGoal(0,new HurtByTargetGoal(this));
+        addAttackGoals();
+        addLookAtTargetGoal();
+        addLookAtPlayerGoal();
+    }
+
+    protected void addAttackGoals(){
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10,true,true, this::canAttack));
 
+    }
 
+    protected void addLookAtTargetGoal(){
         this.goalSelector.addGoal(1,new ShootGoal(this,null));
+    }
+
+    protected void addLookAtPlayerGoal(){
         this.goalSelector.addGoal(5,new LookAtPlayerGoal(this, Player.class,3,0.1f){
             @Override
             public boolean canUse() {
@@ -123,9 +132,6 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
                 return (getTarget()==null || !getTarget().isAlive()) && super.canUse();
             }
         });
-
-
-
     }
 
     @Override
@@ -198,19 +204,6 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         builder.define(DATA_CARD_LVL, 0);
     }
 
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.cardLevel = compound.getInt("cardLevel");
-    }
-
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("cardLevel",this.cardLevel);
-
-    }
-
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
@@ -221,6 +214,24 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         }
         super.onSyncedDataUpdated(key);
     }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.cardLevel = compound.getInt("cardLevel");
+        this.skills.index = compound.getInt("skillIndex");
+        this.skills.tick = compound.getInt("skillTick");
+        this.entityData.set(DATA_CARD_LVL, this.cardLevel);
+        this.entityData.set(DATA_CAFE_POSE_NAME, this.skills.getCurSkillName());
+    }
+
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("cardLevel",this.cardLevel);
+        compound.putInt("skillIndex",this.skills.index);
+        compound.putInt("skillTick",this.skills.tick);
+    }
+
 
     @Override
     public boolean ignoreExplosion(Explosion e){
@@ -243,9 +254,6 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             PacketDistributor.sendToPlayer(serverPlayer, new PlantRecorderPacket(list));
         }
     }
-
-
-
 
     public static class Builder{
         //默认参数（豌豆）

@@ -169,11 +169,12 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     }
 
     @Override
-    protected boolean canHitEntity(@NotNull Entity pTarget) {
-        return pTarget != getOwner() &&
-                !(pTarget instanceof AbstractPlant) &&
-                !(pTarget instanceof Player) &&
-                super.canHitEntity(pTarget);
+    protected boolean canHitEntity(@NotNull Entity target) {
+
+        return target.canBeHitByProjectile() &&
+                target != getOwner() &&
+                !(target instanceof AbstractPlant) &&
+                !(target instanceof Player);
     }
 
     @Override//流体阻力

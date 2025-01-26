@@ -59,7 +59,6 @@ public class PotatoMine extends AbstractPlant {
 
     @Override
     public void addSkills() {
-        super.addSkills();
         CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle", readyTime, 0);
         CircleSkill<AbstractPlant> up = new CircleSkill<>( "up",  29, 0);
         CircleSkill<AbstractPlant> on = new CircleSkill<>( "idle_on",  999999999, 0)

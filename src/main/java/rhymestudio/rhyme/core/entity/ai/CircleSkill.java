@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity.ai;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 
@@ -24,7 +25,6 @@ public class CircleSkill<T extends AbstractPlant> {
         this.name = name;
         this.timeContinue = timeContinue;
         this.timeTrigger = timeTrigger;
-
     }
 
     public CircleSkill(String animName, int timeContinue, int timeTrigger,

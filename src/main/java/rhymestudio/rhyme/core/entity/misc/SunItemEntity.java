@@ -1,6 +1,7 @@
 package rhymestudio.rhyme.core.entity.misc;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -109,12 +110,14 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
         super.readAdditionalSaveData(pCompound);
     }
 
+    @Override
     public void playerTouch(Player entity) {
         if(this.tickCount<20)return;
         if (touchTick>tickCount) {
-            if (entity.takeXpDelay == 0 && entity instanceof ServerPlayer serverplayer ) {
+            var singleCount =  getItem().get(DataComponents.MAX_DAMAGE);
+            if (entity.takeXpDelay == 0 && entity instanceof ServerPlayer serverplayer && singleCount!=null ) {
                 var data = serverplayer.getData(ModAttachments.PLAYER_STORAGE);
-                data.sunCount += this.getItem().getCount() * 25;
+                data.sunCount += this.getItem().getCount() * singleCount;
                 data.sunCount = Math.min(data.sunCount, data.getMaxSunCount());
                 data.sendSunCountUpdate(serverplayer);
                 playSound(ModSounds.POINTS.get());
@@ -133,7 +136,9 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
                 BlockPos pos = serverPlayer.getOnPos().offset(offsetX, 0, offsetZ).atY(256);
                 if (serverLevel.isLoaded(pos)) {
                     var entity = new SunItemEntity(serverLevel, pos.getCenter());
-                    entity.setItem(new ItemStack(MaterialItems.SOLID_SUN.get()));
+                    ItemStack stack = new ItemStack(MaterialItems.SOLID_SUN.get());
+                    stack.set(DataComponents.MAX_DAMAGE, 25);
+                    entity.setItem(stack);
                     serverLevel.addFreshEntity(entity);
                 }
             }

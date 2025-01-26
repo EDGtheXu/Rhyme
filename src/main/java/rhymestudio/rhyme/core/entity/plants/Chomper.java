@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.IFSMGeoMob;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chomper> {
+public class Chomper extends AbstractGeoPlant {
     int eatTime;
     int killBlood;
     public List<LivingEntity> ultimateTargets = new ArrayList<>();
@@ -34,10 +35,8 @@ public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chom
         this.killBlood = killBlood;
     }
     LivingEntity target;
-    protected Map<String, RawAnimation> animationMap = new HashMap<>();
     @Override
     public void addSkills() {
-        super.addSkills();
         this.entityData.set(DATA_CAFE_POSE_NAME, "misc.idle");
         CircleSkill<AbstractPlant> idle = new CircleSkill<>( "misc.idle",  999999999, 0)
                 .onTick(a-> {
@@ -62,10 +61,10 @@ public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chom
         CircleSkill<AbstractPlant> eating = new CircleSkill<>( "eating", eatTime, 0);
         CircleSkill<AbstractPlant> eatingFinish = new CircleSkill<>( "eating_finish", 60, 0);
 
-        addGeoAnim(idle,true);
-        addGeoAnim(attack,false);
-        addGeoAnim(eating,true);
-        addGeoAnim(eatingFinish,false);
+        addSkill(idle);
+        addSkill(attack);
+        addSkill(eating);
+        addSkill(eatingFinish);
     }
     @Override
     public boolean hurt(DamageSource damageSource, float damage){
@@ -82,17 +81,6 @@ public class Chomper extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chom
         if(hp <= 0) {
             tar.discard();
         }
-    }
-
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-    @Override
-    public Map<String, RawAnimation> getAnimationMap() {
-        return animationMap;
     }
 
 }

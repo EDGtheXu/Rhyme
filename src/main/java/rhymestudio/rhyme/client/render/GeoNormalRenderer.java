@@ -8,7 +8,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -39,6 +41,15 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
         this.scale=scale;
         this.offsetY=offsetY;
     }
+
+    public GeoNormalRenderer(EntityRendererProvider.Context renderManager, EntityType<?> type, boolean ifRotX) {
+        this(renderManager, BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath(), ifRotX,1,0);
+    }
+    public GeoNormalRenderer(EntityRendererProvider.Context renderManager, EntityType<?> type, boolean ifRotX, float scale, float offsetY) {
+        this(renderManager, BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath(), ifRotX,scale,offsetY);
+    }
+
+
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);

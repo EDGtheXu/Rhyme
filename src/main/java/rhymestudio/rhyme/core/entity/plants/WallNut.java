@@ -16,7 +16,6 @@ public class WallNut extends AbstractPlant {
 
     @Override
     public void addSkills() {
-        super.addSkills();
         CircleSkill<AbstractPlant> idle1 = new CircleSkill<>( "idle1",  999999999, 0)
                 .onTick(a-> {
                     doSmth();

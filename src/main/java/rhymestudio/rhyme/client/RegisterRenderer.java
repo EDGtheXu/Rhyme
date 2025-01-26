@@ -50,10 +50,13 @@ public class RegisterRenderer {
         registerOne(event, REPEATER.get(),getRenderSup(RepeaterModel.class),0.5f,1f,true);
         registerOne(event,WALL_NUT.get(),getRenderSup(WallNutModel.class),0.5f,1f);
         registerOne(event,POTATO_MINE.get(),getRenderSup(PotatoMineModel.class),0,1f);
-        registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);
+
+//        registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);
+        event.registerEntityRenderer(PUFF_SHROOM.get(), c -> new GeoNormalRenderer<>(c, PUFF_SHROOM.get(),false));
+        event.registerEntityRenderer(SUN_SHROOM.get(), c -> new GeoNormalRenderer<>(c, SUN_SHROOM.get(),false));
         registerOne(event,CABBAGE_PULT.get(),getRenderSup(CabbageModel.class));
 
-        event.registerEntityRenderer(CHOMPER.get(), c -> new GeoNormalRenderer<>(c, "chomper",false));
+        event.registerEntityRenderer(CHOMPER.get(), c -> new GeoNormalRenderer<>(c, CHOMPER.get(),false));
 
 
 
