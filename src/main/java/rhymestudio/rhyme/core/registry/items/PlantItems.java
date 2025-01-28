@@ -26,7 +26,10 @@ public class PlantItems {
 
     // tip 蘑菇类
     public static final DeferredItem<Item> PUFF_SHROOM_ITEM = registerPlant("puff_shroom", "小喷菇", ()-> builder(PlantEntities.PUFF_SHROOM,0).build());
-    public static final DeferredItem<Item> SUN_SHROOM_ITEM = registerPlant("sun_shroom", "阳光菇", ()-> builder(PlantEntities.SUN_SHROOM,0).build());
+
+    public static final DeferredItem<Item> FUME_SHROOM_ITEM = registerPlant("fume_shroom", "大喷菇", ()-> builder(PlantEntities.FUME_SHROOM,75).build());
+
+    public static final DeferredItem<Item> SUN_SHROOM_ITEM = registerPlant("sun_shroom", "阳光菇", ()-> builder(PlantEntities.SUN_SHROOM,25).build());
 
     // tip 土豆雷类
     public static final DeferredItem<Item> POTATO_MINE_ITEM = registerPlant("potato_mine", "土豆雷", ()-> builder(PlantEntities.POTATO_MINE,25).cd(30).build());

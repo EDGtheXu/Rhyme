@@ -14,6 +14,7 @@ import rhymestudio.rhyme.core.entity.misc.ModelPartEntity;
 import rhymestudio.rhyme.core.entity.proj.LineProj;
 import rhymestudio.rhyme.core.entity.proj.ThrowableProj;
 import rhymestudio.rhyme.core.registry.ModEffects;
+import rhymestudio.rhyme.core.registry.ModParticles;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.function.Supplier;
@@ -38,6 +39,11 @@ public class MiscEntities {
             new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> PUFF_SHROOM_PROJ = registerMisc("puff_shroom_proj",(e,l)->
             new LineProj(e,l,BaseProj.TextureLib.PUFF_SHROOM_BULLET).setHitSound(ModSounds.SPLAT),0.15F,0.15F);
+    public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> FUME_SHROOM_PROJ = registerMisc("fume_shroom_proj",(e,l)->
+            new LineProj(e,l,BaseProj.TextureLib.EMPTY).setExistTick(10).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
+                    for(int i=0;i<5;i++)
+                        p.level().addParticle(ModParticles.PUFF_PROJ_PARTICLE.get(),p.getX(),p.getY()+0.5,p.getZ(),0.0D,0,0);
+            }), 1F,1F);
 
         // tip 投掷
     public static final DeferredHolder<EntityType<?>, EntityType<ThrowableProj>> CABBAGE_PROJ = registerMisc("cabbage_proj",(e, l)->

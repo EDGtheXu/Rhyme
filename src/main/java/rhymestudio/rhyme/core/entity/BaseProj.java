@@ -31,6 +31,7 @@ import rhymestudio.rhyme.network.s2c.ProjHitPacket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public abstract class BaseProj extends AbstractHurtingProjectile{
@@ -41,6 +42,7 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     protected MobEffectInstance effect;
     public ResourceLocation texture;
     protected DeferredHolder<SoundEvent,SoundEvent> hitSound;
+    public Consumer<BaseProj> clientTickCallback;
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
@@ -53,7 +55,14 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
 
     public float getDamage() {return damage;}
     public void addDamage(int damage) {this.damage += damage;}
-    public void setPenetrate(int penetration){this.penetration = penetration;}
+    public <T extends BaseProj> T setPenetrate(int penetration){
+        this.penetration = penetration;
+        return (T) this;
+    }
+    public <T extends BaseProj> T setClientTickCallback(Consumer<BaseProj> clientTickCallback){
+        this.clientTickCallback = clientTickCallback;
+        return (T) this;
+    }
     public void setTexture(ResourceLocation texture){this.texture = texture;}
     public ResourceLocation getTexture(){return texture;}
     public abstract int waveDur();
@@ -101,6 +110,8 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
                 return;
             }
             doAABBHurt();
+        }else if(clientTickCallback!= null){
+            clientTickCallback.accept(this);
         }
 
     }
@@ -149,11 +160,12 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         Vec3 pos = hurter.position();
 
         if(this.level() instanceof ServerLevel serverlevel){
-            serverlevel.sendParticles(new BrokenProjOptions(this.texture.getPath()),
-                    pos.x,
-                    pos.y+1,
-                    pos.z,
-                    20, 0.2, 0, 0.2, 0.1F);
+            if(this.texture != null)
+                serverlevel.sendParticles(new BrokenProjOptions(this.texture.getPath()),
+                        pos.x,
+                        pos.y+1,
+                        pos.z,
+                        20, 0.2, 0, 0.2, 0.1F);
             penetration--;
             if(penetration <= 0) {
                 discard();
@@ -208,6 +220,7 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         public static final ResourceLocation SNOW_PEA = Rhyme.space("textures/entity/snow_pea_bullet.png");
         public static final ResourceLocation PUFF_SHROOM_BULLET = Rhyme.space("textures/entity/puff_shroom_bullet.png");
         public static final ResourceLocation FIRE_PEA = Rhyme.space("textures/entity/fire_pea_bullet.png");
+        public static final ResourceLocation EMPTY = null;
 
     }
 

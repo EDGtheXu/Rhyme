@@ -22,6 +22,7 @@ import rhymestudio.rhyme.client.render.entity.BasePlantRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.SunRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.HelmetEntityRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.ModelPartRenderer;
+import rhymestudio.rhyme.client.render.entity.plant.SunShroomRenderer;
 import rhymestudio.rhyme.client.render.entity.proj.ProjRenderer;
 import rhymestudio.rhyme.client.render.entity.zombie.NormalZombieRenderer;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
@@ -53,7 +54,8 @@ public class RegisterRenderer {
 
 //        registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);
         event.registerEntityRenderer(PUFF_SHROOM.get(), c -> new GeoPlantRenderer<>(c, PUFF_SHROOM.getId(),false));
-        event.registerEntityRenderer(SUN_SHROOM.get(), c -> new GeoPlantRenderer<>(c, SUN_SHROOM.getId(),false));
+        event.registerEntityRenderer(FUME_SHROOM.get(), c -> new GeoPlantRenderer<>(c, FUME_SHROOM.getId(),false));
+        event.registerEntityRenderer(SUN_SHROOM.get(), c -> new SunShroomRenderer<>(c, SUN_SHROOM.getId()));
         registerOne(event,CABBAGE_PULT.get(),getRenderSup(CabbageModel.class));
 
         event.registerEntityRenderer(CHOMPER.get(), c -> new GeoPlantRenderer<>(c, CHOMPER.getId(),false));
@@ -64,6 +66,7 @@ public class RegisterRenderer {
         registerProj(event,PEA_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
         registerProj(event,ICE_PEA_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
         registerProj(event,PUFF_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
+        registerProj(event,FUME_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
 
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
 

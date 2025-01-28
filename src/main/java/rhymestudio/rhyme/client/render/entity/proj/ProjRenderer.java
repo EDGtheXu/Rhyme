@@ -31,12 +31,14 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
 
     @Override
     public ResourceLocation getTextureLocation(BaseProj pEntity) {
-        if(pEntity.getTexture() == null)return Rhyme.space("textures/entity/missing_texture.png");
+        if(pEntity.getTexture() == null) return BaseProj.TextureLib.EMPTY;
         return pEntity.getTexture();
     }
 
     @Override
     public void render(T pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+        if(pEntity.getTexture()==null) return;
+
         super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
         pPoseStack.pushPose();
         pPoseStack.scale(size,size,size);

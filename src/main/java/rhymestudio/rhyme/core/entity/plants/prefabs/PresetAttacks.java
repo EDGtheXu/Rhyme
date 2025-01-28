@@ -90,10 +90,13 @@ public class PresetAttacks {
         BaseProj proj1 = proj.get().create(me.level());
 //        BaseProj proj1 = new LineProj(PlantEntities.ICE_PEA_PROJ.get(), me.level(),BaseProj.TextureLib.SNOW_PEA,new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5));
         proj1.setOwner(me);
+        if(!me.builder.shouldRotX)dir = dir.multiply(1,0,1);
         proj1.setPos(me.getEyePosition().add(0,offsetY,0));
         proj1.shoot(dir.x, dir.y, dir.z, me.builder.projSpeed, 1.0F);
         me.level().addFreshEntity(proj1);
     };
+
+
 
     //普通豌豆
     public static final BiConsumer<AbstractPlant, LivingEntity> PEA_SHOOT = (me, tar) -> {
@@ -106,10 +109,15 @@ public class PresetAttacks {
 
 
 
-    //小喷菇
+    // 小喷菇
     public static final BiConsumer<AbstractPlant, LivingEntity> SPORE_SHOOT = (me, tar) -> {
         PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.PUFF_SHROOM_PROJ, -0.45f);
     };
+    // 大喷菇
+    public static final BiConsumer<AbstractPlant, LivingEntity> FUME_SHOOT = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FUME_SHROOM_PROJ, 0f);
+    };
+
 
     /**
      * 投掷物弹幕

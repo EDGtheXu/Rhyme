@@ -146,17 +146,22 @@ public class PlantEntities {
 
     //      tip 蘑菇类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
-            new PuffShroom(type,level, builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
-                s.addAnimation("sleep", PuffShroomAnimation.sleeping,1);
-                s.addAnimation("idle", PuffShroomAnimation.idle,1);
-                s.addAnimation("shoot", PuffShroomAnimation.attack,1);
-            }).setUltimate(new CircleSkill<>("ultimate",50, 0)
-                    .onTick(e->{ if(e.tickCount % 3 == 0)
-                        PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
-                    })
-            )),0.5f,0.5f);
+            new PuffShroom(type,level, builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), PUFF_SHROOM_PLANT.get()
+                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                            .onTick(e->{ if(e.tickCount % 3 == 0)
+                                PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
+                            })
+                    )),0.5f,0.5f);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> SUN_SHROOM = registerCreature("sun_shroom","阳光菇",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> FUME_SHROOM = registerCreature("fume_shroom","大喷菇",(type, level)->
+            new PuffShroom(type,level, builder().setAttack(FUME_SHOOT).setSound(ModSounds.PUFF).build(), PUFF_SHROOM_PLANT.get()
+                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                            .onTick(e->{ if(e.tickCount % 3 == 0)
+                                PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
+                            })
+                    )));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<SunShroom>> SUN_SHROOM = registerCreature("sun_shroom","阳光菇",(type, level)->
             new SunShroom(type,level,NORMAL_SUNFLOWER_PLANT.get()
                     .setUltimate(new CircleSkill<>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 5 == 0)

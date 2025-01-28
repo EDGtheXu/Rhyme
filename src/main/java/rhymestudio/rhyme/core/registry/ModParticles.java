@@ -19,6 +19,7 @@ public final class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MODID);
 
     public static final DeferredHolder<ParticleType<?>, ParticleType<BrokenProjOptions>> BROKEN_PROJ_PARTICLE = register("broken_proj_particle", false, BrokenProjOptions.CODEC, BrokenProjOptions.STREAM_CODEC);
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> PUFF_PROJ_PARTICLE = PARTICLES.register("puff_proj_particle", ()->new SimpleParticleType(false));
 
 
     private static <T extends ParticleOptions> DeferredHolder<ParticleType<?>, ParticleType<T>> register(String id,boolean overrideLimiter,MapCodec<T> mapCodec, StreamCodec<? super RegistryFriendlyByteBuf, T>streamCodec){

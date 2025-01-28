@@ -23,6 +23,11 @@ public class LineProj extends BaseProj {
         this.existTick = 20 * 5;
     }
 
+    public LineProj setExistTick(int existTick) {
+        this.existTick = existTick;
+        return this;
+    }
+
 
     @Override
     public void tick(){

@@ -20,6 +20,10 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
     boolean energy = false;
     public int consumedOverlay = -1;
     public Color consumedColor;
+    public GeoPlantRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
+        super(renderManager, path);
+    }
+
     public GeoPlantRenderer(EntityRendererProvider.Context renderManager, ResourceLocation name, boolean ifRotX) {
         super(renderManager, name,ifRotX);
     }

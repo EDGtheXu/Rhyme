@@ -133,7 +133,13 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             }
         });
     }
-
+    public void setXRot(float value){
+        if(builder.shouldRotX) super.setXRot(value);
+    }
+    public float getXRot(){
+        if(builder.shouldRotX) return super.getXRot();
+        return 0;
+    }
     @Override
     public boolean hurt(DamageSource source, float damage) {
         if(isUltimating) return false;
@@ -261,6 +267,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         public  float animSpeed = 1;
         public float projSpeed = 1;
         public boolean shouldRotHead = true;
+        public boolean shouldRotX = true;
 
         public  int attackTriggerTick = 20;
         public  int attackAnimTick = 30;
@@ -328,6 +335,10 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             return this;
         }
 
+        public Builder setNoRotX() {
+            this.shouldRotX = false;
+            return this;
+        }
 
     }
 

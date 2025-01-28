@@ -6,17 +6,16 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
-import rhymestudio.rhyme.core.entity.plants.prefabs.GeneralCircleSkills;
 
 import static rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks.produceSun;
 
-public class SunShroom extends AbstractGeoPlant {
+public class SunShroom extends AbstractShroom  {
 
     public int stage = 0;
     public int growth = 0;
+    public int lastGrowthTick = 0;
     public static final EntityDataAccessor<Integer> DATA_GROWTH_STAGE = SynchedEntityData.defineId(SunShroom.class, EntityDataSerializers.INT);
 
 
@@ -26,7 +25,7 @@ public class SunShroom extends AbstractGeoPlant {
 
     @Override
     protected void addSkills() {
-        CircleSkill<AbstractPlant> sleep = GeneralCircleSkills.SROOM_SLEEP_SKILLS.get();
+        super.addSkills();
         CircleSkill<AbstractPlant> idleSkill = new CircleSkill<>("idle",builder.attackInternalTick,0);
         CircleSkill<AbstractPlant> sunSkill = new CircleSkill<>("glow",builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
@@ -34,27 +33,24 @@ public class SunShroom extends AbstractGeoPlant {
                         produceSun(this, getSun(stage));
                     }
                 });
-        addSkill(sleep);
         addSkill(idleSkill);
         addSkill(sunSkill);
     }
+
     @Override
-    public void aiStep() {
-        if(!level().isClientSide && !level().isNight()) {
-            skills.forceStartIndex(0);
-            return;
-        }
+    protected void actualAiStep() {
         if(!level().isClientSide) {
             growth++;
-            if(growth > 60 && stage == 0){
+            if(growth > 5*20 && stage == 0){
                 stage = 1;
+                growth = 0;
                 this.entityData.set(DATA_GROWTH_STAGE, stage);
-            }else if(growth > 120 && stage == 1){
+            }else if(growth > 5*20 && stage == 1){
                 stage = 2;
+                growth = 0;
                 this.entityData.set(DATA_GROWTH_STAGE, stage);
             }
         }
-        super.aiStep();
     }
 
     public int getSun(int stage){
@@ -75,7 +71,9 @@ public class SunShroom extends AbstractGeoPlant {
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if (level().isClientSide && key.equals(DATA_GROWTH_STAGE)) {
-            this.growth = this.entityData.get(DATA_GROWTH_STAGE);
+            this.stage = this.entityData.get(DATA_GROWTH_STAGE);
+            this.growth = 0;
+            this.lastGrowthTick = tickCount;
         }
     }
 
