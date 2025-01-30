@@ -4,13 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JavaOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.config.Codec.ICodec;
 import rhymestudio.rhyme.core.recipe.AmountIngredient;
@@ -42,7 +42,7 @@ public abstract class AbstractRecipeProvider implements DataProvider {
             var obj = pair.json;
             var result = pair.result;
             var suffix = pair.suffix;
-            ResourceLocation loc = result.getItemHolder().getKey().location();
+            ResourceLocation loc = ForgeRegistries.ITEMS.getKey(result.getItemHolder().value());
             Path path = getPath(loc, suffix);
             this.futures.add(DataProvider.saveStable(cachedOutput, obj, path));
         });
@@ -68,18 +68,19 @@ public abstract class AbstractRecipeProvider implements DataProvider {
         return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve("recipe");
     }
 
-    protected JsonElement amountIngredientJson(AmountIngredient i){
-        JsonElement ingres;
-        if(i.amount() > 1){
-            var ing = AmountIngredient.CODEC.encoder().encodeStart(JavaOps.INSTANCE, i).result().get();
-            ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
-            ingres.getAsJsonObject().addProperty("type",amountIngredientType());
-        }else if(i.amount() == 1){
-            var ing = Ingredient.CODEC.encodeStart(JavaOps.INSTANCE, i.ingredient()).result().get();
-            ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
-        }else ingres = new JsonObject();
-        return ingres;
-    }
+    // todo
+//    protected JsonElement amountIngredientJson(AmountIngredient i){
+//        JsonElement ingres;
+//        if(i.amount() > 1){
+//            var ing = AmountIngredient.CODEC.encoder().encodeStart(JavaOps.INSTANCE, i).result().get();
+//            ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
+//            ingres.getAsJsonObject().addProperty("type",amountIngredientType());
+//        }else if(i.amount() == 1){
+//            var ing = Ingredient.CODEC.encodeStart(JavaOps.INSTANCE, i.ingredient()).result().get();
+//            ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
+//        }else ingres = new JsonObject();
+//        return ingres;
+//    }
     protected String amountIngredientType(){return MODID + ":" + ModRecipes.AMOUNT_INGREDIENT_ID;}
     protected JsonElement parseCodec(DataResult<?> result){
         return JsonParser.parseString(ICodec.getGson().toJson(result.result().get()));

@@ -83,11 +83,6 @@ public class SnowPeaModel extends AbstractPlantModel<AbstractPlant> {
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int c) {
-		super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, c);
-
-	}
 
 	@Override
 	public ModelPart root() {

@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.core.registry.entities;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -9,8 +8,10 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.animation.plantAnimations.*;
 import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
@@ -23,6 +24,8 @@ import rhymestudio.rhyme.core.entity.plants.shroom.PuffShroom;
 import rhymestudio.rhyme.core.entity.plants.shroom.SunShroom;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
+import java.util.UUID;
+
 import static rhymestudio.rhyme.Rhyme.add_zh_en;
 import static rhymestudio.rhyme.core.entity.plants.prefabs.EnergyBeanSkills.ChomperSkill;
 import static rhymestudio.rhyme.core.entity.plants.prefabs.EnergyBeanSkills.PotatoEnergy;
@@ -32,11 +35,11 @@ import static rhymestudio.rhyme.core.registry.ModEntities.Key;
 
 
 public class PlantEntities {
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, Rhyme.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Rhyme.MODID);
 
     // tip 植物
     //      tip 生产类
-    public static final DeferredHolder<EntityType<?>, EntityType<SunFlower>> SUN_FLOWER = registerCreature("sunflower","向日葵" ,(type, level)->
+    public static final RegistryObject<EntityType<SunFlower>> SUN_FLOWER = registerCreature("sunflower","向日葵" ,(type, level)->
             new SunFlower(level,NORMAL_SUNFLOWER_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", SunflowerAnimation.idle,1);
                 s.addAnimation("sun", SunflowerAnimation.sun,1);
@@ -48,7 +51,7 @@ public class PlantEntities {
             ));
 
     //      tip 豌豆类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PEA = registerCreature("pea_shooter","豌豆射手",(type, level)->
+    public static final RegistryObject<EntityType<AbstractPlant>> PEA = registerCreature("pea_shooter","豌豆射手",(type, level)->
             new Pea(type,level, builder().setAttack(PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()
                     //动画
             .setAnim(s->{
@@ -82,7 +85,7 @@ public class PlantEntities {
             )
             ));
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> SNOW_PEA = registerCreature("snow_pea_shooter","寒冰射手",(type, level)->
+    public static final RegistryObject<EntityType<AbstractPlant>> SNOW_PEA = registerCreature("snow_pea_shooter","寒冰射手",(type, level)->
             new Pea(type,level, builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", IcePeaAnimation.idle);
                 s.addAnimation("shoot", IcePeaAnimation.shoot);
@@ -93,7 +96,7 @@ public class PlantEntities {
             )
             ));
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> REPEATER = registerCreature("repeater","双发射手",(type, level)->
+    public static final RegistryObject<EntityType<AbstractPlant>> REPEATER = registerCreature("repeater","双发射手",(type, level)->
             new Pea(type,level, builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", RepeaterAnimation.idle);
                 s.addAnimation("shoot", RepeaterAnimation.shoot);
@@ -105,25 +108,25 @@ public class PlantEntities {
             ));
 
     //      tip 投手类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> CABBAGE_PULT = registerCreature("cabbage_pult","卷心菜投手",(type, level)->
+    public static final RegistryObject<EntityType<AbstractPlant>> CABBAGE_PULT = registerCreature("cabbage_pult","卷心菜投手",(type, level)->
             new Pea(type,level, builder().setAttack(THROWN_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAttackDamage(10).setAnim(s->{
                 s.addAnimation("idle", CabbageAnimation.idle);
                 s.addAnimation("shoot", CabbageAnimation.shoot);
             }).setUltimate(new CircleSkill<>("ultimate",50, 10)
-                    .onInit(e->e.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(Rhyme.space("energy"),100, AttributeModifier.Operation.ADD_VALUE)))
+                    .onInit(e->e.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(UUID.fromString(Rhyme.space("energy").toString()),"energy",100, AttributeModifier.Operation.ADDITION)))
                     .onTick(e->{ if(e.skills.canTrigger()){
                         level.getEntities(e,e.getBoundingBox().inflate(20),target->target instanceof LivingEntity liv &&  e.canAttack(liv)).forEach(tar->{
                             if(tar instanceof LivingEntity liv)
                                 THROWN_PEA_SHOOT.accept(e, liv);
                         });
                     }})
-                    .onOver(e-> (e.getAttribute(Attributes.ATTACK_DAMAGE)).removeModifier(Rhyme.space("energy")))
+                    .onOver(e-> (e.getAttribute(Attributes.ATTACK_DAMAGE)).removeModifier(UUID.fromString(Rhyme.space("energy").toString()))
             )
-            ));
+            )));
 
 
     //      tip 坚果类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> WALL_NUT = registerCreature("wall_nut","坚果墙",(type, level)->
+    public static final RegistryObject<EntityType<AbstractPlant>> WALL_NUT = registerCreature("wall_nut","坚果墙",(type, level)->
             new WallNut(type,level, DEFENSE_PLANT.apply(150).setAnim(s->{
                 s.addAnimation("idle1", WallNutAnimation.idle1,1);
                 s.addAnimation("idle2", WallNutAnimation.idle2,1);
@@ -135,7 +138,7 @@ public class PlantEntities {
 
 
     //      tip 土豆雷类
-    public static final DeferredHolder<EntityType<?>, EntityType<PotatoMine>> POTATO_MINE = registerCreature("potato_mine","土豆雷",(type, level)->
+    public static final RegistryObject<EntityType<PotatoMine>> POTATO_MINE = registerCreature("potato_mine","土豆雷",(type, level)->
             new PotatoMine(type,level, 15 * 20,1,EXPLORE_PLANT.apply(250).setAnim(s->{
                 s.addAnimation("idle", PotatoMineAnimation.idle);
                 s.addAnimation("up", PotatoMineAnimation.up);
@@ -145,7 +148,7 @@ public class PlantEntities {
             ),0.85f,0.5f);
 
     //      tip 蘑菇类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
+    public static final RegistryObject<EntityType<AbstractGeoPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
             new PuffShroom(type,level, builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("sleep", PuffShroomAnimation.sleeping,1);
                 s.addAnimation("idle", PuffShroomAnimation.idle,1);
@@ -156,7 +159,7 @@ public class PlantEntities {
                     })
             )),0.5f,0.5f);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> SUN_SHROOM = registerCreature("sun_shroom","阳光菇",(type, level)->
+    public static final RegistryObject<EntityType<AbstractGeoPlant>> SUN_SHROOM = registerCreature("sun_shroom","阳光菇",(type, level)->
             new SunShroom(type,level,NORMAL_SUNFLOWER_PLANT.get()
                     .setUltimate(new CircleSkill<>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 5 == 0)
@@ -166,7 +169,7 @@ public class PlantEntities {
 
 
     //      tip 大嘴花类
-    public static final DeferredHolder<EntityType<?>, EntityType<Chomper>> CHOMPER = registerCreature("chomper","大嘴花",(type, level)->
+    public static final RegistryObject<EntityType<Chomper>> CHOMPER = registerCreature("chomper","大嘴花",(type, level)->
             new Chomper(type,level, 20 * 15,200,NORMAL_PEA_PLANT.get()
                     .setUltimate(ChomperSkill)
             ),0.85F,1.95F);
@@ -174,14 +177,14 @@ public class PlantEntities {
 
 
     // tip 疯狂戴夫
-    public static final DeferredHolder<EntityType<?>, EntityType<CrazyDave>> CRAZY_DAVE = registerCreature("crazy_dave","疯狂戴夫",(type, level)->
+    public static final RegistryObject<EntityType<CrazyDave>> CRAZY_DAVE = registerCreature("crazy_dave","疯狂戴夫",(type, level)->
             new CrazyDave(type,level),0.95f,2);
 
 
-    public static <T extends Mob> DeferredHolder<EntityType<?>, EntityType<T>> registerCreature(String name, String zh, EntityType.EntityFactory<T> entityFactory) {
+    public static <T extends Mob> RegistryObject<EntityType<T>> registerCreature(String name, String zh, EntityType.EntityFactory<T> entityFactory) {
         return registerCreature(name,zh,entityFactory,0.9F,1);
     }
-    public static <T extends Mob> DeferredHolder<EntityType<?>, EntityType<T>> registerCreature(String name, String zh, EntityType.EntityFactory<T> entityFactory, float w, float h) {
+    public static <T extends Mob> RegistryObject<EntityType<T>> registerCreature(String name, String zh, EntityType.EntityFactory<T> entityFactory, float w, float h) {
         var entity =ENTITIES.register(name, ()->EntityType.Builder.of(entityFactory , MobCategory.CREATURE).clientTrackingRange(10).sized(w,h).build(Key(name)));
         add_zh_en(entity, zh);
         return entity;

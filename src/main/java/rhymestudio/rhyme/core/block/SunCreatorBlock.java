@@ -1,9 +1,7 @@
 package rhymestudio.rhyme.core.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -17,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -33,7 +30,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.menu.SunCreatorMenu;
-import rhymestudio.rhyme.core.recipe.AmountIngredient;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.ModRecipes;
@@ -50,13 +46,6 @@ public class SunCreatorBlock extends BaseEntityBlock  {
         super(properties);
     }
 
-    public static final MapCodec<SunCreatorBlock> CODEC = simpleCodec(SunCreatorBlock::new);
-
-    @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
     public void fallOn(@NotNull Level level, @NotNull BlockState state, @NotNull BlockPos pos, net.minecraft.world.entity.Entity entity, float fallDistance) {
         if (entity.isSuppressingBounce()) {
             super.fallOn(level, state, pos, entity, fallDistance);
@@ -71,40 +60,23 @@ public class SunCreatorBlock extends BaseEntityBlock  {
     @Override
     public <T extends BlockEntity> BlockEntityTicker getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, ModBlocks.SUN_CREATOR_BLOCK_ENTITY.get(), (level, pos, state, blockEntity)->{
-
-            if(!level.isNight() && !blockEntity.getItems().get(1).isEmpty() &&
-                ! blockEntity.getItems().get(2).isEmpty()
+            if(!level.isNight() && !blockEntity.items.get(1).isEmpty() &&
+                ! blockEntity.items.get(2).isEmpty()
             ) {
-                var validRecipes = level.getRecipeManager().getRecipeFor(ModRecipes.SUN_CREATOR_SEC_TYPE.get(), new RecipeInput() {
-                    @Override
-                    public ItemStack getItem(int i) {
-                        return blockEntity.getItems().get(i+1);
-                    }
-
-                    @Override
-                    public int size() {
-                        return 2;
-                    }
-                }, level);
+                var validRecipes = level.getRecipeManager().getRecipeFor(ModRecipes.SUN_CREATOR_SEC_TYPE.get(), new SimpleContainer(blockEntity.items.get(1), blockEntity.items.get(2)), level);
 
                 int t = blockEntity.time;
                 if(validRecipes.isPresent()){
                     if( t >= blockEntity.interval){
-                        ItemStack it = blockEntity.getItems().get(0);
+                        ItemStack it = blockEntity.items.get(0);
                         int has = it.getCount();
-                        var recipe = validRecipes.get().value();
+                        var recipe = validRecipes.get();
                         var res = recipe.getResultItem(null);
                         if(has < 64 &&( it.getItem() == res.getItem() || it.isEmpty())){
                             blockEntity.time = 0;
-                            if(recipe.left.getCustomIngredient()!=null && recipe.left.getCustomIngredient() instanceof AmountIngredient ing){
-                                blockEntity.getItems().get(1).shrink(ing.amount());
-                            }else
-                                blockEntity.getItems().get(1).shrink(1);
-                            if(recipe.right.getCustomIngredient()!=null && recipe.right.getCustomIngredient() instanceof AmountIngredient ing2){
-                                blockEntity.getItems().get(2).shrink(ing2.amount());
-                            }else
-                                blockEntity.getItems().get(2).shrink(1);
-                            blockEntity.getItems().set(0, new ItemStack(MaterialItems.SOLID_SUN.get(), has + res.getCount()));
+                            blockEntity.items.get(1).shrink(1);
+                            blockEntity.items.get(2).shrink(1);
+                            blockEntity.items.set(0, new ItemStack(MaterialItems.SOLID_SUN.get(), has + res.getCount()));
                         }
                     }else{
                         blockEntity.time++;
@@ -113,16 +85,20 @@ public class SunCreatorBlock extends BaseEntityBlock  {
             }
         });}
 
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand pHand, BlockHitResult pHit) {
         if(state.hasBlockEntity()){
             if(!level.isClientSide) player.openMenu(state.getMenuProvider(level, pos));
-            var data = player.getData(ModAttachments.PLAYER_STORAGE);
-            data.x = pos.getX();
-            data.y = pos.getY();
-            data.z = pos.getZ();
-            return ItemInteractionResult.SUCCESS;
+            var data = player.getCapability(ModAttachments.PLAYER_STORAGE);
+            data.ifPresent(d->{
+                d.x = pos.getX();
+                d.y = pos.getY();
+                d.z = pos.getZ();
+            });
+
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     public static final class SunCreatorBlockEntity extends BaseContainerBlockEntity {
@@ -166,32 +142,33 @@ public class SunCreatorBlock extends BaseEntityBlock  {
         }
 
         @Override
-        public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
             CompoundTag tag = pkt.getTag();
             time = tag.getInt("time");
             this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-            ContainerHelper.loadAllItems(tag, this.items, lookupProvider);
+            ContainerHelper.loadAllItems(tag, this.items);
         }
 
         @Override
-        public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-            CompoundTag tag = super.getUpdateTag(registries);
+        public CompoundTag getUpdateTag() {
+            CompoundTag tag = super.getUpdateTag();
             tag.putInt("time", time);
-            ContainerHelper.saveAllItems(tag, this.items, registries);
+            ContainerHelper.saveAllItems(tag, this.items);
             return tag;
         }
 
-        protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-            super.loadAdditional(tag, registries);
+        @Override
+        public void load(CompoundTag tag) {
+            super.load(tag);
             time = tag.getInt("time");
             this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-            ContainerHelper.loadAllItems(tag, this.items, registries);
+            ContainerHelper.loadAllItems(tag, this.items);
         }
 
-        protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-            super.saveAdditional(tag, registries);
+        protected void saveAdditional(CompoundTag tag) {
+            super.saveAdditional(tag);
             tag.putInt("time", time);
-            ContainerHelper.saveAllItems(tag, this.items, registries);
+            ContainerHelper.saveAllItems(tag, this.items);
         }
 
         @Override
@@ -200,25 +177,22 @@ public class SunCreatorBlock extends BaseEntityBlock  {
         }
 
         @Override
-        protected NonNullList<ItemStack> getItems() {
-            return items;
-        }
-
-        @Override
-        protected void setItems(NonNullList<ItemStack> nonNullList) {
-             items = nonNullList;
-        }
-        @Override
         public void setItem(int index, ItemStack stack) {
             ItemStack itemstack = getItem(index);
-            boolean flag = !stack.isEmpty() && ItemStack.isSameItemSameComponents(itemstack, stack);
-            getItems().set(index, stack);
-            stack.limitSize(getMaxStackSize(stack));
+            boolean flag = !stack.isEmpty() && ItemStack.isSameItemSameTags(itemstack, stack);
+            items.set(index, stack);
+//            stack.limitSize(getMaxStackSize(stack));
             if (index < 3 && !flag) {
                 setChanged();
             }
 
         }
+
+        @Override
+        public boolean stillValid(Player player) {
+            return false;
+        }
+
         @Override
         protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
             return new SunCreatorMenu(id, inventory, this,this.dataAccess);
@@ -228,11 +202,45 @@ public class SunCreatorBlock extends BaseEntityBlock  {
         public int getContainerSize() {
             return 3;
         }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public ItemStack getItem(int i) {
+            return this.items.get(i);
+        }
+
+        public ItemStack removeItem(int pIndex, int pCount) {
+            ItemStack $$2 = ContainerHelper.removeItem(this.items, pIndex, pCount);
+            if (!$$2.isEmpty()) {
+                this.setChanged();
+            }
+
+            return $$2;
+        }
+
+        public ItemStack removeItemNoUpdate(int pIndex) {
+            ItemStack $$1 = this.items.get(pIndex);
+            if ($$1.isEmpty()) {
+                return ItemStack.EMPTY;
+            } else {
+                this.items.set(pIndex, ItemStack.EMPTY);
+                return $$1;
+            }
+        }
+
+        public void clearContent() {
+            this.items.clear();
+            this.setChanged();
+        }
     }
 
 
     @Override
-    protected RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
 

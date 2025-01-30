@@ -44,7 +44,7 @@ public class JumpOverBlockGoal extends JumpGoal {
     public void start() {
         super.start();
         mob.setDeltaMovement(0,0,0);
-        mob.jumpFromGround();
+//        mob.jumpFromGround();
         delayJumpTicks = 2;
 //        mob.addDeltaMovement(mob.getForward().normalize().scale(mob.getSpeed() * speedModifier));
     }

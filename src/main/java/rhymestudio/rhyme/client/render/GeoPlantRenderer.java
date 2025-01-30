@@ -9,10 +9,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.util.Color;
+import software.bernie.geckolib.core.object.Color;
 
 import static net.minecraft.client.renderer.entity.LivingEntityRenderer.getOverlayCoords;
 
@@ -42,10 +42,11 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
             poseStack.mulPose(q);
             poseStack.translate(-10, 0,0);
 
+// todo
 
             int lvl = entity.getCardLevel();
-            CardQualityComponent quality = CardQualityComponent.of(lvl);
-            int color = quality.color();
+            CardQualityComponentType quality = CardQualityComponentType.of(lvl);
+            int color = quality.color;
             Minecraft.getInstance().font.drawInBatch("lvl:"+lvl,0,0,color,false,poseStack.last().pose(),buffer, Font.DisplayMode.SEE_THROUGH,0xf000f0,packedLight);
 
             poseStack.popPose();

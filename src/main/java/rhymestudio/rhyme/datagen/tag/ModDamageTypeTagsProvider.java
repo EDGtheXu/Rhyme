@@ -4,7 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.tags.DamageTypeTags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,7 +18,7 @@ public class ModDamageTypeTagsProvider extends DamageTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider holderLookup) {
 
-        tag(DamageTypeTags.NO_KNOCKBACK)
+        tag(DamageTypeTags.BYPASSES_COOLDOWN)
                 .add(ModTags.DamageTypes.PLANT_PROJ)
                 .add(ModTags.DamageTypes.PLANT_EXPLORE);
 

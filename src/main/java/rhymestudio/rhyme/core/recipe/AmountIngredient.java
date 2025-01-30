@@ -1,43 +1,74 @@
 package rhymestudio.rhyme.core.recipe;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.minecraftforge.common.crafting.AbstractIngredient;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
+
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import rhymestudio.rhyme.core.registry.ModRecipes;
+import rhymestudio.rhyme.Rhyme;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Stream;
 
-public record AmountIngredient(Ingredient ingredient, int amount) implements ICustomIngredient {
-    public static final Ingredient EMPTY = new Ingredient(new AmountIngredient(Ingredient.EMPTY, 0));
-    public static final MapCodec<AmountIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Ingredient.CODEC.fieldOf("ingredient").orElse(Ingredient.EMPTY).forGetter(AmountIngredient::ingredient),
-            ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(0).forGetter(AmountIngredient::amount)
-    ).apply(instance, AmountIngredient::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AmountIngredient> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC.codec());
+//public record AmountIngredient(Ingredient ingredient, int amount) implements ICustomIngredient {
+public class AmountIngredient extends AbstractIngredient{
+    public static final AmountIngredient EMPTY = new AmountIngredient();
+    private final ItemStack itemStack;
+
+    protected AmountIngredient(ItemStack itemStack) {
+        super(Stream.of(new AmountItemValue(itemStack)));
+        this.itemStack = itemStack;
+    }
+
+    AmountIngredient() {
+        super(Stream.empty());
+        this.itemStack = ItemStack.EMPTY;
+    }
+
+    public static AmountIngredient of(ItemStack itemStack) {
+        return new AmountIngredient(itemStack);
+    }
+
+    public Item getItem() {
+        return itemStack.getItem();
+    }
+
+    public int getCount() {
+        return itemStack.getCount();
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
 
     @Override
-    public @NotNull Stream<ItemStack> getItems() {
-        return Arrays.stream(ingredient.getItems()).peek(itemStack -> itemStack.setCount(amount));
+    public ItemStack @NotNull [] getItems() {
+        return new ItemStack[]{itemStack};
     }
 
     @Override
     public boolean test(@Nullable ItemStack pStack) {
         if (pStack == null) return false;
-        if (pStack.getCount() < amount) {
-            return false;
+        if (pStack == itemStack) {
+            return true;
         } else {
-            return ingredient.test(pStack);
+            return pStack.getCount() >= itemStack.getCount() && (itemStack.hasTag() ? ItemStack.isSameItemSameTags(pStack, itemStack) : ItemStack.isSameItem(pStack, itemStack));
         }
     }
 
@@ -47,7 +78,81 @@ public record AmountIngredient(Ingredient ingredient, int amount) implements ICu
     }
 
     @Override
-    public @NotNull IngredientType<AmountIngredient> getType() {
-        return ModRecipes.AMOUNT_INGREDIENT_TYPE.get();
+    public boolean isEmpty() {
+        return itemStack.isEmpty();
     }
+
+    @Override
+    public @NotNull IIngredientSerializer<AmountIngredient> getSerializer() {
+        return Serializer.INSTANCE;
+    }
+
+    @Override
+    public @NotNull JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", TYPE().toString());
+        serialize(jsonObject, itemStack);
+        return jsonObject;
+    }
+
+    public static AmountIngredient fromJson(JsonObject json, String name) {
+        return AmountIngredient.Serializer.INSTANCE.parse(GsonHelper.convertToJsonObject(GsonHelper.getNonNull(json,
+                name).getAsJsonObject(), TYPE().toString()));
+    }
+
+    public static AmountIngredient fromNetwork(FriendlyByteBuf buffer) {
+        return Serializer.INSTANCE.parse(buffer);
+    }
+
+
+    public static ResourceLocation TYPE(){
+        return Rhyme.space("amount_ingredient");
+    }
+
+    public static void serialize(JsonObject jsonObject, ItemStack itemStack) {
+        jsonObject.addProperty("item", ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
+        jsonObject.addProperty("count", itemStack.getCount());
+        if (itemStack.getTag() != null) jsonObject.addProperty("nbt", itemStack.getTag().toString());
+    }
+
+    public static class Serializer implements IIngredientSerializer<AmountIngredient> {
+        public static final Serializer INSTANCE = new Serializer();
+
+        @Override
+        public @NotNull AmountIngredient parse(FriendlyByteBuf buffer) {
+            return new AmountIngredient(buffer.readItem());
+        }
+
+        @Override
+        public @NotNull AmountIngredient parse(@NotNull JsonObject json) {
+            return new AmountIngredient(CraftingHelper.getItemStack(json, true));
+        }
+
+        @Override
+        public void write(FriendlyByteBuf buffer, AmountIngredient ingredient) {
+            buffer.writeItem(ingredient.itemStack);
+        }
+    }
+
+    public static class AmountItemValue implements Value {
+        private final Collection<ItemStack> itemStacks;
+
+        public AmountItemValue(ItemStack itemStack) {
+            this.itemStacks = Collections.singleton(itemStack);
+        }
+
+        @Override
+        public @NotNull Collection<ItemStack> getItems() {
+            return itemStacks;
+        }
+
+        @Override
+        public @NotNull JsonObject serialize() {
+            JsonObject jsonObject = new JsonObject();
+            ItemStack itemStack = itemStacks.iterator().next();
+            AmountIngredient.serialize(jsonObject, itemStack);
+            return jsonObject;
+        }
+    }
+
 }

@@ -5,8 +5,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
@@ -23,7 +23,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        tag(ModTags.Items.DAVE_FOOD).add(Items.PUMPKIN_PIE,MaterialItems.TACO.asItem());
+        tag(ModTags.Items.DAVE_FOOD).add(Items.PUMPKIN_PIE,MaterialItems.TACO.get().asItem());
 
         PlantItems.PLANTS.getEntries().forEach(e->tag(ModTags.Items.CARD).add(e.get().asItem()));
 

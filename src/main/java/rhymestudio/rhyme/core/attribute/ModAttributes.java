@@ -7,8 +7,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.Rhyme;
 
 public class ModAttributes {
@@ -19,7 +20,7 @@ public class ModAttributes {
         return Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE, ResourceLocation.fromNamespaceAndPath(Rhyme.MODID,name), attribute);
     }
 
-    public static final DeferredHolder<Attribute,Attribute> MAX_SUN_COUNT = ATTRIBUTES_TYPES.register(
+    public static final RegistryObject<Attribute> MAX_SUN_COUNT = ATTRIBUTES_TYPES.register(
             "max_sun_count",
             ()->new RangedAttribute("attribute.max_sun_count", 2000.0, 2000.0, 9999.0).setSyncable(true)
     );

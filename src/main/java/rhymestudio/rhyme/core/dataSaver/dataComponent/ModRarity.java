@@ -2,12 +2,10 @@ package rhymestudio.rhyme.core.dataSaver.dataComponent;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.client.animate.ColorAnimation;
 import rhymestudio.rhyme.client.animate.ExpertColorAnimation;
@@ -15,10 +13,8 @@ import rhymestudio.rhyme.client.animate.MasterColorAnimation;
 
 import java.util.Objects;
 
-/**
- * FROM @link <a href="https://github.com/westernat/TerraCurio/blob/f2cdd8a6a400a27d5d4721c289f72d832b76028b/src/main/java/org/confluence/terra_curio/common/component/ModRarity.java">...</a>
- */
-public class ModRarity implements DataComponentType<ModRarity> {
+
+public class ModRarity extends AbstractDataComponent<ModRarity> {
     public static final ModRarity COMMON = new ModRarity("common",16777215);
     public static final ModRarity UNCOMMON = new ModRarity("uncommon", 16777045);
     public static final ModRarity RARE = new ModRarity("rare", 5636095);
@@ -37,7 +33,7 @@ public class ModRarity implements DataComponentType<ModRarity> {
     public static final ModRarity CYAN = new ModRarity("cyan", 0x05C8FF);
     public static final ModRarity RED = new ModRarity("red", 0xFF2864);
     public static final ModRarity PURPLE = new ModRarity("purple", 0xB428FF);
-    
+
 
     public static final ModRarity EXPERT = new ModRarity("expert", ExpertColorAnimation.INSTANCE);
     public static final ModRarity MASTER = new ModRarity("master", MasterColorAnimation.INSTANCE);
@@ -45,21 +41,20 @@ public class ModRarity implements DataComponentType<ModRarity> {
 
 
 
-
-    public static final Codec<ModRarity> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.STRING.fieldOf("name").forGetter(ModRarity::getName),
-            ColorAnimation.CODEC.fieldOf("animation").forGetter(ModRarity::getAnimation),
-            Style.Serializer.CODEC.fieldOf("style").forGetter(ModRarity::getStyle)
-    ).apply(instance, ModRarity::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, ModRarity> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, ModRarity::getName,
-            ByteBufCodecs.INT, ModRarity::getColor,
-            Style.Serializer.TRUSTED_STREAM_CODEC, ModRarity::getStyle,
-            ModRarity::new
-    );
+//
+//    public static final Codec<ModRarity> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+//            Codec.STRING.fieldOf("name").forGetter(ModRarity::getName),
+//            ColorAnimation.CODEC.fieldOf("animation").forGetter(ModRarity::getAnimation),
+//            Style.Serializer.CODEC.fieldOf("style").forGetter(ModRarity::getStyle)
+//    ).apply(instance, ModRarity::new));
+//
+//    public static final StreamCodec<RegistryFriendlyByteBuf, ModRarity> STREAM_CODEC = StreamCodec.composite(
+//            ByteBufCodecs.STRING_UTF8, ModRarity::getName,
+//            ByteBufCodecs.INT, ModRarity::getColor,
+//            Style.Serializer.TRUSTED_STREAM_CODEC, ModRarity::getStyle,
+//            ModRarity::new
+//    );
     private final ColorAnimation animation;
-
     private final String name;
     private final Style style;
 
@@ -106,15 +101,15 @@ public class ModRarity implements DataComponentType<ModRarity> {
         return animation;
     }
 
-    @Override
-    public @Nullable Codec<ModRarity> codec() {
-        return CODEC;
-    }
-
-    @Override
-    public StreamCodec<? super RegistryFriendlyByteBuf, ModRarity> streamCodec() {
-        return STREAM_CODEC;
-    }
+//    @Override
+//    public @Nullable Codec<ModRarity> codec() {
+//        return CODEC;
+//    }
+//
+//    @Override
+//    public StreamCodec<? super RegistryFriendlyByteBuf, ModRarity> streamCodec() {
+//        return STREAM_CODEC;
+//    }
 
     @Override
     public final boolean equals(Object object) {
@@ -130,5 +125,20 @@ public class ModRarity implements DataComponentType<ModRarity> {
         result = 31 * result + Objects.hashCode(getName());
         result = 31 * result + Objects.hashCode(getStyle());
         return result;
+    }
+
+    @Override
+    public String name() {
+        return "mod_rarity";
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag tag) {
+
+    }
+
+    @Override
+    public void writeToNBT(CompoundTag tag) {
+
     }
 }

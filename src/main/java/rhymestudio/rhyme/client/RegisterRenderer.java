@@ -6,10 +6,11 @@ import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.model.plantModels.*;
 import rhymestudio.rhyme.client.model.proj.CabbageProjModel;
@@ -36,7 +37,7 @@ import static rhymestudio.rhyme.client.RegisterModel.getModelDefine;
 import static rhymestudio.rhyme.core.registry.entities.MiscEntities.*;
 import static rhymestudio.rhyme.core.registry.entities.PlantEntities.*;
 
-@EventBusSubscriber(modid = Rhyme.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Rhyme.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class RegisterRenderer {
     @SubscribeEvent
     public static void register(EntityRenderersEvent.RegisterRenderers event) {

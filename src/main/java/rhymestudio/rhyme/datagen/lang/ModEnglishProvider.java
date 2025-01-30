@@ -1,7 +1,7 @@
 package rhymestudio.rhyme.datagen.lang;
 
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.common.data.LanguageProvider;
 import rhymestudio.rhyme.Rhyme;
 
 import java.util.Arrays;

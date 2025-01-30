@@ -18,7 +18,6 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 import rhymestudio.rhyme.core.entity.ai.CircleSkills;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
@@ -27,7 +26,7 @@ import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
-import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
+
 
 import java.util.function.Consumer;
 
@@ -87,7 +86,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         return !level().getEntities(this,this.getBoundingBox(),e->e instanceof AbstractPlant).isEmpty() && canBePush;
     }
 
-    public void onAddedToLevel(){
+    public void onAddedToWorld(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.health);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.attackDamage);
         addSkills();
@@ -95,7 +94,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         if(level().isClientSide)
             animState.playAnim(skills.getCurSkillName(),tickCount);
         if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
-        super.onAddedToLevel();
+        super.onAddedToWorld();
         if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
     }
 
@@ -198,10 +197,10 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
 
     // 动画数据同步
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_CAFE_POSE_NAME, "idle");
-        builder.define(DATA_CARD_LVL, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_CAFE_POSE_NAME, "idle");
+        this.entityData.define(DATA_CARD_LVL, 0);
     }
 
     @Override
@@ -234,9 +233,9 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
 
 
     @Override
-    public boolean ignoreExplosion(Explosion e){
+    public boolean ignoreExplosion(){
 //        return true;
-        return e.getIndirectSourceEntity() instanceof AbstractPlant || super.ignoreExplosion(e);
+        return true;
     }
 
     @Override
@@ -245,13 +244,14 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     }
 
     @Override
-    public void onRemovedFromLevel() {
-        super.onRemovedFromLevel();
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
         if(owner instanceof ServerPlayer serverPlayer){ // 只在服务端才有owner
-            var list = serverPlayer.getData(ModAttachments.PLANT_RECORDER_STORAGE).ids;
-
-            list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
-            PacketDistributor.sendToPlayer(serverPlayer, new PlantRecorderPacket(list));
+            // todo
+//            var list = serverPlayer.getData(ModAttachments.PLANT_RECORDER_STORAGE).ids;
+//
+//            list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
+//            PacketDistributor.sendToPlayer(serverPlayer, new PlantRecorderPacket(list));
         }
     }
 

@@ -8,7 +8,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.recipe.AbstractAmountRecipe;
@@ -25,7 +24,7 @@ public class SunCreatorMenu extends AbstractContainerMenu {
     private final CraftingContainer craftSlots = new TransientCraftingContainer(this, 3, 4);
     private final ResultContainer resultSlot = new ResultContainer();
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
-    private List<RecipeHolder<SunCreatorRecipe>> recipes = new ArrayList<>();
+    private List<SunCreatorRecipe> recipes = new ArrayList<>();
     public Container container;
     public SunCreatorMenu(int pContainerId, Inventory inventory) {
         this(pContainerId, inventory, new SimpleContainer(3),new SimpleContainerData(2));
@@ -101,7 +100,7 @@ public class SunCreatorMenu extends AbstractContainerMenu {
     public ItemStack getUpResult() {
         int index = getUpIndex();
         if (index == -1) return resultSlot.getItem(0);
-        return recipes.get(index).value().getResultItem(null);
+        return recipes.get(index).getResultItem(null);
     }
 
     public int getUpIndex() {
@@ -121,7 +120,7 @@ public class SunCreatorMenu extends AbstractContainerMenu {
     public ItemStack getDownResult() {
         int index = getDownIndex();
         if (index == -1) return resultSlot.getItem(0);
-        return recipes.get(index).value().getResultItem(null);
+        return recipes.get(index).getResultItem(null);
     }
 
     public int getDownIndex() {
@@ -154,7 +153,7 @@ public class SunCreatorMenu extends AbstractContainerMenu {
 
     private void setupResultSlot() {
         if (!recipes.isEmpty() && isValidRecipeIndex(selectedRecipeIndex.get())) {
-            SunCreatorRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
+            SunCreatorRecipe recipe = recipes.get(selectedRecipeIndex.get());
             ItemStack itemStack = recipe.getResultItem(null).copy();
             if (itemStack.isItemEnabled(player.level().enabledFeatures())) {
                 resultSlot.setItem(0, itemStack);
@@ -186,14 +185,14 @@ public class SunCreatorMenu extends AbstractContainerMenu {
 
     @Override
     public void slotsChanged(@NotNull Container pContainer) {
-        this.recipes = player.level().getRecipeManager().getRecipesFor(ModRecipes.SUN_CREATOR_TYPE.get(), craftSlots.asCraftInput(), player.level());
+        this.recipes = player.level().getRecipeManager().getRecipesFor(ModRecipes.SUN_CREATOR_TYPE.get() ,craftSlots, player.level());
         if (selectedRecipeIndex.get() >= recipes.size()) selectedRecipeIndex.set(recipes.size() - 1);
 
         if (player instanceof ServerPlayer serverPlayer) {
             ItemStack itemStack = ItemStack.EMPTY;
             if (!recipes.isEmpty()) {
                 if (selectedRecipeIndex.get() == -1) selectedRecipeIndex.set(0);
-                SunCreatorRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
+                SunCreatorRecipe recipe = recipes.get(selectedRecipeIndex.get());
                 itemStack = recipe.getResultItem(null).copy();
                 setCurrentRecipe(recipe);
             }

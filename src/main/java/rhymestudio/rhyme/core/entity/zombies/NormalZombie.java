@@ -33,10 +33,10 @@ public class NormalZombie extends AbstractMonster {
 
     // 动画数据同步
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_DROP_ARM, false);
-        builder.define(DATA_DROP_HEAD, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_DROP_ARM, false);
+        this.entityData.define(DATA_DROP_HEAD, false);
     }
 
     @Override
@@ -106,22 +106,22 @@ public class NormalZombie extends AbstractMonster {
 
     @Override
     public SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        if(this.getItemBySlot(EquipmentSlot.HEAD).is(ArmorItems.CONE_HELMET)){
+        if(this.getItemBySlot(EquipmentSlot.HEAD).is(ArmorItems.CONE_HELMET.get())){
             return ModSounds.PLASTIC_HIT.get();
-        }else if(this.getItemBySlot(EquipmentSlot.HEAD).is(ArmorItems.IRON_BUCKET_HELMET)){
+        }else if(this.getItemBySlot(EquipmentSlot.HEAD).is(ArmorItems.IRON_BUCKET_HELMET.get())){
             return ModSounds.SHIELD_HIT.get();
         }
         return super.getHurtSound(damageSourceIn);
     }
 
     @Override
-    public void onAddedToLevel() {
-        super.onAddedToLevel();
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
         if(this.dirty && !level().isClientSide()){
             if(this.getType() == Zombies.CONE_ZOMBIE.get()){
-                this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.CONE_HELMET.toStack());
+                this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.CONE_HELMET.get().getDefaultInstance());
             }else if(this.getType() == Zombies.IRON_BUCKET_ZOMBIE.get()){
-                this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.IRON_BUCKET_HELMET.toStack());
+                this.setItemSlot(EquipmentSlot.HEAD, ArmorItems.IRON_BUCKET_HELMET.get().getDefaultInstance());
             }
         }
     }

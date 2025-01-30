@@ -7,13 +7,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.particle.options.BrokenProjOptions;
+
+import java.awt.image.RenderedImage;
 
 public class BrokenProjParticle extends TextureSheetParticle {
     private final ResourceLocation texture;
@@ -46,22 +52,27 @@ public class BrokenProjParticle extends TextureSheetParticle {
         return ParticleRenderType.CUSTOM;
     }
 
+    static BufferBuilder bf = new BufferBuilder(2097152);
     @Override
     public void render(@NotNull VertexConsumer pBuffer, Camera camera, float pPartialTicks){
 //        RenderSystem.colorMask(false, false, false, true);
 //        super.render(pBuffer, camera, pPartialTicks);
 
         bg = true;
-        BufferBuilder bufferbuilder = getRenderType().begin(Tesselator.getInstance(), Minecraft.getInstance().getTextureManager());
+        // todo
 
-        if (bufferbuilder != null) {
-            super.render(bufferbuilder, camera, pPartialTicks);
-            MeshData meshdata = bufferbuilder.build();
+        getRenderType().begin(bf,Minecraft.getInstance().getTextureManager());
+
+        if (bf != null) {
+            bf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            super.render(bf, camera, pPartialTicks);
+            BufferBuilder.RenderedBuffer meshdata = bf.end();
             if (meshdata != null) {
                 int id = RenderSystem.getShaderTexture(0);
                 RenderSystem.setShaderTexture(0, this.texture);
                 BufferUploader.drawWithShader(meshdata);
                 RenderSystem.setShaderTexture(0, id);
+                bf.clear();
             }
         }
 

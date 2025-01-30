@@ -42,9 +42,9 @@ public class PotatoMine extends AbstractPlant {
 
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_SPEED, 1F);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_SPEED, 1F);
 
     }
 
@@ -103,7 +103,7 @@ public class PotatoMine extends AbstractPlant {
         this.addSkill(boom);
     }
     protected void explode() {
-        this.level().explode(this, Explosion.getDefaultDamageSource(this.level(), this), USED_PORTAL_DAMAGE_CALCULATOR , this.getX(), this.getY(0.0625), this.getZ(), explosionRadius, false, Level.ExplosionInteraction.TRIGGER);
+        this.level().explode(this, damageSources().explosion(this,this), USED_PORTAL_DAMAGE_CALCULATOR , this.getX(), this.getY(0.0625), this.getZ(), explosionRadius, false, Level.ExplosionInteraction.MOB);
     }
 
     private  final ExplosionDamageCalculator USED_PORTAL_DAMAGE_CALCULATOR = new ExplosionDamageCalculator() {
@@ -121,10 +121,10 @@ public class PotatoMine extends AbstractPlant {
                     ? Optional.empty()
                     : super.getBlockExplosionResistance(p_353090_, p_353088_, p_353091_, p_353093_, p_353095_);
         }
-        @Override
-        public float getEntityDamageAmount(Explosion explosion, Entity entity) {
-            return super.getEntityDamageAmount(explosion, entity) + builder.attackDamage;
-        }
+//        @Override
+//        public float getEntityDamageAmount(Explosion explosion, Entity entity) {
+//            return super.getEntityDamageAmount(explosion, entity) + builder.attackDamage;
+//        }
 
     };
     @Override

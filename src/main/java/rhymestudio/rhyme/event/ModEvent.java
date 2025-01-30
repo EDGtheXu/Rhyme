@@ -1,32 +1,23 @@
 package rhymestudio.rhyme.event;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import rhymestudio.rhyme.network.c2s.DaveShopPacket;
-import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
-import rhymestudio.rhyme.network.s2c.ProjHitPacket;
-import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
+
+
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import rhymestudio.rhyme.network.NetworkHandler;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEvent {
 
     @SubscribeEvent
-    public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("1");
-        registrar.playToClient(SunCountPacketS2C.TYPE, SunCountPacketS2C.STREAM_CODEC, SunCountPacketS2C::handle);
-        registrar.playToClient(ProjHitPacket.TYPE, ProjHitPacket.STREAM_CODEC, ProjHitPacket::handle);
-        registrar.playToClient(PlantRecorderPacket.TYPE, PlantRecorderPacket.STREAM_CODEC, PlantRecorderPacket::handle);
-
-
-        registrar.playToServer(DaveShopPacket.TYPE, DaveShopPacket.STREAM_CODEC, DaveShopPacket::handle);
-
+    public static void commonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+//            Config.init();
+            NetworkHandler.register();
+        });
     }
-
-
-
 
 }

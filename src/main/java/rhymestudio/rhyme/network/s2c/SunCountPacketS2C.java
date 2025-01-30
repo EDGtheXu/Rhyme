@@ -1,44 +1,50 @@
 package rhymestudio.rhyme.network.s2c;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 
-import org.jetbrains.annotations.NotNull;
-import rhymestudio.rhyme.Rhyme;
+
+import net.minecraftforge.network.NetworkEvent;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 
-public record SunCountPacketS2C(int count,int money, int additionSunCount) implements CustomPacketPayload {
-    public int count() {
-        return count;
-    }
-    public static final Type<SunCountPacketS2C> TYPE = new Type<>(Rhyme.space("sun_count_packet_s2c"));
-    public static final StreamCodec<ByteBuf, SunCountPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, SunCountPacketS2C::count,
-            ByteBufCodecs.INT, SunCountPacketS2C::money,
-            ByteBufCodecs.INT, SunCountPacketS2C::additionSunCount,
-            SunCountPacketS2C::new
-    );
+import java.util.function.Supplier;
 
-    @Override
-    public @NotNull Type<SunCountPacketS2C> type() {
-        return TYPE;
+public class SunCountPacketS2C{
+    public int count;
+    public int money;
+    public int additionSunCount;
+
+    public SunCountPacketS2C(int count, int money, int additionSunCount) {
+        this.count = count;
+        this.money = money;
+        this.additionSunCount = additionSunCount;
     }
 
-    public void handle(IPayloadContext context) {
+    public static SunCountPacketS2C decode(FriendlyByteBuf buffer) {
+        int count = buffer.readInt();
+        int money = buffer.readInt();
+        int additionSunCount = buffer.readInt();
+        return new SunCountPacketS2C(count, money, additionSunCount);
+    }
+
+    public static void encode(SunCountPacketS2C packet, FriendlyByteBuf buf) {
+        buf.writeInt(packet.count);
+        buf.writeInt(packet.money);
+        buf.writeInt(packet.additionSunCount);
+    }
+
+
+    public static void handle(SunCountPacketS2C packet, Supplier<NetworkEvent.Context> cxt) {
+        NetworkEvent.Context context = cxt.get();
         context.enqueueWork(() -> {
-            if (context.player().isLocalPlayer()) {
-                var data = context.player().getData(ModAttachments.PLAYER_STORAGE);
-                data.sunCount = count;
-                data.moneys = money;
-                data.additionalSunCount = additionSunCount;
-            }
-        }).exceptionally(e -> {
-            context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
-            return null;
-        });
+            var data = Minecraft.getInstance().player.getCapability(ModAttachments.PLAYER_STORAGE);
+            data.ifPresent(d->{
+                d.sunCount = packet.count;
+                d.moneys = packet.money;
+                d.additionalSunCount = packet.additionSunCount;
+            });
+
+
+        }).exceptionally(e -> null);
     }
 }

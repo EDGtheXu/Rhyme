@@ -92,16 +92,17 @@ public class CardHUD {
         long time = System.currentTimeMillis();
         if(time > lastCacheTime + 500){
             lastCacheTime = time;
-//            int cacheSunNumber = Computer.getInventoryItemCount(player, MaterialItems.SUN_ITEM.get());
-            var data = player.getData(ModAttachments.PLAYER_STORAGE);
-            cachedSunNumber = data.sunCount;
-            cacheSunStr =String.valueOf(cachedSunNumber) ;
-            cacheSunStrSize = cacheSunStr.length();
+            var data = player.getCapability(ModAttachments.PLAYER_STORAGE);
 
-            cachedMoney = data.moneys;
-            cacheMoneyStr = String.valueOf(cachedMoney);
-            cacheMoneyStrSize = cacheMoneyStr.length();
+            data.ifPresent(d->{
+                cachedSunNumber = d.sunCount;
+                cacheSunStr =String.valueOf(cachedSunNumber) ;
+                cacheSunStrSize = cacheSunStr.length();
 
+                cachedMoney = d.moneys;
+                cacheMoneyStr = String.valueOf(cachedMoney);
+                cacheMoneyStrSize = cacheMoneyStr.length();
+            });
         }
 
         guiGraphics.drawString(mc.font,cacheSunStr,w/2-3* cacheSunStrSize,h-12, Color.yellow.getRGB());

@@ -1,10 +1,11 @@
 package rhymestudio.rhyme.client.model;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,9 @@ public class ModelUtils {
 
 
     public static ResourceLocation getHeadModelResourceLocation(Item item,int index) {
-        ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
-        String name =  "item/" + location.getPath() + "_head" + (index > 1? "_" + index : "");
-        return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), name);
+        ResourceLocation location = ForgeRegistries.ITEMS.getKey(item);
+        String name =  location.getPath() + "_head" + (index > 1? "_" + index : "");
+        return new ResourceLocation(location.getNamespace(), name);
     }
 
 

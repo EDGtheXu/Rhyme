@@ -1,7 +1,8 @@
 package rhymestudio.rhyme.datagen.tag;
 
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -76,7 +77,7 @@ public final class ModTags {
             return new DamageSource(level.registryAccess().registry(Registries.DAMAGE_TYPE).orElseThrow().getHolderOrThrow(key), causing, direct);
         }
 
-        public static void createDamageTypes(BootstrapContext<DamageType> context) {
+        public static void createDamageTypes(BootstapContext<DamageType> context) {
             context.register(PLANT_PROJ, new DamageType("plant_proj", 0.1F));
             context.register(PLANT_EXPLORE, new DamageType("plant_explore", 0.2F));
 

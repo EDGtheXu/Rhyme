@@ -2,7 +2,6 @@ package rhymestudio.rhyme.datagen.biome;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -11,9 +10,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.neoforged.neoforge.common.world.BiomeModifier;
-import net.neoforged.neoforge.common.world.MobSpawnSettingsBuilder;
-import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
+
+import net.minecraftforge.common.world.BiomeModifier;
+import net.minecraftforge.common.world.MobSpawnSettingsBuilder;
+import net.minecraftforge.common.world.ModifiableBiomeInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -21,12 +21,12 @@ import java.util.function.Function;
 
 public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, List<ExtendedSpawnData> spawners) implements BiomeModifier {
 
-    public static final MapCodec<ExtendedAddSpawnsBiomeModifier> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
+    public static final Codec<ExtendedAddSpawnsBiomeModifier> CODEC = RecordCodecBuilder.create(builder -> builder.group(
             Biome.LIST_CODEC.fieldOf("biomes").forGetter(ExtendedAddSpawnsBiomeModifier::biomes),
             Biome.LIST_CODEC.fieldOf("excludedBiomes").forGetter(ExtendedAddSpawnsBiomeModifier::excludedBiomes),
             Codec.either(ExtendedSpawnData.CODEC.listOf(), ExtendedSpawnData.CODEC).xmap(
                     either -> either.map(Function.identity(), List::of), // convert list/singleton to list when decoding
-                    list -> list.size() == 1 ? Either.right(list.getFirst()) : Either.left(list) // convert list to singleton/list when encoding
+                    list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list) // convert list to singleton/list when encoding
             ).fieldOf("spawners").forGetter(ExtendedAddSpawnsBiomeModifier::spawners)
     ).apply(builder, ExtendedAddSpawnsBiomeModifier::new));
 
@@ -45,7 +45,7 @@ public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<
     }
 
     @Override
-    public @NotNull MapCodec<? extends BiomeModifier> codec() {
+    public @NotNull Codec<? extends BiomeModifier> codec() {
         return CODEC;
     }
 

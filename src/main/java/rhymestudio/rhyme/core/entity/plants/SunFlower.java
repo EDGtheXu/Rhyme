@@ -31,7 +31,7 @@ public class SunFlower extends AbstractPlant {
 
     public int getSun(int stage){
         return switch (stage){
-            case 0 -> 15;
+            case 0 -> 25;
             case 1 -> 25;
             default -> 50;
         };

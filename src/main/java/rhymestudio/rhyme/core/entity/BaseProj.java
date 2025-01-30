@@ -19,14 +19,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.RegistryObject;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.particle.options.BrokenProjOptions;
 import rhymestudio.rhyme.core.registry.ModEffects;
 import rhymestudio.rhyme.datagen.tag.ModTags;
+import rhymestudio.rhyme.network.NetworkHandler;
 import rhymestudio.rhyme.network.s2c.ProjHitPacket;
 
 import java.util.ArrayList;
@@ -40,13 +42,13 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     public int penetration =1;
     protected MobEffectInstance effect;
     public ResourceLocation texture;
-    protected DeferredHolder<SoundEvent,SoundEvent> hitSound;
+    protected RegistryObject<SoundEvent> hitSound;
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
         this.effect = pEffect;
     }
-    public <T extends BaseProj> T setHitSound(DeferredHolder<SoundEvent,SoundEvent> hitSound){
+    public <T extends BaseProj> T setHitSound(RegistryObject<SoundEvent> hitSound){
         this.hitSound = hitSound;
         return (T) this;
     }
@@ -87,12 +89,6 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-    }
-
-
-    @Override
     public void tick() {
         super.tick();
         if(!level().isClientSide){
@@ -114,8 +110,8 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         this.shoot(f, f1, f2, pVelocity, pInaccuracy);
     }
     @Override
-    public void onAddedToLevel(){
-        super.onAddedToLevel();
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
         if(!level().isClientSide()){
             if(getOwner()==null){
                 discard();
@@ -135,17 +131,18 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     protected void doHurt(LivingEntity hurter){
         Entity entity = this.getOwner();
         if(effect!= null && hurter != entity){
-            if(effect.getEffect().is(ModEffects.FROZEN_EFFECT.getId())){
-                PacketDistributor.sendToAllPlayers(new ProjHitPacket(hurter.getId(),effect.getDuration()));
+            if(effect.getEffect() == ModEffects.FROZEN_EFFECT.get()){
+                //todo
+//                NetworkHandler.CHANNEL.send(new ProjHitPacket(hurter.getId(),effect.getDuration()), );
             }
             hurter.addEffect(effect);
         }
         if(hitSound != null)
             level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
         if(entity!= null)
-            hurter.hurt(entity.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
+            hurter.hurt(ModTags.DamageTypes.of(level(),ModTags.DamageTypes.PLANT_PROJ), getDamage());
         else if(hurter!= null)
-            hurter.hurt(this.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
+            hurter.hurt(ModTags.DamageTypes.of(level(),ModTags.DamageTypes.PLANT_PROJ), getDamage());
         Vec3 pos = hurter.position();
 
         if(this.level() instanceof ServerLevel serverlevel){
@@ -162,10 +159,9 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     }
 
 
-    @Nullable
     @Override//设置粒子效果
     protected ParticleOptions getTrailParticle() {
-        return null;
+        return super.getTrailParticle();
     }
 
     @Override
@@ -175,11 +171,6 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
                 target != getOwner() &&
                 !(target instanceof AbstractPlant) &&
                 !(target instanceof Player);
-    }
-
-    @Override//流体阻力
-    protected float getLiquidInertia() {
-        return 1;
     }
 
     @Override//火焰效果

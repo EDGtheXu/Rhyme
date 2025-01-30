@@ -1,25 +1,25 @@
 package rhymestudio.rhyme.client.event;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.Music;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.event.SelectMusicEvent;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import rhymestudio.rhyme.client.render.buffer.DebugEntityHelper;
-import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.client.animate.ExpertColorAnimation;
 import rhymestudio.rhyme.client.animate.MasterColorAnimation;
 import rhymestudio.rhyme.client.render.gui.hud.CardHUD;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
+import java.util.function.Supplier;
+
 import static rhymestudio.rhyme.Rhyme.MODID;
 
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.GAME,value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class GameClientEvent {
 
     @SubscribeEvent
@@ -27,9 +27,10 @@ public class GameClientEvent {
         CardHUD hud = CardHUD.getInstance();
         hud.render(event.getGuiGraphics());
 
+
     }
     @SubscribeEvent
-    public static void onTick(ClientTickEvent.Pre event) {
+    public static void onTick(TickEvent.ClientTickEvent event) {
         MasterColorAnimation.INSTANCE.updateColor();
         ExpertColorAnimation.INSTANCE.updateColor();
 
@@ -45,25 +46,22 @@ public class GameClientEvent {
             DebugEntityHelper.Singleton().render(event);
         }
     }
-    @SubscribeEvent
-    public static void onTickEnd(ClientTickEvent.Pre event) {
-        //PostUtil.clear();
 
-    }
+    public static Supplier<Music> BGM_MUSIC = ()->new Music(ModSounds.BGM.getHolder().get(),300,3000,true);
 
-    public static Music BGM_MUSIC = new Music(ModSounds.BGM,300,3000,true);
-    @SubscribeEvent
-    public static void onSelectMusic(SelectMusicEvent event) {
-        if(Minecraft.getInstance().level==null) return;
-
-        if(event.getPlayingMusic() == null && ClientConfig.IsOpenBgm.get()){
-            event.setMusic(BGM_MUSIC);
-//            Minecraft.getInstance().getMusicManager().
-        }
-        if(Minecraft.getInstance().getMusicManager().isPlayingMusic(BGM_MUSIC) && !ClientConfig.IsOpenBgm.get()){
-            event.setMusic(null);
-        }
-
-    }
+    // todo
+//    @SubscribeEvent
+//    public static void onSelectMusic(SelectMusicEvent event) {
+//        if(Minecraft.getInstance().level==null) return;
+//
+//        if(event.getPlayingMusic() == null && ClientConfig.IsOpenBgm.get()){
+//            event.setMusic(BGM_MUSIC);
+////            Minecraft.getInstance().getMusicManager().
+//        }
+//        if(Minecraft.getInstance().getMusicManager().isPlayingMusic(BGM_MUSIC) && !ClientConfig.IsOpenBgm.get()){
+//            event.setMusic(null);
+//        }
+//
+//    }
 
 }

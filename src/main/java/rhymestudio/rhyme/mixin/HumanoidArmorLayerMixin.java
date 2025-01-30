@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import rhymestudio.rhyme.client.render.util.ArmorLayerMixinUtil;
 import rhymestudio.rhyme.core.item.armor.IModelArmor;
-
+@SuppressWarnings("all")
 @Mixin(HumanoidArmorLayer.class)
 public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> {
 
@@ -27,12 +27,11 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
         this.Rhyme$renderer = renderer;
     }
 
-    @Inject(method = "renderArmorPiece(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;ILnet/minecraft/client/model/HumanoidModel;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/client/extensions/common/IClientItemExtensions;getDefaultDyeColor(Lnet/minecraft/world/item/ItemStack;)I"), cancellable = true)
-    public void renderMixin(PoseStack poseStack, MultiBufferSource bufferSource, T livingEntity, EquipmentSlot slot, int packedLight, A p_model, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
-
+    @Inject(method = "renderArmorPiece", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/HumanoidArmorLayer;usesInnerModel(Lnet/minecraft/world/entity/EquipmentSlot;)Z"), cancellable = true)
+    public void renderMixin(PoseStack poseStack, MultiBufferSource bufferSource, T livingEntity, EquipmentSlot slot, int packedLight, A model, CallbackInfo ci) {
         ItemStack itemstack = livingEntity.getItemBySlot(slot);
         if(itemstack.getItem() instanceof IModelArmor){
-            ArmorLayerMixinUtil.renderModelArmor(poseStack, bufferSource, livingEntity, slot, packedLight, p_model, limbSwing, limbSwingAmount, partialTick, ageInTicks, netHeadYaw, headPitch,itemstack,
+            ArmorLayerMixinUtil.renderModelArmor(poseStack, bufferSource, livingEntity, slot, packedLight, model,  itemstack,
                     Rhyme$renderer.getModel().head
             );
             ci.cancel();

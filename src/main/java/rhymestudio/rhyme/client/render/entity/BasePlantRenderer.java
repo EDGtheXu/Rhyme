@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 import javax.annotation.Nullable;
@@ -37,10 +37,10 @@ public class BasePlantRenderer<T extends AbstractPlant,U extends EntityModel<T>>
     }
 
     @Override
-    protected void setupRotations(T entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+    protected void setupRotations(T entity, PoseStack poseStack,  float yBodyRot, float partialTick, float scale) {
         if(rotY) poseStack.mulPose(Axis.YP.rotationDegrees(-90));
         poseStack.scale(this.scale, this.scale, this.scale);
-        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
+        super.setupRotations(entity, poseStack,yBodyRot, partialTick, scale);
     }
 
     @Override
@@ -63,11 +63,9 @@ public class BasePlantRenderer<T extends AbstractPlant,U extends EntityModel<T>>
             poseStack.mulPose(q);
             poseStack.translate(-10, 0,0);
 
-
-
             int lvl = entity.getCardLevel();
-            CardQualityComponent quality = CardQualityComponent.of(lvl);
-            int color = quality.color();
+            CardQualityComponentType quality = CardQualityComponentType.of(lvl);
+            int color = quality.color;
             Minecraft.getInstance().font.drawInBatch("lvl:"+lvl,0,0,color,false,poseStack.last().pose(),buffer, Font.DisplayMode.SEE_THROUGH,0xf000f0,packedLight);
 
             poseStack.popPose();

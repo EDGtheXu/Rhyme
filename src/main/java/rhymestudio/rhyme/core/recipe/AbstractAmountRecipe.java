@@ -1,117 +1,88 @@
 package rhymestudio.rhyme.core.recipe;
 
-import net.minecraft.core.HolderLookup;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.HashSet;
 
-public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
+public abstract class AbstractAmountRecipe implements Recipe<Container> {
+    protected final ResourceLocation id;
     protected final ItemStack result;
     protected final NonNullList<Ingredient> ingredients;
 
-    protected AbstractAmountRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
+    protected AbstractAmountRecipe(ResourceLocation pId, ItemStack pResult, NonNullList<Ingredient> pIngredients) {
+        this.id = pId;
         this.result = pResult;
         this.ingredients = pIngredients;
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@Nullable Provider registries) {
-        return result;
-    }
-
-    @Override
-    public boolean matches(@NotNull RecipeInput pContainer, @NotNull Level pLevel) {
-        // pContainer
-        Map<Item, Integer> ingredientCount = new HashMap<>();
-        for (int index = 0; index < pContainer.size(); index++) {
-            ItemStack itemStack = pContainer.getItem(index);
-            if (!itemStack.isEmpty()) {
-                ingredientCount.put(itemStack.getItem(), ingredientCount.getOrDefault(itemStack.getItem(), 0) + itemStack.getCount());
-            }
-        }
-        // ingredients
-        Map<Item, Integer> requiredCount = new HashMap<>();
+    public boolean matches(@NotNull Container pContainer, @NotNull Level pLevel) {
+        found:
         for (Ingredient ingredient : ingredients) {
-            ItemStack[] items = ingredient.getItems();
-            for (ItemStack item : items) {
-                requiredCount.put(item.getItem(), requiredCount.getOrDefault(item.getItem(), 0) + item.getCount());
+            for (int index = 0; index < pContainer.getContainerSize(); index++) {
+                ItemStack itemStack = pContainer.getItem(index);
+                if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
+                    continue found;
+                }
             }
-        }
-        // 比较
-        for (Map.Entry<Item, Integer> entry : requiredCount.entrySet()) {
-            Item requiredItem = entry.getKey();
-            int requiredAmount = entry.getValue();
-            int availableAmount = ingredientCount.getOrDefault(requiredItem, 0);
-
-            if (availableAmount < requiredAmount) {
-                return false;
-            }
+            return false;
         }
         return true;
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull RecipeInput input, HolderLookup.@NotNull Provider registries) {
-        extractIngredients(input, ingredients);
-        return getResultItem(registries).copy();
+    public @NotNull ItemStack assemble(@NotNull Container pContainer, @NotNull RegistryAccess pRegistryAccess) {
+        extractIngredients(pContainer, ingredients);
+        return getResultItem(pRegistryAccess).copy();
     }
 
-    public ItemStack assemble(RecipeInput container, Level level) {
-        return assemble(container, level.registryAccess());
-    }
-
-    private static void extractIngredients(RecipeInput pContainer, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(pContainer.size(), pContainer::getItem, ingredients);
-    }
-
-    public static void extractIngredients(CraftingContainer pContainer, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(pContainer.getContainerSize(), pContainer::getItem, ingredients);
-    }
-
-    private static void consumeIngredients(int pContainerSize, Function<Integer, ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients) {
-        // 计算所有需要的原料数量
-        Map<ItemStack, Integer> requiredIngredients = new HashMap<>();
+    public static void extractIngredients(Container pContainer, NonNullList<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
-            int requiredAmount = ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient
-                    ? amountIngredient.amount() : 1;
-            ItemStack[] items = ingredient.getItems();
-            for (ItemStack item : items) {
-                requiredIngredients.put(item, requiredIngredients.getOrDefault(item, 0) + requiredAmount);
-            }
-        }
-        // 逐个消耗
-        for (Map.Entry<ItemStack, Integer> entry : requiredIngredients.entrySet()) {
-            ItemStack requiredItem = entry.getKey();
-            int amountToConsume = entry.getValue();
-            for (int index = 0; index < pContainerSize; index++) {
-                ItemStack itemStack = getItemStackCallback.apply(index);
-                if (!itemStack.isEmpty() && requiredItem.getItem() == itemStack.getItem()) {
-                    int availableAmount = itemStack.getCount();
-                    // 实际消耗
-                    int amountToShrink = Math.min(availableAmount, amountToConsume);
-                    itemStack.shrink(amountToShrink);
-                    amountToConsume -= amountToShrink;
-                    if (amountToConsume <= 0) break;
+            for (int index = 0; index < pContainer.getContainerSize(); index++) {
+                ItemStack itemStack = pContainer.getItem(index);
+                if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
+                    pContainer.removeItem(index, ((AmountIngredient) ingredient).getCount());
+                    break;
                 }
             }
         }
     }
 
+    public ItemStack assemble(Container container, Level level) {
+        return assemble(container, level.registryAccess());
+    }
+
     @Override
     public boolean canCraftInDimensions(int i, int i1) {
         return true;
+    }
+
+    @Override
+    public @NotNull ItemStack getResultItem(@Nullable RegistryAccess registryAccess) {
+        return result;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getId() {
+        return id;
     }
 
     @Override
@@ -122,6 +93,47 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     protected abstract int maxIngredientSize();
 
     public static abstract class Serializer<R extends AbstractAmountRecipe> implements RecipeSerializer<R> {
-//        protected abstract R newInstance(ItemStack pResult, NonNullList<Ingredient> pIngredients);
+        protected abstract R newInstance(ResourceLocation pId, ItemStack pResult, NonNullList<Ingredient> pIngredients);
+
+        @Override
+        public @NotNull R fromJson(@NotNull ResourceLocation pRecipeId, @NotNull JsonObject pJson) {
+            ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(pJson, "result"), true, true);
+            JsonArray ingredients = GsonHelper.getAsJsonArray(pJson, "ingredients");
+            NonNullList<Ingredient> nonNullList = NonNullList.withSize(ingredients.size(), AmountIngredient.EMPTY);
+            HashSet<Item> items = new HashSet<>();
+            for (int i = 0; i < ingredients.size(); ++i) {
+                JsonElement jsonElement = ingredients.get(i);
+                JsonObject json = GsonHelper.convertToJsonObject(jsonElement.getAsJsonObject(), "rhyme:amount_ingredient");
+                AmountIngredient ingredient = AmountIngredient.Serializer.INSTANCE.parse(json);
+                Item item = ingredient.getItem();
+                if (items.add(item)) {
+                    nonNullList.set(i, ingredient);
+                } else {
+                    throw new IllegalArgumentException("Duplicate ingredient " + item);
+                }
+            }
+            if (nonNullList.isEmpty()) throw new JsonParseException("No ingredients for " + pRecipeId);
+            R recipe = newInstance(pRecipeId, result, nonNullList);
+            if (ingredients.size() > recipe.maxIngredientSize()) throw new IndexOutOfBoundsException("The ingredient size of '" + pRecipeId + "' is multiOut of 3");
+            return recipe;
+        }
+
+        @Override
+        public @Nullable R fromNetwork(@NotNull ResourceLocation pRecipeId, @NotNull FriendlyByteBuf pBuffer) {
+            int size = pBuffer.readVarInt();
+            NonNullList<Ingredient> ingredients = NonNullList.withSize(size, AmountIngredient.EMPTY);
+            ingredients.replaceAll(ignored -> Ingredient.fromNetwork(pBuffer));
+            ItemStack result = pBuffer.readItem();
+            return newInstance(pRecipeId, result, ingredients);
+        }
+
+        @Override
+        public void toNetwork(@NotNull FriendlyByteBuf pBuffer, @NotNull R pRecipe) {
+            pBuffer.writeVarInt(pRecipe.ingredients.size());
+            for (Ingredient ingredient : pRecipe.ingredients) {
+                ingredient.toNetwork(pBuffer);
+            }
+            pBuffer.writeItem(pRecipe.result);
+        }
     }
 }

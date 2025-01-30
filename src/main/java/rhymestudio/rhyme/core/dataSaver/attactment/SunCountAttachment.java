@@ -4,10 +4,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.network.PacketDistributor;
+
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.network.NetworkDirection;
 import org.jetbrains.annotations.UnknownNullability;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
+import rhymestudio.rhyme.network.NetworkHandler;
 import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
 import rhymestudio.rhyme.utils.Computer;
 
@@ -21,7 +23,7 @@ public class SunCountAttachment implements INBTSerializable<CompoundTag> {
     public int x,y,z;
 
     public void sendSunCountUpdate(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player,new SunCountPacketS2C(sunCount, moneys , additionalSunCount));
+        NetworkHandler.CHANNEL.sendTo(new SunCountPacketS2C(sunCount, moneys , additionalSunCount),player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     public int getMaxSunCount() {
@@ -29,7 +31,7 @@ public class SunCountAttachment implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("sunCount", sunCount);
         tag.putInt("x", x);
@@ -40,7 +42,7 @@ public class SunCountAttachment implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag compoundTag) {
+    public void deserializeNBT(CompoundTag compoundTag) {
         sunCount = compoundTag.getInt("sunCount");
         x = compoundTag.getInt("x");
         y = compoundTag.getInt("y");

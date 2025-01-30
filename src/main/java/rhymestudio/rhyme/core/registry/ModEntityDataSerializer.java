@@ -1,9 +1,9 @@
 package rhymestudio.rhyme.core.registry;
 
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import rhymestudio.rhyme.core.recipe.DaveTrades;
+
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
@@ -11,9 +11,9 @@ import static rhymestudio.rhyme.Rhyme.MODID;
 
 public class ModEntityDataSerializer {
 
-    public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, MODID);
+    public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.ENTITY_DATA_SERIALIZERS.get(), MODID);
 
-    public static Supplier<EntityDataSerializer<DaveTrades>> DAVE_TRADES_SERIALIZER = ENTITY_DATA_SERIALIZERS.register("dave_trades",()->EntityDataSerializer.forValueType(DaveTrades.STREAM_CODEC));
+//    public static Supplier<EntityDataSerializer<DaveTrades>> DAVE_TRADES_SERIALIZER = ENTITY_DATA_SERIALIZERS.register("dave_trades",()->EntityDataSerializer.simple(DaveTrades.STREAM_CODEC));
 
 
 }

@@ -6,25 +6,40 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemDataMapComponent implements DataComponentType<ItemDataMapComponent> {
-    private final JsonObject itemDataMap;
-    private final Map<String, JsonElement> itemData;
-
+public class ItemDataMapComponent extends AbstractDataComponent<ItemDataMapComponent> {
+    private JsonObject itemDataMap;
+    private Map<String, JsonElement> itemData;
 
     public static DataMapBuilder builder(){
         return new DataMapBuilder();
     }
 
+    @Override
+    public String name() {
+        return "item_data_map";
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag tag) {
+        if (!tag.contains("item_data_map")) {
+            setInvalid();
+            return;
+        }
+        this.itemDataMap = GsonHelper.parse(tag.getString("item_data_map"));
+    }
+
+    @Override
+    public void writeToNBT(CompoundTag tag) {
+        tag.putString("item_data_map", itemDataMap.toString());
+    }
 
     public static class DataMapBuilder{
         Map<String,Map<String, JsonElement>> itemData = new HashMap<>();
@@ -91,24 +106,15 @@ public class ItemDataMapComponent implements DataComponentType<ItemDataMapCompon
         itemData = itemDataMap.asMap();
     }
 
+    public ItemDataMapComponent(ItemStack stack){
+        this.readFromNBT(stack.getOrCreateTag());
+    }
+
     public static final Codec<ItemDataMapComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("itemDataMap").forGetter(o-> o.itemDataMap.toString() )
     ).apply(instance, s->new ItemDataMapComponent(JsonParser.parseString(s).getAsJsonObject())));
 
-    public static final StreamCodec<ByteBuf, ItemDataMapComponent> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, i->i.itemDataMap.toString(),
-            s->new ItemDataMapComponent(JsonParser.parseString(s).getAsJsonObject())
-    );
 
-    @Override
-    public @Nullable Codec<ItemDataMapComponent> codec() {
-        return CODEC;
-    }
-
-    @Override
-    public StreamCodec<? super RegistryFriendlyByteBuf, ItemDataMapComponent> streamCodec() {
-        return STREAM_CODEC;
-    }
     public int hashCode(){
         return itemDataMap.hashCode();
     }

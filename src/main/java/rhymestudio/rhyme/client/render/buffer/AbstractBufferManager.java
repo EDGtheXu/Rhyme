@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 
 /**
@@ -39,11 +39,13 @@ public abstract class AbstractBufferManager {
 
         vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder buffer = tessellator.getBuilder();
+
+//        .begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
         buildBuffer(buffer);
 
-        var build = buffer.build();
+        var build = buffer.end();
         if (build == null) {
             vertexBuffer = null;
         } else {
@@ -55,10 +57,10 @@ public abstract class AbstractBufferManager {
 
 
     public void render(RenderLevelStageEvent event){
-        render(event.getPoseStack(), event.getModelViewMatrix(), Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), event.getProjectionMatrix());
+        render(event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), event.getProjectionMatrix());
 
     }
-    public void render(PoseStack poseStack, Matrix4f modelMatrix, Vec3 playerPos, Matrix4f projectMatrix){
+    public void render(PoseStack poseStack, Vec3 playerPos, Matrix4f projectMatrix){
         if(shouldRefresh())
             refresh();
 
@@ -68,7 +70,7 @@ public abstract class AbstractBufferManager {
             beforeRender();
 
             poseStack.pushPose();
-            poseStack.mulPose(modelMatrix);
+//            poseStack.mulPose(modelMatrix);
             poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
 //            poseStack.mulPose(event.getCamera().rotation());
 

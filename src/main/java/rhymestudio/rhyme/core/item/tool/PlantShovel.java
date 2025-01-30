@@ -32,7 +32,9 @@ public class PlantShovel extends Item {
 
             doOnNotDetect(level,player,itemStack);
         }
-        player.getData(ModAttachments.PLAYER_STORAGE.get()).consumeSun(player,2000);
+        player.getCapability(ModAttachments.PLAYER_STORAGE).ifPresent(cap->{
+            cap.consumeSun(player,2000);
+        });
         return super.use(level, player, usedHand);
     }
 

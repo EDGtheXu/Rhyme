@@ -4,11 +4,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.crafting.IngredientType;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import rhymestudio.rhyme.Rhyme;
+
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import rhymestudio.rhyme.core.recipe.AmountIngredient;
 import rhymestudio.rhyme.core.recipe.CardUpLevelRecipe;
 import rhymestudio.rhyme.core.recipe.SunCreatorRecipe;
@@ -26,11 +25,11 @@ public final class ModRecipes {
 
     public static final String AMOUNT_INGREDIENT_ID = "amount_ingredient";
 
-    public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, MODID);
-    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, MODID);
-    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
+//    public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister.create(ForgeRegistries.Keys.INGREDIENT_TYPES, MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
 
-    public static final Supplier<IngredientType<AmountIngredient>> AMOUNT_INGREDIENT_TYPE = INGREDIENT_TYPES.register(AMOUNT_INGREDIENT_ID, () -> new IngredientType<>(AmountIngredient.CODEC, AmountIngredient.STREAM_CODEC));
+//    public static final Supplier<IngredientType<AmountIngredient>> AMOUNT_INGREDIENT_TYPE = INGREDIENT_TYPES.register(AMOUNT_INGREDIENT_ID, () -> new IngredientType<>(AmountIngredient.CODEC, AmountIngredient.STREAM_CODEC));
 
 
     public static final Supplier<RecipeType<SunCreatorRecipe>> SUN_CREATOR_TYPE = registerType(SUN_CREATOR_ID);
@@ -54,7 +53,7 @@ public final class ModRecipes {
     }
 
     public static void register(IEventBus eventBus) {
-        INGREDIENT_TYPES.register(eventBus);
+//        INGREDIENT_TYPES.register(eventBus);
         RECIPE_TYPES.register(eventBus);
         RECIPE_SERIALIZERS.register(eventBus);
     }

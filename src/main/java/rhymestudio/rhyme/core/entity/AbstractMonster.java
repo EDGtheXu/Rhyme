@@ -14,6 +14,9 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 
@@ -58,9 +61,8 @@ public class AbstractMonster extends Monster implements ICafeMob{
         this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(builder.ATTACK_KNOCKBACK);
         this.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(builder.ATTACK_SPEED);
         this.getAttribute(Attributes.FLYING_SPEED).setBaseValue(builder.FLYING_SPEED);
-        this.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(builder.SAFE_FALL);
         this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(builder.JUMP_STRENGTH);
-        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(builder.STEP_HEIGHT);
+        this.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(builder.STEP_HEIGHT);
 
 
 
@@ -70,9 +72,9 @@ public class AbstractMonster extends Monster implements ICafeMob{
 
     // 动画数据同步
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_CAFE_POSE_NAME, "idle");
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_CAFE_POSE_NAME, "idle");
     }
 
     @Override
@@ -118,6 +120,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.FLYING_SPEED)
+                .add(Attributes.JUMP_STRENGTH)
                 ;
     }
 
@@ -209,8 +212,8 @@ public class AbstractMonster extends Monster implements ICafeMob{
     }
 
     @Override
-    public void onAddedToLevel(){
-        super.onAddedToLevel();
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
         if(this.dirty){
             this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
             this.setHealth(getMaxHealth());

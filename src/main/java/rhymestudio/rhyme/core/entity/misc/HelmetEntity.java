@@ -22,7 +22,7 @@ public class HelmetEntity extends Entity {
     public HelmetEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
         this.setNoGravity(false);
-        float f = this.getRandom().nextFloat() * 6.28f;
+        float f = level.getRandom().nextFloat() * 6.28f;
         this.setDeltaMovement(Math.sin(f)*0.1f,0.2f,Math.cos(f)*0.1f);
 
     }
@@ -44,8 +44,8 @@ public class HelmetEntity extends Entity {
     public static final EntityDataAccessor<Integer> DATA_OWNER = SynchedEntityData.defineId(HelmetEntity.class, EntityDataSerializers.INT);
 
 
-    public void onAddedToLevel(){
-        super.onAddedToLevel();
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
 
     }
     public void tick(){
@@ -73,9 +73,9 @@ public class HelmetEntity extends Entity {
         move(MoverType.SELF, getDeltaMovement());
     }
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_ITEM_STACK, ItemStack.EMPTY);
-        builder.define(DATA_OWNER, 0);
+    protected void defineSynchedData() {
+        this.entityData.define(DATA_ITEM_STACK, ItemStack.EMPTY);
+        this.entityData.define(DATA_OWNER, 0);
     }
 
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {

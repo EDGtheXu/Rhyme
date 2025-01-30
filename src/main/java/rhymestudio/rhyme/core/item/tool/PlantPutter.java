@@ -4,15 +4,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.EntitySaverComponent;
-import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
+
+import net.minecraftforge.registries.ForgeRegistries;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.EntitySaverComponentType;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.ItemDataMapComponent;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.utils.Computer;
 
@@ -28,43 +31,49 @@ public class PlantPutter extends PlantShovel {
     @Override
     protected void doOnDetect(Entity entity, Level level, Player player, ItemStack itemStack){
 
-        var data = itemStack.get(ModDataComponentTypes.ITEM_ENTITY_TAG);
-        if(data == null){
+        var data = new ItemDataMapComponent(itemStack);
+        if(data.isValid()){
 
             CompoundTag tag = new CompoundTag();
             entity.save(tag);
-            itemStack.set(ModDataComponentTypes.ITEM_ENTITY_TAG.get(), new EntitySaverComponent(tag, BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())));
+            new EntitySaverComponentType(tag, ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).writeToNBT(tag);
             entity.discard();
             player.playSound(ModSounds.SHOVEL.get());
             if(player.canBeSeenAsEnemy())
                 player.getCooldowns().addCooldown(this, 20 * 15);
         }
 
-//        player.playSound(ModSounds.SHOVEL.get());
+        player.playSound(ModSounds.SHOVEL.get());
 
 
     }
     @Override
     protected void doOnNotDetect(Level level, Player player, ItemStack itemStack){
-
-        var data = itemStack.get(ModDataComponentTypes.ITEM_ENTITY_TAG);
-        if(data != null){
+        var data = new EntitySaverComponentType(itemStack);
+        if(data.isValid()){
             final BlockPos pos = Computer.getEyeBlockHitResult(player);
             if(!canPutPlant(level,player,pos)) {
                 if(!level.isClientSide)
-                    player.sendSystemMessage(Component.translatable("plantcard.cannot_put_plant").withColor(0xff0000));
+                    player.sendSystemMessage(Component.translatable("plantcard.cannot_put_plant").withStyle(Style.EMPTY.withColor(0xff0000)));
                 return;
             }
 
-            CompoundTag tag = data.tag();
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(data.type());
-            Entity e =  type.create(level);
+            CompoundTag tag = data.tag;
+            EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(data.type);
+            Entity e;
+            if (type != null) {
+                e = type.create(level);
+            }else return;
 
-            e.load(tag);
+            if (e != null) {
+                e.load(tag);
+            }else return;
 
             e.setPos(Computer.getBlockPosCenter(pos,player.getRandom()));
             level.addFreshEntity(e);
-            itemStack.remove(ModDataComponentTypes.ITEM_ENTITY_TAG.get());
+            if (itemStack.getTag() != null) {
+                itemStack.getTag().remove(data.name());
+            }
             player.playSound(ModSounds.PLANT.get());
             if(player.canBeSeenAsEnemy())
                 player.getCooldowns().addCooldown(this, 20 * 15);
@@ -72,20 +81,22 @@ public class PlantPutter extends PlantShovel {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        var data = stack.get(ModDataComponentTypes.ITEM_ENTITY_TAG);
-        if(data != null){
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(data.type());
-            CompoundTag tag = data.tag();
+        var data = new EntitySaverComponentType(stack);
+        if(data.isValid()){
+            EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(data.type);
+            CompoundTag tag = data.tag;
             int lvl = tag.getInt("cardLevel");
             tooltipComponents.add(Component.translatable("tooltip.rhyme.plant_putter.entity_picked")
                     .append(Component.translatable(type.getDescriptionId()))
             );
 
-            var quality = CardQualityComponent.of(lvl);
-            tooltipComponents.add(Component.translatable("plantcard.tooltip.card_quality").append(": ")
-                    .append(Component.translatable("plantcard.tooltip.card_quality."+BuiltInRegistries.ITEM.getKey(quality.getQualityItem()).getPath().split("/")[1]).withColor(quality.color())));
+            var quality = CardQualityComponentType.of(lvl);
+            var r = ForgeRegistries.ITEMS.getKey(quality.getQualityItem());
+            if(r != null)
+                tooltipComponents.add(Component.translatable("plantcard.tooltip.card_quality").append(": ")
+                        .append(Component.translatable("plantcard.tooltip.card_quality."+ r.getPath().split("/")[1]).withStyle(Style.EMPTY.withColor(quality.color))));
 
         }
     }

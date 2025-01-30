@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.core.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -14,13 +13,8 @@ public class BaseModelBlock extends Block  {
 
     public BaseModelBlock(Properties properties) {super(properties);}
 
-    public static final MapCodec<BaseModelBlock> CODEC = simpleCodec(BaseModelBlock::new);
-
     @Override
-    protected @NotNull MapCodec<? extends Block> codec() {return CODEC;}
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {return RenderShape.MODEL;}
+    public RenderShape getRenderShape(BlockState state) {return RenderShape.MODEL;}
 
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {return super.getShape(pState, pLevel, pPos, pContext);}

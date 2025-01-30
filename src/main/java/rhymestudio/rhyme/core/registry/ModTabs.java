@@ -4,8 +4,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 import rhymestudio.rhyme.core.registry.items.*;
 
 import java.util.function.Supplier;
@@ -16,12 +18,16 @@ public class ModTabs {
 
     public static final Supplier<CreativeModeTab> CARD = TABS.register("cards",
             () -> CreativeModeTab.builder()
-                    .icon(MaterialItems.SOLID_SUN::toStack)
+                    .icon(MaterialItems.SOLID_SUN.get()::getDefaultInstance)
                     .title(Component.translatable("creativetab.rhyme"))
                     .displayItems((parameters, output) -> {
                         ModBlocks.BLOCKS.getEntries().forEach(item -> output.accept(item.get()));
                         MaterialItems.MATERIALS.getEntries().forEach(item -> output.accept(item.get()));
-                        PlantItems.PLANTS.getEntries().forEach(item -> output.accept(item.get()));
+                        PlantItems.PLANTS.getEntries().forEach(item -> {
+                            ItemStack stack = item.get().getDefaultInstance();
+                            CardQualityComponentType.of(0).writeToNBT(stack.getOrCreateTag());
+                            output.accept(stack);
+                        });
                         SpawnEggItems.EGGS.getEntries().forEach(item -> output.accept(item.get()));
                         ArmorItems.ARMORS.getEntries().forEach(item -> output.accept(item.get()));
                         ToolItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));

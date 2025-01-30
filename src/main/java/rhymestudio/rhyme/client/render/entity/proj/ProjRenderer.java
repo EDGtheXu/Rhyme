@@ -42,7 +42,7 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
         pPoseStack.scale(size,size,size);
         pPoseStack.translate(0,offsetY,0);
         VertexConsumer buffer = pBuffer.getBuffer(this.bulletModel.renderType(this.getTextureLocation(pEntity)));
-        this.bulletModel.renderToBuffer(pPoseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY);
+        this.bulletModel.renderToBuffer(pPoseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         pPoseStack.popPose();
     }
 

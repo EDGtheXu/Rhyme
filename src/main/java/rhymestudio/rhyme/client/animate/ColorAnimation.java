@@ -1,18 +1,19 @@
 package rhymestudio.rhyme.client.animate;
 
+import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Mth;
 
 public class ColorAnimation {
-    public static final Codec<ColorAnimation> CODEC = Codec.STRING.dispatch("type", ColorAnimation::getType, type -> switch (type) {
-        case "master" -> MapCodec.unit(MasterColorAnimation.INSTANCE);
-        case "expert" -> MapCodec.unit(ExpertColorAnimation.INSTANCE);
-        default -> RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ColorState.CODEC.fieldOf("color").forGetter(ColorAnimation::getColorState)
-        ).apply(instance, ColorAnimation::new));
-    });
+//    public static final Codec<ColorAnimation> CODEC = Codec.STRING.dispatch("type", ColorAnimation::getType, type -> switch (type) {
+//        case "master" -> MapCodec.unit(MasterColorAnimation.INSTANCE);
+//        case "expert" -> MapCodec.unit(ExpertColorAnimation.INSTANCE);
+//        default -> RecordCodecBuilder.mapCodec(instance -> instance.group(
+//                ColorState.CODEC.fieldOf("color").forGetter(ColorAnimation::getColorState)
+//        ).apply(instance, ColorAnimation::new));
+//    });
 
     protected final ColorState color;
 

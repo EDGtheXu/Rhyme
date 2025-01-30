@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.client.model.layerModels.ZombieArmorLayer;
 import rhymestudio.rhyme.client.model.zombieModels.NormalZombieModel;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
@@ -32,21 +31,21 @@ public class NormalZombieRenderer<T extends NormalZombie, M extends NormalZombie
         this.rotY = rotY;
         this.scale = scale;
 
-        this.addLayer(new ZombieArmorLayer<>(this,
-                new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.ZOMBIE)),
+//        this.addLayer(new ZombieArmorLayer<>(this,
 //                new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.ZOMBIE)),
-                context.getModelManager()
-        ));
+////                new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.ZOMBIE)),
+//                context.getModelManager()
+//        ));
 
 //        this.addLayer(new CustomHeadLayer(this, context.getModelSet(), scale, scale, scale, context.getItemInHandRenderer()));
 //        this.addLayer(new ElytraLayer(this, context.getModelSet()));
 //        this.addLayer(new ItemInHandLayer(this, context.getItemInHandRenderer()));
     }
 
-    protected void setupRotations(T entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
+    protected void setupRotations(T entity, PoseStack poseStack, float yBodyRot, float partialTick, float scale) {
         if(rotY) poseStack.mulPose(Axis.YP.rotationDegrees(-90));
         poseStack.scale(this.scale, this.scale, this.scale);
-        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
+        super.setupRotations(entity, poseStack, yBodyRot, partialTick, scale);
     }
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         ModelPart arm = null;

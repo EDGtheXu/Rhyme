@@ -1,6 +1,6 @@
 package rhymestudio.rhyme.core.registry;
 
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 import rhymestudio.rhyme.core.registry.items.*;
 
 public class ModItems {

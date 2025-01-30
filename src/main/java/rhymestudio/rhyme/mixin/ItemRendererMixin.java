@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 
 import static rhymestudio.rhyme.client.model.ModelUtils.HEAD_MODEL_ITEMS;
 
@@ -49,13 +49,13 @@ public abstract class ItemRendererMixin {
                     }else if(percentage > 0.33f){
                         location = HEAD_MODEL_ITEMS.get(item).get(1);
                     }else{
-                        location = HEAD_MODEL_ITEMS.get(item).getFirst();
+                        location = HEAD_MODEL_ITEMS.get(item).get(0);
                     }
                 }else{
-                    location =HEAD_MODEL_ITEMS.get(item).getLast();
+                    location = HEAD_MODEL_ITEMS.get(item).get(HEAD_MODEL_ITEMS.get(item).size()-1);
                 }
 
-                BakedModel bakedmodel = itemModelShaper.getModelManager().getModel(ModelResourceLocation.standalone(location));
+                BakedModel bakedmodel = itemModelShaper.getModelManager().getModel(new ModelResourceLocation(location, "inventory"));
                 if(bakedmodel!=itemModelShaper.getModelManager().getMissingModel()) {
                     this.render(itemStack, displayContext, leftHand, poseStack, bufferSource, combinedLight, combinedOverlay, bakedmodel);
                     ci.cancel();
@@ -63,14 +63,11 @@ public abstract class ItemRendererMixin {
             }
         }
 
-
-        var data = itemStack.getComponents().get(ModDataComponentTypes.CARD_QUALITY.get());
-        if(data != null){
+        var data = new CardQualityComponentType(itemStack);
+        if(data.isValid()){
             ItemStack qualityItem = data.getQualityItem().getDefaultInstance();
             renderStatic(entity, qualityItem, displayContext, leftHand, poseStack, bufferSource, level, combinedLight, combinedOverlay, seed);
-
         }
-
     }
             /*
     @Inject(method = "getModel", at = @At(value = "HEAD"),cancellable = true)

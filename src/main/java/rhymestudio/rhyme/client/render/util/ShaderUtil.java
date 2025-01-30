@@ -3,6 +3,7 @@ package rhymestudio.rhyme.client.render.util;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import rhymestudio.rhyme.client.ModRenderTypes;
@@ -16,12 +17,14 @@ public class ShaderUtil {
 
         RenderSystem.setShader(()->ModRenderTypes.Shaders.rectPolar);
 
-        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.addVertex(pose, 0, 0, 0).setUv(0, 0);
-        bufferbuilder.addVertex(pose, 0, h, 0).setUv(0, 1);
-        bufferbuilder.addVertex(pose, w, h, 0).setUv(1, 1);
-        bufferbuilder.addVertex(pose, w, 0,0).setUv(1, 0);
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+//        .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder.vertex(pose, 0, 0, 0).uv(0, 0).endVertex();
+        bufferbuilder.vertex(pose, 0, h, 0).uv(0, 1).endVertex();
+        bufferbuilder.vertex(pose, w, h, 0).uv(1, 1).endVertex();
+        bufferbuilder.vertex(pose, w, 0,0).uv(1, 0).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
     }

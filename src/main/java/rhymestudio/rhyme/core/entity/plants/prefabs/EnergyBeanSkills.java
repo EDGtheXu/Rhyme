@@ -10,8 +10,9 @@ import rhymestudio.rhyme.utils.Computer;
 
 import java.util.ArrayList;
 import java.util.List;
+import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 
-import static rhymestudio.rhyme.core.registry.entities.PlantEntities.POTATO_MINE;
+
 
 public class EnergyBeanSkills {
 
@@ -21,7 +22,7 @@ public class EnergyBeanSkills {
             .onTick(e-> {
                 if (e.skills.canTrigger()){
                     for(int i=0;i<3;i++){
-                        PotatoMine en = POTATO_MINE.get().create(e.level());
+                        PotatoMine en = PlantEntities.POTATO_MINE.get().create(e.level());
                         Vec3 center = e.position();
                         double r = e.getRandom().nextFloat()*2*Math.PI;
                         Vec3 pos = center.add(Math.sin(r),0.5f,Math.cos(r));
@@ -42,7 +43,7 @@ public class EnergyBeanSkills {
                 if(e.skills.tick % 3 == 0 && e.skills.tick < 12){
                     List<LivingEntity> targets = new ArrayList<>();
                     e.level().getEntities(e,e.getBoundingBox().inflate(20),target->target instanceof Enemy).forEach(tar->{
-                        if(tar instanceof  LivingEntity liv && Computer.angle(e.calculateViewVector(e.getXRot(),e.yHeadRot),tar.position().subtract(e.position()).normalize()) < 20){
+                        if(tar instanceof  LivingEntity liv && Computer.angle(e.getLookAngle(),tar.position().subtract(e.position()).normalize()) < 20){
                             targets.add(liv);
                         }
                     });

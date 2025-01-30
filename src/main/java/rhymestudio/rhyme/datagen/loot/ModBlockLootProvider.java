@@ -17,8 +17,8 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
 //            ModBlock.BA_JIN_ORE.get()
     );
 
-    public ModBlockLootProvider(HolderLookup.Provider registries) {
-        super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags(),registries);
+    public ModBlockLootProvider() {
+        super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags());
     }
 
     @Override

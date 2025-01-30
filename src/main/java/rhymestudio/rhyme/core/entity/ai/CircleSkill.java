@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.core.entity.ai;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 

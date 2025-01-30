@@ -13,12 +13,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static net.minecraft.world.item.Item.getPlayerPOVHitResult;
 
 public class Computer {
 
@@ -56,7 +56,9 @@ public class Computer {
     }
 
     public static BlockPos getEyeBlockHitResult(Player player){
-        final BlockHitResult result = getPlayerPOVHitResult(player.level(), player, ClipContext.Fluid.SOURCE_ONLY);
+        Vec3 vec3 = player.getEyePosition();
+        Vec3 vec31 = vec3.add(player.getLookAngle().scale(player.getAttributeValue(ForgeMod.BLOCK_REACH.get())));
+        BlockHitResult result =  player.level().clip(new ClipContext(vec3, vec31, net.minecraft.world.level.ClipContext.Block.OUTLINE, ClipContext.Fluid.WATER, player));
         final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
         final BlockPos pos = raytraceResult.getBlockPos();
         return pos;
@@ -67,14 +69,14 @@ public class Computer {
 
     }
 
-    public static void playSound(Entity entity, DeferredHolder<SoundEvent,SoundEvent> sound, float volume, BlockPos pos){
+    public static void playSound(Entity entity, RegistryObject<SoundEvent> sound, float volume, BlockPos pos){
         entity.level().playSound(entity,pos,sound.get(),SoundSource.AMBIENT,volume,1F);
 
     }
-    public static void playSound(Entity entity, DeferredHolder<SoundEvent,SoundEvent> sound, float volume){
+    public static void playSound(Entity entity, RegistryObject<SoundEvent> sound, float volume){
         playSound(entity, sound, volume, entity.blockPosition().above());
     }
-    public static void playSound(Entity entity, DeferredHolder<SoundEvent,SoundEvent> sound){
+    public static void playSound(Entity entity, RegistryObject<SoundEvent> sound){
         playSound(entity, sound, 1F);
     }
 

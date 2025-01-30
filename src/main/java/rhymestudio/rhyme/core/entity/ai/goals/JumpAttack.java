@@ -24,7 +24,7 @@ public class JumpAttack extends JumpOverBlockGoal {
         lastAttackTime = mob.tickCount;
         if(mob.getTarget() == null) return;
         mob.getLookControl().setLookAt(mob.getTarget(), 30.0F, 30.0F);
-        mob.jumpFromGround();
+//        mob.jumpFromGround();
         mob.addDeltaMovement(mob.getTarget().position().subtract(mob.position())
                 .multiply(1,0,1).normalize().scale(mob.getSpeed() * speedModifier));
         mob.setAggressive(true);

@@ -1,36 +1,39 @@
 package rhymestudio.rhyme.network.s2c;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
-import rhymestudio.rhyme.Rhyme;
+import net.minecraft.network.FriendlyByteBuf;
+
+import net.minecraftforge.network.NetworkEvent.Context;
 import rhymestudio.rhyme.mixinauxiliary.ILivingEntity;
 
-public record ProjHitPacket (int id, int frozenTick) implements CustomPacketPayload {
+import java.util.function.Supplier;
 
-    public static final Type<ProjHitPacket> TYPE = new Type<>(Rhyme.space("frozen_tick_packet_s2c"));
-    public static final StreamCodec<ByteBuf, ProjHitPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, ProjHitPacket::id,
-            ByteBufCodecs.INT, ProjHitPacket::frozenTick,
-            ProjHitPacket::new
-    );
-
-    @Override
-    public @NotNull Type<ProjHitPacket> type() {
-        return TYPE;
+public class ProjHitPacket{
+    int id;
+    int frozenTick;
+    public ProjHitPacket(int id, int frozenTick) {
+        this.id = id;
+        this.frozenTick = frozenTick;
     }
 
-    public void handle(IPayloadContext context) {
+    public static ProjHitPacket decode(FriendlyByteBuf buffer) {
+        int id = buffer.readInt();
+        int frozenTick = buffer.readInt();
+        return new ProjHitPacket(id, frozenTick);
+    }
+
+    public static void encode(ProjHitPacket packet, FriendlyByteBuf buf) {
+        buf.writeInt(packet.id);
+        buf.writeInt(packet.frozenTick);
+    }
+
+
+    public static void handle(ProjHitPacket packet, Supplier<Context> cxt) {
+        Context context = cxt.get();
         context.enqueueWork(() -> {
-            if (context.player().isLocalPlayer()) {
-                ((ILivingEntity)context.player().level().getEntity(id)).rhyme$setFrozenTime(frozenTick);
+            if (context.getSender().isLocalPlayer()) {
+                ((ILivingEntity)context.getSender().level().getEntity(packet.id)).rhyme$setFrozenTime(packet.frozenTick);
             }
         }).exceptionally(e -> {
-            context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
             return null;
         });
     }

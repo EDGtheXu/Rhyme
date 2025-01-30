@@ -2,9 +2,10 @@ package rhymestudio.rhyme.datagen;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredRegister;
+
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 
@@ -25,7 +26,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
 
         // 一般方块
-        List<DeferredRegister.Blocks> normalBlocks = List.of(
+        List<DeferredRegister<Block>> normalBlocks = List.of(
                 ModBlocks.BLOCKS
         );
         normalBlocks.forEach(blocks -> blocks.getEntries().forEach(block -> {

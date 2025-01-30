@@ -1,13 +1,12 @@
 package rhymestudio.rhyme.core.entity.plants.prefabs;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.BaseProj;
 import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
@@ -18,13 +17,14 @@ import rhymestudio.rhyme.core.registry.items.MaterialItems;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 
 /**
  * 弹幕预设，调整发射初始位置、弹幕类型
  */
 public class PresetAttacks {
-    public DeferredHolder<SoundEvent, SoundEvent> sound;
+    public RegistryObject<SoundEvent> sound;
     public Function<AbstractPlant,Integer> shootCountSetter;
     public Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attackSetter;
 
@@ -37,7 +37,7 @@ public class PresetAttacks {
         return 1;
     }
 
-    public PresetAttacks(Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attackGetter, DeferredHolder<SoundEvent, SoundEvent> sound, Function<AbstractPlant,Integer> shootCountSetter) {
+    public PresetAttacks(Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attackGetter, RegistryObject<SoundEvent> sound, Function<AbstractPlant,Integer> shootCountSetter) {
         this.attackSetter = attackGetter;
         this.sound = sound;
         this.shootCountSetter = shootCountSetter;
@@ -48,7 +48,7 @@ public class PresetAttacks {
     }
     public static class Builder {
         private Function<AbstractPlant,BiConsumer<AbstractPlant, LivingEntity>> attack;
-        private DeferredHolder<SoundEvent, SoundEvent> sound;
+        private RegistryObject<SoundEvent> sound;
         private Function<AbstractPlant,Integer> shootCountSetter;
         public Builder setShootCount(int shootCount) {
             this.shootCountSetter = (p) -> shootCount;
@@ -66,7 +66,7 @@ public class PresetAttacks {
             this.attack = attack;
             return this;
         }
-        public Builder setSound(DeferredHolder<SoundEvent, SoundEvent> sound) {
+        public Builder setSound(RegistryObject<SoundEvent> sound) {
             this.sound = sound;
             return this;
         }
@@ -79,14 +79,14 @@ public class PresetAttacks {
     /**
      * 直线弹幕
      */
-    public static final QuaConsumer<AbstractPlant, LivingEntity, DeferredHolder<EntityType<?>, EntityType<LineProj>>, Float> PEA_SHOOT_ATTACK_BASE = (me, tar, proj, offsetY) -> {
+    public static final QuaConsumer<AbstractPlant, LivingEntity, Supplier< EntityType<LineProj>>, Float> PEA_SHOOT_ATTACK_BASE = (me, tar, proj, offsetY) -> {
 
         Vec3 dir;
         if(tar!=null) {
             Vec3 pos = tar.position().add(0,tar.getEyeHeight()* 0.75f,0);
             dir = pos.subtract(me.getEyePosition());
 //            dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
-        } else dir = me.calculateViewVector(me.getXRot(), me.yHeadRot);
+        } else dir = me.getLookAngle();
         BaseProj proj1 = proj.get().create(me.level());
 //        BaseProj proj1 = new LineProj(PlantEntities.ICE_PEA_PROJ.get(), me.level(),BaseProj.TextureLib.SNOW_PEA,new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5));
         proj1.setOwner(me);
@@ -114,7 +114,7 @@ public class PresetAttacks {
     /**
      * 投掷物弹幕
      */
-    private static final  QuaConsumer<AbstractPlant, LivingEntity, DeferredHolder<EntityType<?>, EntityType<ThrowableProj>>, Float> THROWN_SHOOT = (me, tar, proj, offsetY) -> {
+    private static final  QuaConsumer<AbstractPlant, LivingEntity, Supplier<EntityType<ThrowableProj>>, Float> THROWN_SHOOT = (me, tar, proj, offsetY) -> {
         Vec3 pos = tar.position().add(0,tar.getEyeHeight(),0);
         if(tar instanceof Mob mob && !mob.getNavigation().isDone()){
             Vec3 dir = tar.getDeltaMovement().normalize().scale(2.5f);
@@ -150,7 +150,7 @@ public class PresetAttacks {
         SunItemEntity entity = new SunItemEntity(plant.level(), plant.position().add(0,0.5,0));
         entity.setDeltaMovement(plant.getRandom().nextFloat()*0.05f,0.05f,plant.getRandom().nextFloat()*0.05f);
         ItemStack stack = new ItemStack(MaterialItems.SOLID_SUN.get());
-        stack.set(DataComponents.MAX_DAMAGE, count);
+        stack.getOrCreateTag().putInt("sun_count",count);
         entity.setItem(stack);
         plant.level().addFreshEntity(entity);
     }

@@ -1,20 +1,25 @@
 package rhymestudio.rhyme.core.registry;
 
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.attactment.PlantRecorderAttachment;
 import rhymestudio.rhyme.core.dataSaver.attactment.SunCountAttachment;
 
-import java.util.function.Supplier;
-
-import static rhymestudio.rhyme.Rhyme.MODID;
-
+@Mod.EventBusSubscriber(modid = Rhyme.MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ModAttachments {
-    public static final DeferredRegister<AttachmentType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
 
-    public static final Supplier<AttachmentType<SunCountAttachment>> PLAYER_STORAGE = TYPES.register("player_storage", () -> AttachmentType.serializable(SunCountAttachment::new).copyOnDeath().build());
-    public static final Supplier<AttachmentType<PlantRecorderAttachment>> PLANT_RECORDER_STORAGE = TYPES.register("plant_recorder_storage", () -> AttachmentType.serializable(PlantRecorderAttachment::new).copyOnDeath().build());
+    public static final Capability<PlantRecorderAttachment> PLANT_RECORDER_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<SunCountAttachment> PLAYER_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
 
-
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.register(PlantRecorderAttachment.class);
+        event.register(SunCountAttachment.class);
+    }
 }

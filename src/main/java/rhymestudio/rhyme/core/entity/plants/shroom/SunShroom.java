@@ -66,9 +66,9 @@ public class SunShroom extends AbstractGeoPlant {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_GROWTH_STAGE, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_GROWTH_STAGE, 0);
     }
 
     @Override

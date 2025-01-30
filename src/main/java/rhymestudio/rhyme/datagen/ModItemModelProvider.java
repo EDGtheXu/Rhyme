@@ -3,9 +3,12 @@ package rhymestudio.rhyme.datagen;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredRegister;
+
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.registry.items.*;
 
@@ -24,7 +27,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        List<DeferredRegister.Items> ALL = new ArrayList<>();
+        List<DeferredRegister<Item>> ALL = new ArrayList<>();
         ALL.add(MaterialItems.MATERIALS);
         ALL.add(IconItems.QUALITY_ITEMS);
         ALL.add(ArmorItems.ARMORS);

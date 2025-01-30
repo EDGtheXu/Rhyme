@@ -46,12 +46,6 @@ public class WallNutModel extends AbstractPlantModel<AbstractPlant> {
 		return LayerDefinition.create(meshdefinition, 128, 128);
 	}
 
-
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int c) {
-		head.render(poseStack, vertexConsumer, packedLight, packedOverlay, c);
-	}
-
 	@Override
 	public ModelPart root() {
 		return head;

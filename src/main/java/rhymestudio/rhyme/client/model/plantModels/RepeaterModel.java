@@ -69,12 +69,6 @@ public class RepeaterModel extends AbstractPlantModel<AbstractPlant> {
 
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
-		root().render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
-
-	}
-
-	@Override
 	public ModelPart root() {
 		return root;
 	}

@@ -4,6 +4,7 @@ import com.google.gson.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Type;
 
@@ -20,7 +21,7 @@ public class ItemStackCodec implements ICodec<ItemStack> {
     @Override
     public JsonElement serialize(ItemStack src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("item", src.getItemHolder().getKey().location().toString());
+        obj.addProperty("item", ForgeRegistries.ITEMS.getKey(src.getItemHolder().get()).toString());
         obj.addProperty("count", src.getCount());
         return obj;
     }

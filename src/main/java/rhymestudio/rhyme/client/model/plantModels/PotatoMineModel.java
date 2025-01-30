@@ -106,10 +106,6 @@ public class PotatoMineModel extends AbstractPlantModel<PotatoMine> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int c) {
-		super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, c);
-	}
-	@Override
 	public ModelPart root() {
 		return root;
 	}

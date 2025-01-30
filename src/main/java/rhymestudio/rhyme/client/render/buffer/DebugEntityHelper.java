@@ -8,14 +8,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Quaternionf;
 import rhymestudio.rhyme.client.render.GeoPlantRenderer;
 import rhymestudio.rhyme.client.render.entity.BasePlantRenderer;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.EntitySaverComponentType;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.item.AbstractCardItem;
 import rhymestudio.rhyme.core.item.tool.PlantPutter;
-import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 import rhymestudio.rhyme.utils.Computer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -61,14 +62,14 @@ public class DebugEntityHelper{
             if(!canPut) {
                 color = Color.MAGENTA;
             }else color = Color.WHITE;
-            var data = it.get(ModDataComponentTypes.ITEM_ENTITY_TAG);
-            if(data != null){
-                var type = BuiltInRegistries.ENTITY_TYPE.get(data.type());
+            var data = new EntitySaverComponentType(it);
+            if(data.isValid()){
+                var type = ForgeRegistries.ENTITY_TYPES.getValue(data.type);
                 if(!p.equals(pos) || type != e.getType()){
                     pos = p;
-                    if(type.create(Minecraft.getInstance().level) instanceof AbstractPlant plant){
-                        e = plant ;
-                        e.setPos(p.getX() + 0.5, p.getY() + 1.5 + (canPut?0:-1), p.getZ() + 0.5);
+                    if (type != null && type.create(Minecraft.getInstance().level) instanceof AbstractPlant plant) {
+                        e = plant;
+                        e.setPos(p.getX() + 0.5, p.getY() + 1.5 + (canPut ? 0 : -1), p.getZ() + 0.5);
                         e.animState.playDefaultAnim(0);
                         return true;
                     }
@@ -103,7 +104,7 @@ public class DebugEntityHelper{
             poseStack.translate(0,-renderer.scale,0);
             poseStack.mulPose(new Quaternionf().rotateY((float) Math.PI));
             model.renderToBuffer(poseStack, vertexconsumer, 15728880,
-                    OverlayTexture.pack(OverlayTexture.u(0.6f), 15), color.getRGB());
+                    OverlayTexture.pack(OverlayTexture.u(0.6f), 15), color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1f);
             poseStack.popPose();
         }else if(render instanceof GeoEntityRenderer renderer){
             poseStack.pushPose();
@@ -111,7 +112,7 @@ public class DebugEntityHelper{
 
             if(renderer instanceof GeoPlantRenderer<?> normalRenderer) {
                 normalRenderer.consumedOverlay = OverlayTexture.pack(OverlayTexture.u(0.6f), 15);
-                normalRenderer.consumedColor = software.bernie.geckolib.util.Color.ofOpaque(color.getRGB());
+                normalRenderer.consumedColor = software.bernie.geckolib.core.object.Color.ofOpaque(color.getRGB());
             }
             renderer.render(e, 0, 0, poseStack, Minecraft.getInstance().renderBuffers().bufferSource(), 15<<20| 15 << 4);
 

@@ -85,13 +85,6 @@ public class PeaModel extends AbstractPlantModel<AbstractPlant> {
 	}
 
 
-
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
-		bone2.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
-
-	}
-
 	@Override
 	public ModelPart root() {
 		return bone2;
