@@ -16,6 +16,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
+import rhymestudio.rhyme.core.registry.items.ArmorItems;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 
 import java.util.function.BiFunction;
@@ -34,13 +35,13 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
         this.add(Zombies.NORMAL_ZOMBIE.get(),ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable()));
 
         this.add(Zombies.CONE_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
-//                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.CONE_HELMET, 0.2F, 0.5F))
+                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.CONE_HELMET, 0.2F, 0.5F))
         )
         ;
 
 
         this.add(Zombies.IRON_BUCKET_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
-//                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.IRON_BUCKET_HELMET, 0.2F, 0.3F))
+                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.IRON_BUCKET_HELMET, 0.2F, 0.3F))
         )
         ;
 

@@ -9,7 +9,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.config.Codec.ICodec;
@@ -65,22 +64,21 @@ public abstract class AbstractRecipeProvider implements DataProvider {
     protected abstract String pathSuffix();
 
     protected Path getRoot(ResourceLocation loc){
-        return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve("recipe");
+        return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve("recipes");
     }
 
-    // todo
-//    protected JsonElement amountIngredientJson(AmountIngredient i){
-//        JsonElement ingres;
-//        if(i.amount() > 1){
-//            var ing = AmountIngredient.CODEC.encoder().encodeStart(JavaOps.INSTANCE, i).result().get();
-//            ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
-//            ingres.getAsJsonObject().addProperty("type",amountIngredientType());
-//        }else if(i.amount() == 1){
-//            var ing = Ingredient.CODEC.encodeStart(JavaOps.INSTANCE, i.ingredient()).result().get();
-//            ingres = JsonParser.parseString(ICodec.getGson().toJson(ing));
-//        }else ingres = new JsonObject();
-//        return ingres;
-//    }
+
+    protected JsonElement amountIngredientJson(AmountIngredient i){
+        JsonElement ingres;
+        if(i.getCount() > 1){
+            var ing = i.toJson();
+//            ing.getAsJsonObject().addProperty("type",amountIngredientType());
+            ingres = ing;
+        }else if(i.getCount() == 1){
+            ingres = i.toJsonIngredient();
+        }else ingres = new JsonObject();
+        return ingres;
+    }
     protected String amountIngredientType(){return MODID + ":" + ModRecipes.AMOUNT_INGREDIENT_ID;}
     protected JsonElement parseCodec(DataResult<?> result){
         return JsonParser.parseString(ICodec.getGson().toJson(result.result().get()));

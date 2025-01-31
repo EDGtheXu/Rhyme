@@ -75,8 +75,7 @@ public class SunCreatorScreen extends AbstractContainerScreen<SunCreatorMenu> {
 
     @Override
     protected void renderBg(@NotNull GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-
-
+        this.renderBackground(pGuiGraphics);
     }
 
     @Override

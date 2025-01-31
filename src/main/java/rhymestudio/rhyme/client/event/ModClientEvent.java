@@ -3,7 +3,6 @@ package rhymestudio.rhyme.client.event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -17,6 +16,7 @@ import rhymestudio.rhyme.Rhyme;
 
 
 import rhymestudio.rhyme.client.model.ModelUtils;
+import rhymestudio.rhyme.client.render.gui.CardUpLevelScreen;
 import rhymestudio.rhyme.client.render.gui.SunCreatorScreen;
 import rhymestudio.rhyme.core.registry.ModMenus;
 
@@ -36,7 +36,7 @@ public class ModClientEvent {
 //            ClientConfig.load();
 //
             MenuScreens.register(ModMenus.SUN_CREATOR_MENU.get(), SunCreatorScreen::new);
-//            MenuScreens.register(ModMenus.CARD_UP_LEVEL_MENU.get(), CardUpLevelScreen::new);
+            MenuScreens.register(ModMenus.CARD_UP_LEVEL_MENU.get(), CardUpLevelScreen::new);
 //            MenuScreens.register(ModMenus.DAVE_TRADES_MENU.get(), DaveTradeScreen::new);
 //            PostUtil.init();
         });

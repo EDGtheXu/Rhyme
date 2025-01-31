@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerEventHandler {
     public AbstractContainerWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage) {
         super(pX, pY, pWidth, pHeight, pMessage);
+
     }
 
 
@@ -31,5 +32,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     public void setFocused(@Nullable GuiEventListener guiEventListener) {
 
     }
+
+
 
 }

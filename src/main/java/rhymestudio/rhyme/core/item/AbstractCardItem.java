@@ -13,15 +13,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 
+import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.registries.ForgeRegistries;
-import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.registry.ModAttachments;
@@ -36,7 +35,9 @@ import static rhymestudio.rhyme.config.ServerConfig.PlantConsumeAdditionStep;
 import static rhymestudio.rhyme.utils.Computer.getBlockPosCenter;
 import static rhymestudio.rhyme.utils.Computer.getEyeBlockHitResult;
 
-public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem {
+public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem implements IForgeItem {
+    public static final int MAX_DAMAGE = 10;
+
     public Supplier<EntityType<T>> entityType;
 
     public int consume;
@@ -51,14 +52,22 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         this.cd = cd*20;
         return this;
     }
-
+    @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         if(pStack.getTag() == null || pStack.getTag().get("card_quality") == null){
             var tag = pStack.getOrCreateTag();
             CardQualityComponentType.of(0).writeToNBT(tag);
         }
     }
-
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        if(stack.getTag() != null && stack.getTag().contains("max_damage")){
+            return stack.getTag().getInt("max_damage");
+        }
+        stack.getOrCreateTag().putInt("max_damage", MAX_DAMAGE);
+        return MAX_DAMAGE;
+    }
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if(!player.canBeSeenAsEnemy()){ // 创造

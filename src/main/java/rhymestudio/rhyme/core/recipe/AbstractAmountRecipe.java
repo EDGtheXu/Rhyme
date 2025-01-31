@@ -1,14 +1,13 @@
 package rhymestudio.rhyme.core.recipe;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,11 +15,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractAmountRecipe implements Recipe<Container> {
     protected final ResourceLocation id;
@@ -35,15 +34,31 @@ public abstract class AbstractAmountRecipe implements Recipe<Container> {
 
     @Override
     public boolean matches(@NotNull Container pContainer, @NotNull Level pLevel) {
-        found:
-        for (Ingredient ingredient : ingredients) {
-            for (int index = 0; index < pContainer.getContainerSize(); index++) {
-                ItemStack itemStack = pContainer.getItem(index);
-                if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
-                    continue found;
-                }
+        // pContainer
+        Map<Item, Integer> ingredientCount = new HashMap<>();
+        for (int index = 0; index < pContainer.getContainerSize(); index++) {
+            ItemStack itemStack = pContainer.getItem(index);
+            if (!itemStack.isEmpty()) {
+                ingredientCount.put(itemStack.getItem(), ingredientCount.getOrDefault(itemStack.getItem(), 0) + itemStack.getCount());
             }
-            return false;
+        }
+        // ingredients
+        Map<Item, Integer> requiredCount = new HashMap<>();
+        for (Ingredient ingredient : ingredients) {
+            ItemStack[] items = ingredient.getItems();
+            for (ItemStack item : items) {
+                requiredCount.put(item.getItem(), requiredCount.getOrDefault(item.getItem(), 0) + item.getCount());
+            }
+        }
+        // 比较
+        for (Map.Entry<Item, Integer> entry : requiredCount.entrySet()) {
+            Item requiredItem = entry.getKey();
+            int requiredAmount = entry.getValue();
+            int availableAmount = ingredientCount.getOrDefault(requiredItem, 0);
+
+            if (availableAmount < requiredAmount) {
+                return false;
+            }
         }
         return true;
     }
@@ -59,7 +74,9 @@ public abstract class AbstractAmountRecipe implements Recipe<Container> {
             for (int index = 0; index < pContainer.getContainerSize(); index++) {
                 ItemStack itemStack = pContainer.getItem(index);
                 if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
-                    pContainer.removeItem(index, ((AmountIngredient) ingredient).getCount());
+                    if(ingredient instanceof AmountIngredient am)
+                        pContainer.removeItem(index, am.getCount());
+                    else pContainer.removeItem(index, 1);
                     break;
                 }
             }
@@ -96,25 +113,18 @@ public abstract class AbstractAmountRecipe implements Recipe<Container> {
         protected abstract R newInstance(ResourceLocation pId, ItemStack pResult, NonNullList<Ingredient> pIngredients);
 
         @Override
-        public @NotNull R fromJson(@NotNull ResourceLocation pRecipeId, @NotNull JsonObject pJson) {
-            ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(pJson, "result"), true, true);
-            JsonArray ingredients = GsonHelper.getAsJsonArray(pJson, "ingredients");
-            NonNullList<Ingredient> nonNullList = NonNullList.withSize(ingredients.size(), AmountIngredient.EMPTY);
-            HashSet<Item> items = new HashSet<>();
-            for (int i = 0; i < ingredients.size(); ++i) {
-                JsonElement jsonElement = ingredients.get(i);
-                JsonObject json = GsonHelper.convertToJsonObject(jsonElement.getAsJsonObject(), "rhyme:amount_ingredient");
-                AmountIngredient ingredient = AmountIngredient.Serializer.INSTANCE.parse(json);
-                Item item = ingredient.getItem();
-                if (items.add(item)) {
-                    nonNullList.set(i, ingredient);
-                } else {
-                    throw new IllegalArgumentException("Duplicate ingredient " + item);
-                }
+        public @NotNull R fromJson(@NotNull ResourceLocation pRecipeId, @NotNull JsonObject json) {
+            ItemStack result = ItemStack.CODEC.decode(JsonOps.INSTANCE, json.get("result")).result().get().getFirst();
+            JsonArray jr = json.getAsJsonArray("ingredients");
+//            List<Ingredient> ingredients = AmountIngredient.;ItemStack.CODEC.listOf().decode(JsonOps.INSTANCE, pJson.get("ingredients")).result().get().getFirst();
+            NonNullList<Ingredient> nonNullList = NonNullList.withSize(jr.size(), AmountIngredient.EMPTY);
+//            HashSet<Item> items = new HashSet<>();
+            for (int i = 0; i < jr.size(); ++i) {
+                Ingredient ingredient = Ingredient.fromJson(jr.get(i).getAsJsonObject());
+                nonNullList.set(i, ingredient);
             }
             if (nonNullList.isEmpty()) throw new JsonParseException("No ingredients for " + pRecipeId);
             R recipe = newInstance(pRecipeId, result, nonNullList);
-            if (ingredients.size() > recipe.maxIngredientSize()) throw new IndexOutOfBoundsException("The ingredient size of '" + pRecipeId + "' is multiOut of 3");
             return recipe;
         }
 

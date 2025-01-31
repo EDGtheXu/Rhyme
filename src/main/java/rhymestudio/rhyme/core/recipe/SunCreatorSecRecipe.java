@@ -1,12 +1,14 @@
 package rhymestudio.rhyme.core.recipe;
 
+import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.NonNullList;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.registry.ModRecipes;
 
@@ -21,7 +23,7 @@ public class SunCreatorSecRecipe extends AbstractAmountRecipe {
 
     @Override
     protected int maxIngredientSize() {
-        return 12;
+        return 2;
     }
 
     @Override
@@ -44,6 +46,27 @@ public class SunCreatorSecRecipe extends AbstractAmountRecipe {
         @Override
         protected SunCreatorSecRecipe newInstance(ResourceLocation pId, ItemStack pResult, NonNullList<Ingredient> pIngredients) {
             return new SunCreatorSecRecipe(pId, pResult, pIngredients.get(0), pIngredients.get(1));
+        }
+
+
+        public SunCreatorSecRecipe fromJson(ResourceLocation id, JsonObject json) {
+            Ingredient left = Ingredient.fromJson(json.get("left").getAsJsonObject(),false);
+            Ingredient right = Ingredient.fromJson(json.get("right").getAsJsonObject(),false);
+            ItemStack res = ItemStack.CODEC.decode(JsonOps.INSTANCE,GsonHelper.getAsJsonObject(json, "result")).result().get().getFirst();
+            return new SunCreatorSecRecipe(id, res, left, right);
+        }
+
+        public SunCreatorSecRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+            Ingredient left = AmountIngredient.fromNetwork(buf);
+            Ingredient right = AmountIngredient.fromNetwork(buf);
+            ItemStack res = buf.readItem();
+            return new SunCreatorSecRecipe(id, res, left, right);
+        }
+
+        public void toNetwork(FriendlyByteBuf buf, SunCreatorSecRecipe recipe) {
+            recipe.left.toNetwork(buf);
+            recipe.right.toNetwork(buf);
+            buf.writeItem(recipe.result);
         }
 
     }

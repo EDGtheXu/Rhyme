@@ -12,6 +12,7 @@ import rhymestudio.rhyme.core.registry.items.IconItems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.function.Supplier;
 
 /**
@@ -60,7 +61,7 @@ public class CardQualityComponentType extends AbstractDataComponent<CardQualityC
         if(tag == null) return false;
         var i = increaseLevel();
         if(i.equals(this)) return false;
-        writeToNBT(tag);
+//        i.writeToNBT(tag);
         return true;
     }
 
@@ -69,7 +70,7 @@ public class CardQualityComponentType extends AbstractDataComponent<CardQualityC
         if(tag == null) return false;
         var d = decreaseLevel();
         if(d.equals(this)) return false;
-        writeToNBT(tag);
+//        writeToNBT(tag);
         return true;
     }
 
@@ -87,21 +88,24 @@ public class CardQualityComponentType extends AbstractDataComponent<CardQualityC
 
     @Override
     public void readFromNBT(CompoundTag tag) {
-        if(!tag.contains("level") ||!tag.contains("color") ||!tag.contains("source")){
+        CompoundTag t = getNBT(tag);
+        if(!t.contains("level") ||!t.contains("color") ||!t.contains("source")){
             setInvalid();
             return;
         }
-        level = tag.getInt("level");
-        color = tag.getInt("color");
-        source = new ResourceLocation(tag.getString("source"));
+
+        level = t.getInt("level");
+        color = t.getInt("color");
+        source = new ResourceLocation(t.getString("source"));
 //        return new CardQualityComponentType(level, color, source);
     }
 
     @Override
     public void writeToNBT(CompoundTag tag) {
-        tag.putInt("level", level);
-        tag.putInt("color", color);
-        tag.putString("source", source.toString());
+        CompoundTag t = getNBT(tag);
+        t.putInt("level", level);
+        t.putInt("color", color);
+        t.putString("source", source.toString());
     }
 
 }

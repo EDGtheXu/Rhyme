@@ -1,6 +1,7 @@
 package rhymestudio.rhyme.core.recipe;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -11,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 import rhymestudio.rhyme.core.registry.ModRecipes;
 
 public class CardUpLevelRecipe implements Recipe<Container> {
@@ -31,7 +33,7 @@ public class CardUpLevelRecipe implements Recipe<Container> {
     }
 
     public ItemStack getResultItem(RegistryAccess registryAccess) {
-        return this.result;
+        return this.result.copy();
     }
 
     public boolean canCraftInDimensions(int width, int height) {
@@ -45,17 +47,20 @@ public class CardUpLevelRecipe implements Recipe<Container> {
     @Override
     public boolean matches(Container input, Level level) {
         if (!(
-                this.am_template.test(input.getItem(0)) &&
+                this.am_template.test(input.getItem(3)) &&
+
                         this.base.test(input.getItem(1)) &&
-                        this.am_addition.test(input.getItem(2)) &&
-                        this.am_addition1.test(input.getItem(3))
+                        this.am_addition.test(input.getItem(0)) &&
+                        this.am_addition1.test(input.getItem(2))
         ))
             return false;
 
         var data = input.getItem(1).getTag();
         var dataRes = this.getResultItem(null).getTag();
-        return data != null && dataRes != null && data.getInt("level") == dataRes.getInt("level") - 1
-//                || dataRes.getInt("level") == 0 && input.base().get(DataComponents.UNBREAKABLE)==null
+        boolean accept = data != null && dataRes != null && data.getCompound("card_quality").getInt("level") == dataRes.getCompound("card_quality").getInt("level") - 1
+            ||dataRes != null && dataRes.getCompound("card_quality").getInt("level") == 0 && data != null && data.get("Unbreakable")==null;
+        return accept
+//
                 ;
     }
 
@@ -64,14 +69,16 @@ public class CardUpLevelRecipe implements Recipe<Container> {
         ItemStack result = input.getItem(1).copyWithCount(this.result.getCount());
 
         ItemStack itemstack = result.copy();
-        if(itemstack.hasTag() && itemstack.getTag().contains("level"))
-            itemstack.getTag().putInt("level", input.getItem(1).getTag().getInt("level") + 1);
-//        itemstack.applyComponents(result.getComponentsPatch());
-//        int damage = itemstack.getComponents().get(DataComponents.MAX_DAMAGE).intValue();
-//        damage += 5;
-//        itemstack.set(DataComponents.MAX_DAMAGE, damage);
+        var data = new CardQualityComponentType(getResultItem(null));
+        if(data.level == 0){
+            itemstack.getOrCreateTag().putBoolean("Unbreakable", true);
+            return itemstack;
+        }
+        result.getOrCreateTag().putInt("max_damage", result.getMaxDamage());
+        data.writeToNBT(itemstack.getOrCreateTag());
         return itemstack;
     }
+
     public boolean isTemplateIngredient(ItemStack stack) {
         return this.am_template.test(stack);
     }
@@ -102,10 +109,10 @@ public class CardUpLevelRecipe implements Recipe<Container> {
         public CardUpLevelRecipe fromJson(ResourceLocation id, JsonObject json) {
             AmountIngredient addition = AmountIngredient.fromJson(json,"addition");
             Ingredient base = Ingredient.fromJson(GsonHelper.getNonNull(json, "base"));
-            AmountIngredient addition1 = AmountIngredient.fromJson(json,"addition2");
+            AmountIngredient addition1 = AmountIngredient.fromJson(json,"addition1");
             AmountIngredient template = AmountIngredient.fromJson(json,"template");
-            ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-            return new CardUpLevelRecipe(id, addition, base, addition1, template, itemstack);
+            ItemStack res = ItemStack.CODEC.decode(JsonOps.INSTANCE,GsonHelper.getAsJsonObject(json, "result")).result().get().getFirst();
+            return new CardUpLevelRecipe(id, addition, base, addition1, template, res);
         }
 
         public CardUpLevelRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {

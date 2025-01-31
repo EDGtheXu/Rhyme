@@ -190,7 +190,7 @@ public class SunCreatorBlock extends BaseEntityBlock  {
 
         @Override
         public boolean stillValid(Player player) {
-            return false;
+            return player.distanceToSqr(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D) < 64.0;
         }
 
         @Override

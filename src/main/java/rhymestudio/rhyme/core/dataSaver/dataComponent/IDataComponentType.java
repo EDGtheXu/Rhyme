@@ -15,6 +15,12 @@ public interface IDataComponentType<T> {
         return itemStack.getOrCreateTag().getCompound(name());
     }
 
+    default CompoundTag getNBT(CompoundTag tag){
+        if(!tag.contains(name()))
+            tag.put(name(), new CompoundTag());
+        return tag.getCompound(name());
+    }
+
     default void setNBT(ItemStack itemStack, CompoundTag tag){
         itemStack.getOrCreateTag().put(name(), tag);
     }

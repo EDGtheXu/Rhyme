@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.core.registry;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -8,7 +7,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import rhymestudio.rhyme.core.recipe.AmountIngredient;
 import rhymestudio.rhyme.core.recipe.CardUpLevelRecipe;
 import rhymestudio.rhyme.core.recipe.SunCreatorRecipe;
 import rhymestudio.rhyme.core.recipe.SunCreatorSecRecipe;
@@ -47,7 +45,7 @@ public final class ModRecipes {
         return RECIPE_TYPES.register(id, () -> new RecipeType<>() {
             @Override
             public String toString() {
-                return MODID + id;
+                return MODID+":" + id;
             }
         });
     }
