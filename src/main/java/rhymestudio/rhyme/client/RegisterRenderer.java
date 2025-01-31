@@ -64,7 +64,8 @@ public class RegisterRenderer {
 
         // tip 子弹
         registerProj(event,PEA_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
-        registerProj(event,ICE_PEA_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
+        registerProj(event, SNOW_PEA_PROJ.get(), c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
+        registerProj(event, FROZEN_PEA_PROJ.get(), c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
         registerProj(event,PUFF_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
         registerProj(event,FUME_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
 

@@ -86,11 +86,19 @@ public class PlantEntities {
             new Pea(type,level, builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", IcePeaAnimation.idle);
                 s.addAnimation("shoot", IcePeaAnimation.shoot);
-            }).setUltimate(new CircleSkill<>("ultimate",50, 0)
-                    .onTick(e->{ if(e.tickCount % 3 == 0)
-                        PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.ICE_PEA_PROJ, e.getRandom().nextFloat()*0.5f - 0.25F);
-                    })
-            )
+            })
+                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                            .onTick(e->{ if(e.tickCount % 3 == 0)
+                                PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.SNOW_PEA_PROJ, e.getRandom().nextFloat()*0.5f - 0.25F);
+                            })
+                    )
+
+                    .setCardLevelModifier(CardLevelModifier.<Pea>builder()
+                            .addModifier(1, pea -> pea.attackCallback = builder()
+                                    .setAttack(p -> p.getRandom().nextFloat() < 1f ? FROZEN_PEA_SHOOT : SNOW_PEA_SHOOT)
+                                    .build())
+                            .buildLevelModifier()
+                    )
             ));
 
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> REPEATER = registerCreature("repeater","双发射手",(type, level)->

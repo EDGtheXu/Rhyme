@@ -30,8 +30,6 @@ public class ThrowableProj extends BaseProj {
         this.texture = texture;
     }
 
-
-
     public ThrowableProj setTargetPos(Vec3 targetPos) {
         this.targetPos = targetPos;
         return this;

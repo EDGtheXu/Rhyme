@@ -146,7 +146,7 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     protected void doHurt(LivingEntity hurter){
         Entity entity = this.getOwner();
         if(effect!= null && hurter != entity){
-            if(effect.getEffect().is(ModEffects.FROZEN_EFFECT.getId())){
+            if(effect.getEffect().is(ModEffects.SLOWDOWN_EFFECT.getId())){
                 PacketDistributor.sendToAllPlayers(new ProjHitPacket(hurter.getId(),effect.getDuration()));
             }
             hurter.addEffect(effect);
