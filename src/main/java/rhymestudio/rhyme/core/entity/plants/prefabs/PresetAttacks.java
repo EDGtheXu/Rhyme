@@ -107,8 +107,11 @@ public class PresetAttacks {
         PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.SNOW_PEA_PROJ, 0.1f);
     };
     //冻结豌豆
-    public static final BiConsumer<AbstractPlant, LivingEntity> FROZEN_PEA_SHOOT = (me, tar) -> {
-        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FROZEN_PEA_PROJ, 0.1f);
+    public static final BiConsumer<AbstractPlant, LivingEntity> FROZEN_PEA_SHOOT_1 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FROZEN_PEA_PROJ_1, 0.1f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> FROZEN_PEA_SHOOT_2 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FROZEN_PEA_PROJ_2, 0.1f);
     };
 
 

@@ -37,7 +37,9 @@ public class MiscEntities {
             new LineProj(e,l, BaseProj.TextureLib.PEA).setHitSound(ModSounds.SPLAT),0.25F,0.25F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> SNOW_PEA_PROJ = registerMisc("snow_pea_proj",(e, l)->
             new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT,20 * 5)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
-    public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> FROZEN_PEA_PROJ = registerMisc("frozen_pea_proj",(e, l)->
+    public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> FROZEN_PEA_PROJ_1 = registerMisc("frozen_pea_proj_1",(e, l)->
+            new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 2)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
+    public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> FROZEN_PEA_PROJ_2 = registerMisc("frozen_pea_proj_2",(e, l)->
             new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> PUFF_SHROOM_PROJ = registerMisc("puff_shroom_proj",(e,l)->
             new LineProj(e,l,BaseProj.TextureLib.PUFF_SHROOM_BULLET).setHitSound(ModSounds.SPLAT),0.15F,0.15F);
