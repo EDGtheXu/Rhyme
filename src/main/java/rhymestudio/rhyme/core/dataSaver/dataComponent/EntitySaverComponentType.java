@@ -11,7 +11,7 @@ public class EntitySaverComponentType extends AbstractDataComponent<EntitySaverC
     public ResourceLocation type;
 
     public EntitySaverComponentType(CompoundTag tag, ResourceLocation type) {
-        this.tag = tag;
+        this.tag = tag.copy();
         this.type = type;
     }
     public EntitySaverComponentType(ItemStack stack){
@@ -33,18 +33,20 @@ public class EntitySaverComponentType extends AbstractDataComponent<EntitySaverC
 
     @Override
     public void readFromNBT(CompoundTag tag) {
-        if(!tag.contains("tag")||!tag.contains("type")) {
+        CompoundTag t = getNBT(tag);
+        if(!t.contains("tag")||!t.contains("type")) {
             setInvalid();
             return;
         }
-        this.tag = tag.getCompound("tag");
-        this.type = new ResourceLocation(tag.getString("type"));
+        this.tag = t.getCompound("tag");
+        this.type = new ResourceLocation(t.getString("type"));
     }
 
     @Override
     public void writeToNBT(CompoundTag tag) {
-        tag.put("tag", this.tag);
-        tag.putString("type", type.toString());
+        CompoundTag t = getNBT(tag);
+        t.put("tag", this.tag);
+        t.putString("type", type.toString());
     }
 
 }

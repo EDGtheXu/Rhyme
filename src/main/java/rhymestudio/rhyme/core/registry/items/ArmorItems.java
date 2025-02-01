@@ -81,7 +81,7 @@ public class ArmorItems {
 
 
     public static RegistryObject<Item> register(String en, String zh, ArmorMaterial material, ArmorItem.Type type, ModRarity rarity, Multimap<Attribute, AttributeModifier> modify) {
-        RegistryObject<Item> item =  ARMORS.register("armor/"+en, () -> new NormalArmorItem(material,type, modify,new Item.Properties().stacksTo(1)
+        RegistryObject<Item> item =  ARMORS.register("armor/"+en, () -> new NormalArmorItem(material,type, modify, rarity, new Item.Properties().stacksTo(1)
 //                .component(DataComponents.ATTRIBUTE_MODIFIERS, modify.apply(ItemAttributeModifiers.builder().add(Attributes.ARMOR,new AttributeModifier(Rhyme.space("tier_armor"),material.getDefenseForType(type),AttributeModifier.Operation.ADD_VALUE),EquipmentSlotGroup.HEAD)).build()))
                 ));
         add_zh_en(item, zh);

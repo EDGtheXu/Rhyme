@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.attactment.PlantRecordProvider;
 import rhymestudio.rhyme.core.dataSaver.attactment.SunCountProvider;
+import rhymestudio.rhyme.core.recipe.DaveTrades;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
 
@@ -19,8 +20,7 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void setUp(ServerStartedEvent event){
-        // todo
-//        DaveTrades.readTradesFromJson(event.getServer().getResourceManager());
+        DaveTrades.readTradesFromJson(event.getServer().getResourceManager());
     }
 
     @SubscribeEvent

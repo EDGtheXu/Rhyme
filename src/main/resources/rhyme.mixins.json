@@ -6,6 +6,7 @@
   "refmap": "rhyme.refmap.json",
   "mixins": [
     "EntityMixin",
+    "ItemStackMixin",
     "LivingEntityMixin",
     "MonsterMixin",
     "PlayerMixin",

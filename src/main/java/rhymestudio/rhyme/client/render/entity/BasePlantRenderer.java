@@ -51,6 +51,7 @@ public class BasePlantRenderer<T extends AbstractPlant,U extends EntityModel<T>>
 
     @Override
     public void render(T entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
         if(Minecraft.getInstance().player.distanceTo(entity) < 2){
             poseStack.pushPose();
@@ -66,12 +67,11 @@ public class BasePlantRenderer<T extends AbstractPlant,U extends EntityModel<T>>
             int lvl = entity.getCardLevel();
             CardQualityComponentType quality = CardQualityComponentType.of(lvl);
             int color = quality.color;
-            Minecraft.getInstance().font.drawInBatch("lvl:"+lvl,0,0,color,false,poseStack.last().pose(),buffer, Font.DisplayMode.SEE_THROUGH,0xf000f0,packedLight);
+            Minecraft.getInstance().font.drawInBatch("lvl:"+(lvl+1),0,0,color,false,poseStack.last().pose(),buffer, Font.DisplayMode.SEE_THROUGH,0xf000f0,packedLight);
 
             poseStack.popPose();
         }
 
-         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
 
 

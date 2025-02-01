@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.client.model.layerModels.ZombieArmorLayer;
 import rhymestudio.rhyme.client.model.zombieModels.NormalZombieModel;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
@@ -31,11 +32,11 @@ public class NormalZombieRenderer<T extends NormalZombie, M extends NormalZombie
         this.rotY = rotY;
         this.scale = scale;
 
-//        this.addLayer(new ZombieArmorLayer<>(this,
+        this.addLayer(new ZombieArmorLayer<>(this,
+                new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.ZOMBIE)),
 //                new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.ZOMBIE)),
-////                new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.ZOMBIE)),
-//                context.getModelManager()
-//        ));
+                context.getModelManager()
+        ));
 
 //        this.addLayer(new CustomHeadLayer(this, context.getModelSet(), scale, scale, scale, context.getItemInHandRenderer()));
 //        this.addLayer(new ElytraLayer(this, context.getModelSet()));

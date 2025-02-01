@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.item.tool;
 
+import com.google.common.collect.ImmutableMultimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.EntitySaverComponentType;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ItemDataMapComponent;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.utils.Computer;
 
@@ -24,19 +26,19 @@ import java.util.List;
 import static rhymestudio.rhyme.core.item.AbstractCardItem.canPutPlant;
 
 public class PlantPutter extends PlantShovel {
-    public PlantPutter(Properties properties) {
-        super(properties);
+    public PlantPutter(Properties properties, ModRarity rarity) {
+        super(properties, ImmutableMultimap.of(), rarity);
     }
 
     @Override
     protected void doOnDetect(Entity entity, Level level, Player player, ItemStack itemStack){
 
-        var data = new ItemDataMapComponent(itemStack);
-        if(data.isValid()){
-
-            CompoundTag tag = new CompoundTag();
-            entity.save(tag);
-            new EntitySaverComponentType(tag, ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).writeToNBT(tag);
+        var data = new EntitySaverComponentType(itemStack);
+        if(!data.isValid()){
+            CompoundTag tag = itemStack.getOrCreateTag();
+            CompoundTag s = new CompoundTag();
+            entity.save(s);
+            new EntitySaverComponentType(s, ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).writeToNBT(tag);
             entity.discard();
             player.playSound(ModSounds.SHOVEL.get());
             if(player.canBeSeenAsEnemy())
@@ -100,4 +102,5 @@ public class PlantPutter extends PlantShovel {
 
         }
     }
+
 }

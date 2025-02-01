@@ -13,13 +13,10 @@
 			"bones": [
 				{
 					"name": "head",
-					"pivot": [2, 0, -2],
-					"cubes": [
-						{"origin": [-4, 0, -3], "size": [7, 8, 7], "uv": [0, 32]}
-					]
+					"pivot": [2, 0, -2]
 				},
 				{
-					"name": "head2",
+					"name": "hat",
 					"parent": "head",
 					"pivot": [3, 5, -4],
 					"cubes": [
@@ -27,11 +24,11 @@
 					]
 				},
 				{
-					"name": "light",
+					"name": "body",
 					"parent": "head",
-					"pivot": [-8, 5, -4],
+					"pivot": [2, 0, -2],
 					"cubes": [
-						{"origin": [-5.5, 4.5, -4.1], "size": [10, 7, 10], "uv": [18, 37]}
+						{"origin": [-4, 0, -3], "size": [7, 8, 7], "uv": [0, 32]}
 					]
 				}
 			]

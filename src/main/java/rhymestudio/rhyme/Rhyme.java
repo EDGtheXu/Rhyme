@@ -89,20 +89,20 @@ public class Rhyme {
 
 
 
-//        ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
+        ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
 
 
-        CodecRegister.registerCodecs();
+//        CodecRegister.registerCodecs();
 
-        Gson gson = ICodec.getGson();
+//        Gson gson = ICodec.getGson();
 
-        Price price = new Price(10, ItemStack.EMPTY);
-        String json = gson.toJson(price, Price.class);
-        LOGGER.info(json);
-
-        Price price2 = gson.fromJson(json, Price.class);
-        LOGGER.info(price2.toString());
+//        Price price = new Price(10, ItemStack.EMPTY);
+//        String json = gson.toJson(price, Price.class);
+//        LOGGER.info(json);
+//
+//        Price price2 = gson.fromJson(json, Price.class);
+//        LOGGER.info(price2.toString());
 
     }
 

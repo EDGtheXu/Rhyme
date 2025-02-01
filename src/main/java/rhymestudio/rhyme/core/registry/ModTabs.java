@@ -23,11 +23,7 @@ public class ModTabs {
                     .displayItems((parameters, output) -> {
                         ModBlocks.BLOCKS.getEntries().forEach(item -> output.accept(item.get()));
                         MaterialItems.MATERIALS.getEntries().forEach(item -> output.accept(item.get()));
-                        PlantItems.PLANTS.getEntries().forEach(item -> {
-                            ItemStack stack = item.get().getDefaultInstance();
-                            CardQualityComponentType.of(0).writeToNBT(stack.getOrCreateTag());
-                            output.accept(stack);
-                        });
+                        PlantItems.PLANTS.getEntries().forEach(item -> output.accept(item.get()));
                         SpawnEggItems.EGGS.getEntries().forEach(item -> output.accept(item.get()));
                         ArmorItems.ARMORS.getEntries().forEach(item -> output.accept(item.get()));
                         ToolItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));

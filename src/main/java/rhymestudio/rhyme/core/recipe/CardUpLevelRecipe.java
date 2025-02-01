@@ -74,7 +74,7 @@ public class CardUpLevelRecipe implements Recipe<Container> {
             itemstack.getOrCreateTag().putBoolean("Unbreakable", true);
             return itemstack;
         }
-        result.getOrCreateTag().putInt("max_damage", result.getMaxDamage());
+        itemstack.getOrCreateTag().putInt("max_damage", result.getMaxDamage() + 5);
         data.writeToNBT(itemstack.getOrCreateTag());
         return itemstack;
     }

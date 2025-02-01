@@ -6,15 +6,20 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.client.animate.ColorAnimation;
 import rhymestudio.rhyme.client.animate.ExpertColorAnimation;
 import rhymestudio.rhyme.client.animate.MasterColorAnimation;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
 public class ModRarity extends AbstractDataComponent<ModRarity> {
+    static Map<String, ModRarity> rarityMap = new HashMap<>();
+
     public static final ModRarity COMMON = new ModRarity("common",16777215);
     public static final ModRarity UNCOMMON = new ModRarity("uncommon", 16777045);
     public static final ModRarity RARE = new ModRarity("rare", 5636095);
@@ -39,7 +44,16 @@ public class ModRarity extends AbstractDataComponent<ModRarity> {
     public static final ModRarity MASTER = new ModRarity("master", MasterColorAnimation.INSTANCE);
     public static final ModRarity QUEST = new ModRarity("quest",0xFFAF00);
 
+    public static ModRarity getRarity(String name) {
+        return rarityMap.get(name);
+    }
 
+    public static ModRarity getRarity(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if(tag!= null && stack.getTag().contains("mod_rarity"))
+            return rarityMap.get(tag.getCompound("mod_rarity").getString("name"));
+        return null;
+    }
 
 //
 //    public static final Codec<ModRarity> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -63,26 +77,31 @@ public class ModRarity extends AbstractDataComponent<ModRarity> {
         this.name = name;
         this.animation = new ColorAnimation(color);
         this.style = Style.EMPTY.withColor(color);
+        rarityMap.put(name, this);
     }
     public ModRarity(String name, ColorAnimation animation) {
         this.name = name;
         this.animation = animation;
         this.style = Style.EMPTY.withColor(animation.getColor());
+        rarityMap.put(name, this);
     }
     public ModRarity(String name, Style style) {
         this.name = name;
         this.animation = new ColorAnimation(0);
         this.style = style;
+        rarityMap.put(name, this);
     }
     public ModRarity(String name, int color, Style style) {
         this.name = name;
         this.animation = new ColorAnimation(color);
         this.style = style;
+        rarityMap.put(name, this);
     }
     public ModRarity(String string, ColorAnimation animation, Style style) {
         this.name = string;
         this.animation = animation;
         this.style = style;
+        rarityMap.put(name, this);
     }
 
     public String getName() {
@@ -139,6 +158,7 @@ public class ModRarity extends AbstractDataComponent<ModRarity> {
 
     @Override
     public void writeToNBT(CompoundTag tag) {
-
+        CompoundTag t = getNBT(tag);
+        t.putString("name", getName());
     }
 }

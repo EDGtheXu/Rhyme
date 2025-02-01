@@ -9,14 +9,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeMod;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
 import rhymestudio.rhyme.utils.Computer;
 
 public class EnergyBean extends CustomRarityItem {
 
-    public EnergyBean(Properties properties) {
-        super(properties);
+    public EnergyBean(Properties properties, ModRarity rarity) {
+        super(properties, rarity);
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {

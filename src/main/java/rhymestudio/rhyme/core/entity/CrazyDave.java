@@ -21,6 +21,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import rhymestudio.rhyme.core.entity.ai.goals.DaveTradeGoal;
+import rhymestudio.rhyme.core.menu.DaveTradesMenu;
+import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -33,20 +35,21 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 import static rhymestudio.rhyme.config.ServerConfig.DaveDropRate;
+import static rhymestudio.rhyme.core.registry.ModEntityDataSerializer.DAVE_TRADES_SERIALIZER;
 
 public class CrazyDave extends PathfinderMob implements GeoEntity {
-//    public DaveTrades daveTrades;
+    public DaveTrades daveTrades;
     public Player tradingPlayer;
     private int money = this.random.nextIntBetweenInclusive(10, 50);
 
-//    private static final EntityDataAccessor<DaveTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(CrazyDave.class, DAVE_TRADES_SERIALIZER.get());
+    private static final EntityDataAccessor<DaveTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(CrazyDave.class, DAVE_TRADES_SERIALIZER.get());
 
     public CrazyDave(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
 
         if(!level.isClientSide()) {
-//            daveTrades = DaveTrades.RAND_TRADE.apply(random.nextIntBetweenInclusive(0, DaveTrades.GetAllTradesLength() - 1));
-//            entityData.set(DATA_DAVE_DATA, daveTrades);
+            daveTrades = DaveTrades.RAND_TRADE.apply(random.nextIntBetweenInclusive(0, DaveTrades.GetAllTradesLength() - 1));
+            entityData.set(DATA_DAVE_DATA, daveTrades);
         }
     }
 
@@ -68,39 +71,39 @@ public class CrazyDave extends PathfinderMob implements GeoEntity {
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-//        if (level().isClientSide() && DATA_DAVE_DATA.equals(key)) {
-//            this.daveTrades = this.entityData.get(DATA_DAVE_DATA);
-//        }
+        if (level().isClientSide() && DATA_DAVE_DATA.equals(key)) {
+            this.daveTrades = this.entityData.get(DATA_DAVE_DATA);
+        }
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-//        this.entityData.define(DATA_DAVE_DATA, new DaveTrades(List.of()));
+        this.entityData.define(DATA_DAVE_DATA, new DaveTrades(List.of()));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-//        if (compound.contains("dave_data", 10)) {
-//            DataResult<DaveTrades> data = DaveTrades.CODEC.parse(NbtOps.INSTANCE, compound.get("dave_data"));
-//            this.entityData.set(DATA_DAVE_DATA, data.result().get());
-//            this.daveTrades = data.result().get();
-//        }
+        if (compound.contains("dave_data", 10)) {
+            DataResult<DaveTrades> data = DaveTrades.CODEC.parse(NbtOps.INSTANCE, compound.get("dave_data"));
+            this.entityData.set(DATA_DAVE_DATA, data.result().get());
+            this.daveTrades = data.result().get();
+        }
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-//        DataResult<Tag> data = DaveTrades.CODEC.encodeStart(NbtOps.INSTANCE, daveTrades);
-//        compound.put("dave_data",data.result().get());
+        DataResult<Tag> data = DaveTrades.CODEC.encodeStart(NbtOps.INSTANCE, daveTrades);
+        compound.put("dave_data",data.result().get());
     }
 
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
         if(level().isClientSide()){
-//            this.daveTrades = this.entityData.get(DATA_DAVE_DATA);
+            this.daveTrades = this.entityData.get(DATA_DAVE_DATA);
         }
 
     }
@@ -123,7 +126,7 @@ public class CrazyDave extends PathfinderMob implements GeoEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-//        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new DaveTradesMenu(id,playerInventory,daveTrades),Component.translatable("rhyme.menu.dave_shop")));
+        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new DaveTradesMenu(id,playerInventory,daveTrades), Component.translatable("rhyme.menu.dave_shop")));
         tradingPlayer = player;
         return InteractionResult.PASS;
     }

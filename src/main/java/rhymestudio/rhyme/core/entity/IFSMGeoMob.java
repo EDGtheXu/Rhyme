@@ -34,7 +34,7 @@ public interface IFSMGeoMob<T extends AbstractPlant> extends GeoEntity {
         return (T) this;
     }
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(DefaultAnimations.genericIdleController(this));
+//        controllers.add(DefaultAnimations.genericIdleController(this));
         controllers.add(new AnimationController<>(this, "skills_controller",20, state -> {
             Entity entity = state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;

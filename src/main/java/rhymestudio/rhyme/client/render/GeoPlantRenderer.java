@@ -42,12 +42,10 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
             poseStack.mulPose(q);
             poseStack.translate(-10, 0,0);
 
-// todo
-
             int lvl = entity.getCardLevel();
             CardQualityComponentType quality = CardQualityComponentType.of(lvl);
             int color = quality.color;
-            Minecraft.getInstance().font.drawInBatch("lvl:"+lvl,0,0,color,false,poseStack.last().pose(),buffer, Font.DisplayMode.SEE_THROUGH,0xf000f0,packedLight);
+            Minecraft.getInstance().font.drawInBatch("lvl:"+(lvl+1),0,0,color,false,poseStack.last().pose(),buffer, Font.DisplayMode.SEE_THROUGH,0xf000f0,packedLight);
 
             poseStack.popPose();
         }

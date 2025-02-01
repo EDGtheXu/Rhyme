@@ -19,9 +19,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 
-import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.registries.ForgeRegistries;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
@@ -35,15 +35,15 @@ import static rhymestudio.rhyme.config.ServerConfig.PlantConsumeAdditionStep;
 import static rhymestudio.rhyme.utils.Computer.getBlockPosCenter;
 import static rhymestudio.rhyme.utils.Computer.getEyeBlockHitResult;
 
-public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem implements IForgeItem {
+public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem{
     public static final int MAX_DAMAGE = 10;
 
     public Supplier<EntityType<T>> entityType;
 
     public int consume;
     public int cd = 5*20;
-    public AbstractCardItem(Properties properties, Supplier<EntityType<T>> entityType, int consume){
-        super(properties);
+    public AbstractCardItem(Properties properties, Supplier<EntityType<T>> entityType, int consume, ModRarity rarity){
+        super(properties, rarity);
         this.entityType = entityType;
         this.consume = consume;
     }
@@ -94,7 +94,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         }
         if(!summon(player, level, itemstack)) return InteractionResultHolder.fail(itemstack);
 
-        if(itemstack.getTag() != null && itemstack.getTag().contains("Unbreakable")){
+        if(itemstack.getTag() != null && !itemstack.getTag().contains("Unbreakable")){
             itemstack.setDamageValue(itemstack.getDamageValue() + 1);
             if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
                 itemstack.shrink(1);
@@ -130,7 +130,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
             player.getCooldowns().addCooldown(stack.getItem(), this.cd);
         if(!level.isClientSide){
             var data1 = new CardQualityComponentType(stack);
-            player.sendSystemMessage(Component.translatable("plantcard.summon_success").append(Component.translatable("entity.rhyme."+ ForgeRegistries.ENTITY_TYPES.getKey(entityType.get())).withStyle(Style.EMPTY.withColor(data1.color))));
+            player.sendSystemMessage(Component.translatable("plantcard.summon_success").append(Component.empty().append(entity.getDisplayName()).withStyle(Style.EMPTY.withColor(data1.color))));
         }
         return true;
     }
@@ -154,7 +154,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
 
 
 
-        if(stack.getTag() != null && stack.getTag().contains("Unbreakable"))
+        if(stack.getTag() != null && !stack.getTag().contains("Unbreakable"))
             tooltipComponents.add(Component.translatable("plantcard.tooltip.damage").append(": ")
                 .append(Component.literal((stack.getMaxDamage()-stack.getDamageValue())+"/"+stack.getMaxDamage()).withStyle(style -> style.withColor(color))));
 
@@ -177,30 +177,34 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         private final int consume;
         private int cd = 5;
         private int durability = 10;
+        private ModRarity rarity = ModRarity.COMMON;
 
         public Builder(Supplier<EntityType<T>> entityType, int consume){
             this.entityType = entityType;
             this.consume = consume;
-
-//            properties.component(ModDataComponentTypes.CARD_QUALITY.get(), CardQualityComponentType.COPPER);
-
         }
         public Builder<T> cd(int cd){
             this.cd = cd;
             return this;
         }
-//        public Builder<T> rarity(ModRarity rarity){
-////            properties.component(ModDataComponentTypes.MOD_RARITY.get(), rarity);
-//            return this;
-//        }
+        public Builder<T> rarity(ModRarity rarity){
+            this.rarity = rarity;
+            return this;
+        }
         public Builder<T> durability(int durability){
             this.durability = durability;
             return this;
         }
         public AbstractCardItem<T> build(){
-            return new AbstractCardItem<>(properties.durability(durability), entityType, consume).setCd(cd);
+            return new AbstractCardItem<>(properties.durability(durability), entityType, consume, rarity).setCd(cd);
         }
     }
 
+    @Override
+    public void onStackInit(ItemStack stack) {
+        super.onStackInit(stack);
+        CardQualityComponentType.COPPER.writeToNBT(stack.getOrCreateTag());
+        stack.getOrCreateTag().putInt("max_damage", MAX_DAMAGE);
+    }
 
 }

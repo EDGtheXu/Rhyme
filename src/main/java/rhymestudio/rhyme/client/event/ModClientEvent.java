@@ -17,6 +17,7 @@ import rhymestudio.rhyme.Rhyme;
 
 import rhymestudio.rhyme.client.model.ModelUtils;
 import rhymestudio.rhyme.client.render.gui.CardUpLevelScreen;
+import rhymestudio.rhyme.client.render.gui.DaveTradeScreen;
 import rhymestudio.rhyme.client.render.gui.SunCreatorScreen;
 import rhymestudio.rhyme.core.registry.ModMenus;
 
@@ -37,7 +38,7 @@ public class ModClientEvent {
 //
             MenuScreens.register(ModMenus.SUN_CREATOR_MENU.get(), SunCreatorScreen::new);
             MenuScreens.register(ModMenus.CARD_UP_LEVEL_MENU.get(), CardUpLevelScreen::new);
-//            MenuScreens.register(ModMenus.DAVE_TRADES_MENU.get(), DaveTradeScreen::new);
+            MenuScreens.register(ModMenus.DAVE_TRADES_MENU.get(), DaveTradeScreen::new);
 //            PostUtil.init();
         });
 

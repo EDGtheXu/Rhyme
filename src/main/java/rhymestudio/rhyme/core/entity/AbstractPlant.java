@@ -18,6 +18,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkDirection;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 import rhymestudio.rhyme.core.entity.ai.CircleSkills;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
@@ -26,6 +27,8 @@ import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
+import rhymestudio.rhyme.network.NetworkHandler;
+import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
 
 
 import java.util.function.Consumer;
@@ -247,11 +250,9 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     public void onRemovedFromWorld() {
         super.onRemovedFromWorld();
         if(owner instanceof ServerPlayer serverPlayer){ // 只在服务端才有owner
-            // todo
-//            var list = serverPlayer.getData(ModAttachments.PLANT_RECORDER_STORAGE).ids;
-//
-//            list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
-//            PacketDistributor.sendToPlayer(serverPlayer, new PlantRecorderPacket(list));
+            var list = serverPlayer.getCapability(ModAttachments.PLANT_RECORDER_STORAGE).resolve().get().ids;
+            list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
+            NetworkHandler.CHANNEL.sendTo(new PlantRecorderPacket(list),serverPlayer.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
         }
     }
 

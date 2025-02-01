@@ -18,6 +18,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -84,8 +85,6 @@ public class EntityEvent {
 
         if(damageSource.is(ModTags.DamageTypes.PLANT_PROJ) || damageSource.is(ModTags.DamageTypes.PLANT_EXPLORE)){
             event.getEntity().invulnerableTime = 0;
-            // todo
-//            event.getContainer().setPostAttackInvulnerabilityTicks(0);
         }
     }
 
@@ -94,24 +93,19 @@ public class EntityEvent {
     public static void livingDead(LivingDeathEvent event) {
         if(!event.getEntity().level().isClientSide && event.getEntity() instanceof Monster){
             ItemStack stack = MaterialItems.SILVER_COIN.get().getDefaultInstance();
-            if(stack.getItem() == MaterialItems.SILVER_COIN.get())
-                stack.getOrCreateTag().putInt("money", 5);
-            else if(stack.getItem() == MaterialItems.GOLD_COIN.get())
-                stack.getOrCreateTag().putInt("money", 10);
             ItemEntity ite = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), stack);
             event.getEntity().level().addFreshEntity(ite);
-
         }
     }
 
     // 玩家捡到金币，消失并同步数据
     @SubscribeEvent
-    public static void pickupItem(PlayerEvent.ItemPickupEvent event) {
+    public static void pickupItemPre(EntityItemPickupEvent event) {
         if(event.getEntity() instanceof ServerPlayer sp){
-            ItemStack stack = event.getStack();
+            ItemStack stack = event.getItem().getItem();
             if(
                     (stack.is(MaterialItems.SILVER_COIN.get())
-                        || stack.is(MaterialItems.GOLD_COIN.get()))
+                            || stack.is(MaterialItems.GOLD_COIN.get()))
             ){
                 CompoundTag tag = stack.getTag();
                 int m;
@@ -123,19 +117,14 @@ public class EntityEvent {
                         stack.setCount(0);
                     });
                 }
-                // todo 不能删除
-                event.getOriginalEntity().discard();
-                stack.setCount(0);
-
             }
         }
     }
-
     // 打开戴夫商店
     @SubscribeEvent
     public static void interactEntity(PlayerInteractEvent.EntityInteract event) {
         if(event.getTarget() instanceof CrazyDave dave) {
-//            ((IPlayer) event.getEntity()).rhyme$setDaveTrades(dave.daveTrades);
+            ((IPlayer) event.getEntity()).rhyme$setDaveTrades(dave.daveTrades);
             ((IPlayer) event.getEntity()).rhyme$setInteractingEntity(dave);
         }
     }
