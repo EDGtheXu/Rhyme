@@ -35,11 +35,6 @@ public class ThrowableProj extends BaseProj {
         return this;
     }
 
-    public ThrowableProj setEffect(MobEffectInstance effect) {
-        this.effect = effect;
-        return this;
-    }
-
     public Vec3 getNexPos(){
         step += 0.05f;
         return curse.cal(step);

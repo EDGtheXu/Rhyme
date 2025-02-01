@@ -6,6 +6,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.BaseProj;
 
+import java.util.List;
+
 public class LineProj extends BaseProj {
     private int existTick;
 
@@ -15,10 +17,15 @@ public class LineProj extends BaseProj {
     }
 
     public LineProj(EntityType<? extends LineProj> pEntityType, Level pLevel,ResourceLocation texture) {
-        this(pEntityType,pLevel,texture,null);
+        this(pEntityType,pLevel,texture,(MobEffectInstance)null);
     }
     public LineProj(EntityType<? extends LineProj> pEntityType, Level pLevel,ResourceLocation texture, MobEffectInstance pEffect) {
         super(pEntityType,pLevel,pEffect);
+        this.texture = texture;
+        this.existTick = 20 * 5;
+    }
+    public  LineProj(EntityType<? extends LineProj> pEntityType, Level pLevel,ResourceLocation texture, List<MobEffectInstance> pEffects) {
+        super(pEntityType,pLevel,pEffects);
         this.texture = texture;
         this.existTick = 20 * 5;
     }

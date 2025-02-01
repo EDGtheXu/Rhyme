@@ -1,7 +1,7 @@
 package rhymestudio.rhyme.core.entity;
 
 
-import net.minecraft.core.particles.*;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -39,22 +39,42 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     public float damage;
     private List<Integer> hitList = new ArrayList<>();
     public int penetration =1;
-    protected MobEffectInstance effect;
+    protected List<MobEffectInstance> effects = new ArrayList<>();
     public ResourceLocation texture;
     protected DeferredHolder<SoundEvent,SoundEvent> hitSound;
     public Consumer<BaseProj> clientTickCallback;
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
-        this.effect = pEffect;
+        if (pEffect != null){
+            this.effects.add(pEffect);
+        }
     }
+    public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
+        super(pEntityType, pLevel);
+        this.effects = pEffects;
+    }
+
     public <T extends BaseProj> T setHitSound(DeferredHolder<SoundEvent,SoundEvent> hitSound){
         this.hitSound = hitSound;
         return (T) this;
     }
-
+    public <T extends BaseProj> T setEffect(List<MobEffectInstance> effects) {
+        this.effects = effects;
+        return (T) this;
+    }
+    public <T extends BaseProj> T addEffect(MobEffectInstance effect) {
+        if (effect != null) {
+            this.effects.add(effect);
+        }
+        return (T) this;
+    }
     public float getDamage() {return damage;}
-    public void addDamage(int damage) {this.damage += damage;}
+    public void addDamage(float damage) {this.damage += damage;}
+    public <T extends BaseProj> T setDamage(float damage) {
+        this.damage = damage;
+        return (T) this;
+    }
     public <T extends BaseProj> T setPenetrate(int penetration){
         this.penetration = penetration;
         return (T) this;
@@ -145,9 +165,9 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
 
     protected void doHurt(LivingEntity hurter){
         Entity entity = this.getOwner();
-        if(effect!= null && hurter != entity){
+        for (MobEffectInstance effect : effects) {
             if(effect.getEffect().is(ModEffects.SLOWDOWN_EFFECT.getId())){
-                PacketDistributor.sendToAllPlayers(new ProjHitPacket(hurter.getId(),effect.getDuration()));
+                PacketDistributor.sendToAllPlayers(new ProjHitPacket(hurter.getId(), effect.getDuration()));
             }
             hurter.addEffect(effect);
         }

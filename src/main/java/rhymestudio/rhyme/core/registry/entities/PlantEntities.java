@@ -101,7 +101,7 @@ public class PlantEntities {
                                     .setAttack(p -> p.getRandom().nextFloat() < 0.5f ? FROZEN_PEA_SHOOT_1 : SNOW_PEA_SHOOT)
                                     .build())
                             .addModifier(3, pea -> pea.attackCallback = builder()
-                                    .setAttack(p -> p.getRandom().nextFloat() < 0.7f ? (p.getRandom().nextFloat() < 0.6f ? FROZEN_PEA_SHOOT_1 : FROZEN_PEA_SHOOT_2) : SNOW_PEA_SHOOT)
+                                    .setAttack(p -> p.getRandom().nextFloat() < 0.7f ? (p.getRandom().nextFloat() < 0.7f ? FROZEN_PEA_SHOOT_1 : FROZEN_PEA_SHOOT_2) : SNOW_PEA_SHOOT)
                                     .build())
                             .addModifier(4, pea -> pea.attackCallback = builder()
                                     .setAttack(FROZEN_PEA_SHOOT_2)

@@ -8,15 +8,16 @@ import net.minecraft.world.entity.MobCategory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.core.entity.BaseProj;
-import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.entity.misc.HelmetEntity;
 import rhymestudio.rhyme.core.entity.misc.ModelPartEntity;
+import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.entity.proj.LineProj;
 import rhymestudio.rhyme.core.entity.proj.ThrowableProj;
 import rhymestudio.rhyme.core.registry.ModEffects;
 import rhymestudio.rhyme.core.registry.ModParticles;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
@@ -35,14 +36,29 @@ public class MiscEntities {
         // tip 直线
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> PEA_PROJ = registerMisc("pea_proj",(e, l)->
             new LineProj(e,l, BaseProj.TextureLib.PEA).setHitSound(ModSounds.SPLAT),0.25F,0.25F);
+
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> SNOW_PEA_PROJ = registerMisc("snow_pea_proj",(e, l)->
             new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT,20 * 5)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
+
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> FROZEN_PEA_PROJ_1 = registerMisc("frozen_pea_proj_1",(e, l)->
-            new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 2)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
+            new LineProj(
+                    e, l,
+                    BaseProj.TextureLib.SNOW_PEA,
+                    List.of(new MobEffectInstance(ModEffects.FROZEN_EFFECT, 20 * 2), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT,20 * 5)
+                    )
+            ).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
+
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> FROZEN_PEA_PROJ_2 = registerMisc("frozen_pea_proj_2",(e, l)->
-            new LineProj(e,l,BaseProj.TextureLib.SNOW_PEA, new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5)).setHitSound(ModSounds.SNOW_PROJ_HIT),0.25F,0.25F);
+            new LineProj(
+                    e, l,
+                    BaseProj.TextureLib.SNOW_PEA,
+                    List.of(new MobEffectInstance(ModEffects.FROZEN_EFFECT,20 * 5), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT,20 * 5)
+                    )
+            ).setHitSound(ModSounds.SNOW_PROJ_HIT).setDamage(12.0f),0.25F,0.25F);
+
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> PUFF_SHROOM_PROJ = registerMisc("puff_shroom_proj",(e,l)->
             new LineProj(e,l,BaseProj.TextureLib.PUFF_SHROOM_BULLET).setHitSound(ModSounds.SPLAT),0.15F,0.15F);
+
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> FUME_SHROOM_PROJ = registerMisc("fume_shroom_proj",(e,l)->
             new LineProj(e,l,BaseProj.TextureLib.EMPTY).setExistTick(10).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
                     for(int i=0;i<5;i++)
