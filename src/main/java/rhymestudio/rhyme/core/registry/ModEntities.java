@@ -55,6 +55,9 @@ public class ModEntities {
         event.put(CABBAGE_PULT.get(), genericPlant.build());
         event.put(CHOMPER.get(), genericPlant.build());
 
+        //衍生物
+        event.put(BAKED_POTATO.get(), genericPlant.build());
+
 
         event.put(PlantEntities.POTATO_MINE.get(), genericPlant.build());
 

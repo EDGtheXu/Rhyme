@@ -18,6 +18,7 @@ import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.entity.plants.*;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.plants.derivate.BakedPotato;
 import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.plants.shroom.PuffShroom;
 import rhymestudio.rhyme.core.entity.plants.shroom.SunShroom;
@@ -158,8 +159,25 @@ public class PlantEntities {
                 s.addAnimation("up", PotatoMineAnimation.up);
                 s.addAnimation("idle_on", PotatoMineAnimation.idle_on);
                 s.addAnimation("bomb", PotatoMineAnimation.bomb);
-            }).setUltimate(PotatoEnergy)
+            })
+                    .setUltimate(PotatoEnergy)
+
+                    .setCardLevelModifier(CardLevelModifier.<PotatoMine>builder()
+                            .addModifier(1, potatoMine -> potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.2f)
+                            .addModifier(2, potatoMine -> potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.5f)
+                            .addModifier(3, potatoMine -> potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.75f)
+                            .addModifier(4, potatoMine -> potatoMine.triggerDeathSpeech = true)
+                            .buildLevelModifier()
+                    )
             ),0.85f,0.5f);
+
+    //      tip 土豆雷衍生物
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> BAKED_POTATO = registerCreature("baked_potato","烤土豆",(type, level)->
+            new BakedPotato(type,level, DEFENSE_PLANT.apply(125).setAnim(s->{
+                s.addAnimation("idle", WallNutAnimation.idle1, 1);
+            }).setUltimate(new CircleSkill<>("ultimate",30, 5)
+                    .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
+            )));
 
     //      tip 蘑菇类
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->

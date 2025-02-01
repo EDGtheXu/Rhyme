@@ -18,6 +18,7 @@ import net.minecraft.world.level.material.FluidState;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.CircleSkill;
 import rhymestudio.rhyme.core.registry.ModSounds;
+import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,6 +29,8 @@ public class PotatoMine extends AbstractPlant {
     private int readyTime;
     private final float explosionRadius;
 
+    public Boolean triggerDeathSpeech;
+
     public PotatoMine(EntityType<? extends AbstractPlant> type, Level level,
                       int readyTick,
                       float explosionRadius,
@@ -35,7 +38,7 @@ public class PotatoMine extends AbstractPlant {
         super(type, level,builder);
         this.readyTime = readyTick;
         this.explosionRadius = explosionRadius;
-
+        this.triggerDeathSpeech = false;
     }
 
     public static final EntityDataAccessor<Float> DATA_SPEED = SynchedEntityData.defineId(PotatoMine.class, EntityDataSerializers.FLOAT);
@@ -95,6 +98,13 @@ public class PotatoMine extends AbstractPlant {
                         playSound(ModSounds.POTATO_MINE.get());
                         this.discard();
                         this.explode();
+                        if(triggerDeathSpeech){
+                            var bakedPotato = PlantEntities.BAKED_POTATO.get().create(this.level());
+                            this.level().addFreshEntity(bakedPotato);
+                            bakedPotato.setPos(this.getX(), this.getY(), this.getZ());
+                            bakedPotato.setCardLevel(this.getCardLevel());
+                            bakedPotato.setHealth(bakedPotato.getMaxHealth());
+                        }
                     }
                 });
         this.addSkill(idle);

@@ -11,7 +11,6 @@ public class WallNut extends AbstractPlant {
     public WallNut(EntityType<? extends AbstractPlant> type, Level level,
                    Builder builder) {
         super(type, level,builder);
-
     }
 
     @Override

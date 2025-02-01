@@ -18,10 +18,9 @@ import rhymestudio.rhyme.client.model.zombieModels.NormalZombieModel;
 import rhymestudio.rhyme.client.render.GeoNormalRenderer;
 import rhymestudio.rhyme.client.render.GeoPlantRenderer;
 import rhymestudio.rhyme.client.render.entity.BasePlantRenderer;
-
-import rhymestudio.rhyme.client.render.entity.misc.SunRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.HelmetEntityRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.ModelPartRenderer;
+import rhymestudio.rhyme.client.render.entity.misc.SunRenderer;
 import rhymestudio.rhyme.client.render.entity.plant.SunShroomRenderer;
 import rhymestudio.rhyme.client.render.entity.proj.ProjRenderer;
 import rhymestudio.rhyme.client.render.entity.zombie.NormalZombieRenderer;
@@ -51,6 +50,10 @@ public class RegisterRenderer {
         registerOne(event, REPEATER.get(),getRenderSup(RepeaterModel.class),0.5f,1f,true);
         registerOne(event,WALL_NUT.get(),getRenderSup(WallNutModel.class),0.5f,1f);
         registerOne(event,POTATO_MINE.get(),getRenderSup(PotatoMineModel.class),0,1f);
+
+
+        //tip 衍生物
+        registerOne(event,BAKED_POTATO.get(),getRenderSup(WallNutModel.class),0.5f,1f);
 
 //        registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);
         event.registerEntityRenderer(PUFF_SHROOM.get(), c -> new GeoPlantRenderer<>(c, PUFF_SHROOM.getId(),false));
