@@ -207,4 +207,13 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem{
         stack.getOrCreateTag().putInt("max_damage", MAX_DAMAGE);
     }
 
+    @Override
+    public boolean isEnchantable(ItemStack pStack) {
+        return false;
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        return false;
+    }
 }

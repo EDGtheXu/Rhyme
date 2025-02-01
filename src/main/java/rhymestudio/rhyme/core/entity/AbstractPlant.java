@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
@@ -254,6 +253,11 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
             NetworkHandler.CHANNEL.sendTo(new PlantRecorderPacket(list),serverPlayer.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
         }
+    }
+    @Override
+    public void push(Entity entity) {
+        if(entity instanceof Player) return;
+        super.push(entity);
     }
 
     public static class Builder{

@@ -2,7 +2,6 @@ package rhymestudio.rhyme.core.entity;
 
 
 import net.minecraft.core.particles.*;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -19,17 +18,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.RegistryObject;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.particle.options.BrokenProjOptions;
 import rhymestudio.rhyme.core.registry.ModEffects;
 import rhymestudio.rhyme.datagen.tag.ModTags;
-import rhymestudio.rhyme.network.NetworkHandler;
-import rhymestudio.rhyme.network.s2c.ProjHitPacket;
 
 import java.util.ArrayList;
 import java.util.List;
