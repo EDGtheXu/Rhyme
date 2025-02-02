@@ -94,7 +94,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         entity.setCardLevel(lvl);
         level.addFreshEntity(entity);
         entity.playSound(ModSounds.PLANT.get());
-        entity.setHealth(entity.getMaxHealth());
+//        entity.setHealth(entity.getMaxHealth());
         var plantData = player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
         plantData.ids.add(entity.getId());
         if(player.canBeSeenAsEnemy())

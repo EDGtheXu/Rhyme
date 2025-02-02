@@ -189,7 +189,7 @@ public class PlantEntities {
                     )),0.5f,0.5f);
 
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> FUME_SHROOM = registerCreature("fume_shroom","大喷菇",(type, level)->
-            new PuffShroom(type,level, builder().setAttack(FUME_SHOOT).setSound(ModSounds.PUFF).build(), PUFF_SHROOM_PLANT.get()
+            new PuffShroom(type,level, builder().setAttack(FUME_SHOOT).setSound(ModSounds.PUFF).build(), PUFF_SHROOM_PLANT.get().setAttackInternalTick(10).setAttackAnimTick(50)
                     .setUltimate(new CircleSkill<>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 3 == 0)
                                 PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);

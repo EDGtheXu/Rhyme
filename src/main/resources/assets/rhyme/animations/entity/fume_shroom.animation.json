@@ -205,7 +205,7 @@
 				}
 			}
 		},
-		"attck": {
+		"shoot": {
 			"loop": true,
 			"animation_length": 1.8333,
 			"bones": {

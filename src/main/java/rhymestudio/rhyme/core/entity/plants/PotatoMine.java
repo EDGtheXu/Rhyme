@@ -103,7 +103,7 @@ public class PotatoMine extends AbstractPlant {
                             this.level().addFreshEntity(bakedPotato);
                             bakedPotato.setPos(this.getX(), this.getY(), this.getZ());
                             bakedPotato.setCardLevel(this.getCardLevel());
-                            bakedPotato.setHealth(bakedPotato.getMaxHealth());
+//                            bakedPotato.setHealth(bakedPotato.getMaxHealth());
                         }
                     }
                 });

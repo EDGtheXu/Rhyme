@@ -5,11 +5,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.Tags;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.items.ArmorItems;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
@@ -48,6 +50,25 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B',MaterialItems.GENERAL_SEED)
                 .define('C',Items.STICK)
                 .unlockedBy("has_general_seed",has(MaterialItems.GENERAL_SEED))
+                .save(recipeOutput);
+
+        //手推车
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ToolItems.PLANT_PUTTER.get())
+                .pattern("B  ")
+                .pattern("ACA")
+                .pattern(" A ")
+                .define('A', Items.IRON_INGOT)
+                .define('B', ItemTags.PLANKS)
+                .define('C', ItemTags.DIRT)
+                .unlockedBy("has_iron_ingot_for_putter",has(Items.IRON_INGOT))
+                .save(recipeOutput);
+
+        //玉米卷
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, MaterialItems.TACO.get())
+                .pattern("ABA")
+                .define('A', Items.BREAD)
+                .define('B', MaterialItems.PLANT_GENE)
+                .unlockedBy("has_plant_gene_for_taco",has(MaterialItems.PLANT_GENE))
                 .save(recipeOutput);
 
         //路障

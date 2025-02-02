@@ -28,7 +28,9 @@ import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
+import rhymestudio.rhyme.utils.RhymeUtils;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
@@ -46,6 +48,8 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     public boolean canBePush = true;
     public boolean isUltimating = false;
     private int cardLevel = 0;
+    protected boolean dirty = true;
+    private int cachedId;
 
     public <T extends AbstractPlant> AbstractPlant(EntityType<T> entityType, Level level, Builder builder) {
         super(entityType, level);
@@ -53,6 +57,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         this.builder = builder;
         if(level.isClientSide) builder.anim.accept(animState);
         else this.ultimate = builder.ultimate;
+        this.cachedId = this.getId();
     }
 
     public void setCardLevel(int level){
@@ -82,11 +87,12 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         return ultimate != null;
     }
 
+    @Override
     public boolean isPushable(){
-
         return !level().getEntities(this,this.getBoundingBox(),e->e instanceof AbstractPlant).isEmpty() && canBePush;
     }
 
+    @Override
     public void onAddedToLevel(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.health);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.attackDamage);
@@ -97,7 +103,15 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
         super.onAddedToLevel();
         if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
+
+        if(!level().isClientSide){
+            RhymeUtils.attributesBalance(this,dirty);
+            if(dirty)
+                firstSpawn();
+
+        }
     }
+    public void firstSpawn(){};
 
     public CafeAnimationState getCafeAnimState(){
         return animState;
@@ -133,9 +147,13 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             }
         });
     }
+
+    @Override
     public void setXRot(float value){
         if(builder.shouldRotX) super.setXRot(value);
     }
+
+    @Override
     public float getXRot(){
         if(builder.shouldRotX) return super.getXRot();
         return 0;
@@ -222,20 +240,40 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.cardLevel = compound.getInt("cardLevel");
-        this.skills.index = compound.getInt("skillIndex");
-        this.skills.tick = compound.getInt("skillTick");
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.cardLevel = tag.getInt("cardLevel");
+        this.skills.index = tag.getInt("skillIndex");
+        this.skills.tick = tag.getInt("skillTick");
         this.entityData.set(DATA_CARD_LVL, this.cardLevel);
         this.entityData.set(DATA_CAFE_POSE_NAME, this.skills.getCurSkillName());
+        if (tag.contains("dirty")) {
+            dirty = false;
+        }
+        this.owner = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
+        this.cachedId = tag.getInt("cachedId");
+
+        if(owner!=null && cachedId!=this.getId()){
+            List<Integer> list = owner.getData(ModAttachments.PLANT_RECORDER_STORAGE).ids;
+            for(int i=0;i<list.size();i++){
+                if(list.get(i)==cachedId){
+                    list.set(i,this.getId());
+                    break;
+                }
+            }
+        }
+
     }
 
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("cardLevel",this.cardLevel);
-        compound.putInt("skillIndex",this.skills.index);
-        compound.putInt("skillTick",this.skills.tick);
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("cardLevel",this.cardLevel);
+        tag.putInt("skillIndex",this.skills.index);
+        tag.putInt("skillTick",this.skills.tick);
+        tag.putBoolean("dirty", dirty);
+        if(owner!=null) tag.putUUID("ownerUUID",owner.getUUID());
+        tag.putInt("cachedId",this.cachedId);
     }
 
 
@@ -259,6 +297,12 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
             PacketDistributor.sendToPlayer(serverPlayer, new PlantRecorderPacket(list));
         }
+    }
+
+    @Override
+    public void push(Entity entity) {
+        if(entity instanceof Player) return;
+        super.push(entity);
     }
 
     public static class Builder{

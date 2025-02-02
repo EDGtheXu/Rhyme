@@ -81,7 +81,7 @@ public class Rhyme {
 
 
         ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
-        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 
 
         CodecRegister.registerCodecs();

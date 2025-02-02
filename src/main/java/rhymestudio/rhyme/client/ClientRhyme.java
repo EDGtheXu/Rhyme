@@ -16,7 +16,7 @@ public class ClientRhyme {
 
 
 
-        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }
