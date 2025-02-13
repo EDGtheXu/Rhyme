@@ -8,19 +8,12 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.IFSMGeoMob;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Chomper extends AbstractGeoPlant {
+public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
     int eatTime;
     int killBlood;
     public List<LivingEntity> ultimateTargets = new ArrayList<>();
@@ -29,7 +22,7 @@ public class Chomper extends AbstractGeoPlant {
      * @param eatTime 咀嚼时间
      * @param killBlood 秒杀血量
      */
-    public <T extends AbstractPlant> Chomper(EntityType<T> tEntityType, Level level, int eatTime,int killBlood,Builder builder) {
+    public Chomper(EntityType<T> tEntityType, Level level, int eatTime,int killBlood,Builder builder) {
         super(tEntityType, level,builder);
         this.eatTime = eatTime;
         this.killBlood = killBlood;
@@ -38,7 +31,7 @@ public class Chomper extends AbstractGeoPlant {
     @Override
     public void addSkills() {
         this.entityData.set(DATA_CAFE_POSE_NAME, "misc.idle");
-        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "misc.idle",  999999999, 0)
+        CircleMobSkill<Chomper> idle = new CircleMobSkill<Chomper>( "misc.idle",  999999999, 0)
                 .onTick(a-> {
                     if(skills.canContinue() &&
                             getTarget() != null && getTarget().isAlive() &&
@@ -47,7 +40,7 @@ public class Chomper extends AbstractGeoPlant {
                         skills.forceEnd();
                     }
                 });
-        CircleSkill<AbstractPlant>  attack = new CircleSkill<>( "attack.strike", 30, 25)
+        CircleMobSkill<Chomper> attack = new CircleMobSkill<Chomper>( "attack.strike", 30, 25)
                 .onInit(a-> this.attackAnim = builder.attackAnimTick)
                 .onTick(a->{
                     if(skills.canTrigger() ){
@@ -58,8 +51,8 @@ public class Chomper extends AbstractGeoPlant {
                         }
                     }
                 });
-        CircleSkill<AbstractPlant> eating = new CircleSkill<>( "eating", eatTime, 0);
-        CircleSkill<AbstractPlant> eatingFinish = new CircleSkill<>( "eating_finish", 60, 0);
+        CircleMobSkill<Chomper> eating = new CircleMobSkill<>( "eating", eatTime, 0);
+        CircleMobSkill<Chomper> eatingFinish = new CircleMobSkill<>( "eating_finish", 60, 0);
 
         addSkill(idle);
         addSkill(attack);
@@ -82,5 +75,6 @@ public class Chomper extends AbstractGeoPlant {
             tar.discard();
         }
     }
+
 
 }

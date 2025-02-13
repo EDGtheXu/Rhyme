@@ -13,8 +13,9 @@ import net.minecraft.client.model.geom.builders.*;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.model.AbstractPlantModel;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.plants.Pea;
 
-public class PeaModel extends AbstractPlantModel<AbstractPlant> {
+public class PeaModel extends AbstractPlantModel<Pea> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Rhyme.space( "pea_model"), "main");
 	private final ModelPart bone2;
@@ -88,8 +89,8 @@ public class PeaModel extends AbstractPlantModel<AbstractPlant> {
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+//		bone2.render(poseStack, vertexConsumer, packedLight, packedOverlay, color & 0xFFFFFF | (int)(256 *( Math.sin((System.currentTimeMillis() / 1000.0) ) + 1 ) * 0.5) << 24);
 		bone2.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
-
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class AbstractMonster extends Monster implements ICafeMob{
         this.navigation = createNavigation(level);
         this.setDiscardFriction(builder.noFriction);
 
-        if(level.isClientSide){
+        if(level.isClientSide && builder.animation!= null){
             this.builder.animation.accept(animState);
             this.animState.playAnim("idle",0);
         }

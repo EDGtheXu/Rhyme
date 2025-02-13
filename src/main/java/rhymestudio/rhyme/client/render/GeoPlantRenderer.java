@@ -73,6 +73,8 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
                     (float) Math.sin(System.currentTimeMillis() / 1000d),
                     (float) Math.cos(System.currentTimeMillis() / 1000d));
         }else{
+//            return RenderType.entityTranslucent(getTextureLocation(animatable));
+
             return super.getRenderType(animatable, texture, bufferSource, partialTick);
         }
     }
@@ -82,7 +84,12 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
     }
 
     public Color getRenderColor(T animatable, float partialTick, int packedLight) {
-        return consumedColor==null? super.getRenderColor(animatable, partialTick, packedLight) : consumedColor;
+
+
+        return consumedColor==null?
+                super.getRenderColor(animatable, partialTick, packedLight)
+//                Color.ofARGB((int)(256 *( Math.sin((System.currentTimeMillis() / 1000.0) ) + 1 ) * 0.5), 255, 255, 255)
+                : consumedColor;
     }
 
 }

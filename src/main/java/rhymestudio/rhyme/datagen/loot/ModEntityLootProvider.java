@@ -107,6 +107,10 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
 
     @Override
     protected Stream<EntityType<?>> getKnownEntityTypes() {
-        return Zombies.ZOMBIES.getEntries().stream().map(DeferredHolder::get);
+        return Stream.of(
+                Zombies.NORMAL_ZOMBIE,
+                Zombies.CONE_ZOMBIE,
+                Zombies.IRON_BUCKET_ZOMBIE
+        ).map(DeferredHolder::get);
     }
 }

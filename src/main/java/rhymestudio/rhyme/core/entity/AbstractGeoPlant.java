@@ -2,8 +2,8 @@ package rhymestudio.rhyme.core.entity;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
-import rhymestudio.rhyme.core.entity.plants.Chomper;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkills;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -12,27 +12,31 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractGeoPlant extends AbstractPlant implements GeoEntity, IFSMGeoMob<Chomper> {
+public abstract class AbstractGeoPlant<T extends AbstractPlant<T>> extends AbstractPlant<T> implements GeoEntity, IFSMGeoMob<T> {
 
-    protected Map<String, RawAnimation> animationMap = new HashMap<>();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    protected final ClientBoundAnimationMessage clientBoundAnimationMessage = new ClientBoundAnimationMessage();
 
-    public <T extends AbstractPlant> AbstractGeoPlant(EntityType<T> entityType, Level level, Builder builder) {
+    public AbstractGeoPlant(EntityType<T> entityType, Level level, Builder builder) {
         super(entityType, level, builder);
+        skills = new CircleMobSkills(this, DATA_CAFE_POSE_NAME);
     }
 
-    public void addSkill(CircleSkill skill) {
-        super.addSkill(skill);
-        animationMap.put(skill.name, RawAnimation.begin().thenPlay(skill.name));
+    public void addSkill(CircleMobSkill skill) {
+        IFSMGeoMob.super.addSkill(skill);
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
     }
-    @Override
-    public Map<String, RawAnimation> getAnimationMap() {
-        return animationMap;
+
+    public CircleMobSkills<T> getSkills(){
+        return skills;
     }
 
+    @Override
+    public ClientBoundAnimationMessage getAnimationMessage() {
+        return clientBoundAnimationMessage;
+    }
 }

@@ -5,15 +5,15 @@ import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 
-public abstract class AbstractShroom extends AbstractGeoPlant {
+public abstract class AbstractShroom<T extends AbstractShroom<T>> extends AbstractGeoPlant<T> {
 
 
-    public <T extends AbstractPlant> AbstractShroom(EntityType<T> entityType, Level level, Builder builder) {
+    public AbstractShroom(EntityType<T> entityType, Level level, Builder builder) {
         super(entityType, level, builder);
     }
 
     @Override
-    protected void addSkills() {
+    public void addSkills() {
 //        CircleSkill<AbstractPlant> sleep = GeneralCircleSkills.SROOM_SLEEP_SKILLS.get();
 //        addSkill(sleep);
     }

@@ -6,11 +6,13 @@ import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.client.model.GeoNormalModel;
 import rhymestudio.rhyme.client.model.plantModels.*;
 import rhymestudio.rhyme.client.model.proj.CabbageProjModel;
 import rhymestudio.rhyme.client.model.proj.PeaProjModel;
@@ -80,6 +82,7 @@ public class RegisterRenderer {
         event.registerEntityRenderer(Zombies.NORMAL_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
         event.registerEntityRenderer(Zombies.CONE_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
         event.registerEntityRenderer(Zombies.IRON_BUCKET_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
+        event.registerEntityRenderer(Zombies.POLE_VAULTING_ZOMBIE.get(), c-> new GeoNormalRenderer<>(c, Rhyme.space("zombie/pole_vaulting_zombie")));
 
 
         // 其他

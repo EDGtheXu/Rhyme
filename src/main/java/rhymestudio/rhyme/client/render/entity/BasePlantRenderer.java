@@ -101,6 +101,8 @@ public class BasePlantRenderer<T extends AbstractPlant,U extends EntityModel<T>>
                          (float) Math.sin(System.currentTimeMillis() / 1000d),
                          (float) Math.cos(System.currentTimeMillis() / 1000d));
         }else{
+//            return RenderType.entityTranslucent(getTextureLocation(entity));
+
             return super.getRenderType(entity, bodyVisible, translucent, glowing);
         }
     }

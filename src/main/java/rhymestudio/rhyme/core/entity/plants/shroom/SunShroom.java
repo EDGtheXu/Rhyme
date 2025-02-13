@@ -7,11 +7,11 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 
 import static rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks.produceSun;
 
-public class SunShroom extends AbstractShroom  {
+public class SunShroom extends AbstractShroom<SunShroom>  {
 
     public int stage = 0;
     public int growth = 0;
@@ -19,15 +19,15 @@ public class SunShroom extends AbstractShroom  {
     public static final EntityDataAccessor<Integer> DATA_GROWTH_STAGE = SynchedEntityData.defineId(SunShroom.class, EntityDataSerializers.INT);
 
 
-    public <T extends AbstractPlant> SunShroom(EntityType<T> entityType, Level level, Builder builder) {
+    public  SunShroom(EntityType<SunShroom> entityType, Level level, Builder builder) {
         super(entityType, level, builder);
     }
 
     @Override
-    protected void addSkills() {
+    public void addSkills() {
         super.addSkills();
-        CircleSkill<AbstractPlant> idleSkill = new CircleSkill<>("idle",builder.attackInternalTick,0);
-        CircleSkill<AbstractPlant> sunSkill = new CircleSkill<>("glow",builder.attackAnimTick, builder.attackTriggerTick)
+        CircleMobSkill<SunShroom> idleSkill = new CircleMobSkill<>("idle", builder.attackInternalTick, 0);
+        CircleMobSkill<SunShroom> sunSkill = new CircleMobSkill<SunShroom>("glow",builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
                     if(skills.canTrigger()){
                         produceSun(this, getSun(stage));

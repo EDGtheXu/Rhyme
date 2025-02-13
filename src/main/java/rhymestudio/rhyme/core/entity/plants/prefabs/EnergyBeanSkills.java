@@ -3,7 +3,7 @@ package rhymestudio.rhyme.core.entity.plants.prefabs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.phys.Vec3;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.plants.Chomper;
 import rhymestudio.rhyme.core.entity.plants.PotatoMine;
 import rhymestudio.rhyme.utils.Computer;
@@ -16,7 +16,7 @@ import static rhymestudio.rhyme.core.registry.entities.PlantEntities.POTATO_MINE
 public class EnergyBeanSkills {
 
 
-    public static CircleSkill<PotatoMine> PotatoEnergy = new CircleSkill<PotatoMine>("ultimate",30, 5)
+    public static CircleMobSkill<PotatoMine> PotatoEnergy = new CircleMobSkill<PotatoMine>("ultimate",30, 5)
             .onInit(e->e.canBePush = false)
             .onTick(e-> {
                 if (e.skills.canTrigger()){
@@ -37,7 +37,7 @@ public class EnergyBeanSkills {
             })
             ;
 
-    public static CircleSkill<Chomper> ChomperSkill = new CircleSkill<Chomper>("ultimate",50, 0)
+    public static CircleMobSkill<Chomper<?>> ChomperSkill = new CircleMobSkill<Chomper<?>>("ultimate",50, 0)
             .onTick(e->{
                 if(e.skills.tick % 3 == 0 && e.skills.tick < 12){
                     List<LivingEntity> targets = new ArrayList<>();

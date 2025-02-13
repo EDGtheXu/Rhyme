@@ -2,13 +2,13 @@ package rhymestudio.rhyme.core.entity.plants;
 
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 
 import static rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks.produceSun;
 
 
-public class SunFlower extends AbstractPlant {
+public class SunFlower extends AbstractPlant<SunFlower> {
 
     public int stage = 0;
     public SunFlower(Level level, Builder builder) {
@@ -18,8 +18,8 @@ public class SunFlower extends AbstractPlant {
 
     @Override
     public void addSkills() {
-        CircleSkill<AbstractPlant> idleSkill = new CircleSkill<>("idle",builder.attackInternalTick,0);
-        CircleSkill<AbstractPlant> sunSkill = new CircleSkill<>("sun",builder.attackAnimTick, builder.attackTriggerTick)
+        CircleMobSkill<SunFlower> idleSkill = new CircleMobSkill<>("idle", builder.attackInternalTick, 0);
+        CircleMobSkill<SunFlower> sunSkill = new CircleMobSkill<SunFlower>("sun",builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
                     if(skills.canTrigger()){
                         produceSun(this, getSun(stage));

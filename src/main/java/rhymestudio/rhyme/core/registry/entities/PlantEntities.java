@@ -15,7 +15,7 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.animation.plantAnimations.*;
 import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.CrazyDave;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.plants.*;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.plants.derivate.BakedPotato;
@@ -41,7 +41,7 @@ public class PlantEntities {
             new SunFlower(level,NORMAL_SUNFLOWER_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", SunflowerAnimation.idle,1);
                 s.addAnimation("sun", SunflowerAnimation.sun,1);
-            }).setUltimate(new CircleSkill<>("ultimate",50, 0)
+            }).setUltimate(new CircleMobSkill<SunFlower>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 5 == 0)
                                 produceSun(e, 25);
                             }))
@@ -49,7 +49,7 @@ public class PlantEntities {
             ));
 
     //      tip 豌豆类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> PEA = registerCreature("pea_shooter","豌豆射手",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<Pea>> PEA = registerCreature("pea_shooter","豌豆射手",(type, level)->
             new Pea(type,level, builder().setAttack(PEA_SHOOT).build(), NORMAL_PEA_PLANT.get()
                     //动画
             .setAnim(s->{
@@ -57,7 +57,7 @@ public class PlantEntities {
                 s.addAnimation("shoot", PeaAnimation.shoot,1);
             })
                     // 大招
-            .setUltimate(new CircleSkill<>("ultimate",50, 0)
+            .setUltimate(new CircleMobSkill<Pea>("ultimate",50, 0)
                     .onTick(e->{ if(e.tickCount % 3 == 0)
                         PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PEA_PROJ, e.getRandom().nextFloat()*0.5f - 0.25F);
                     })
@@ -83,12 +83,12 @@ public class PlantEntities {
             )
             ));
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> SNOW_PEA = registerCreature("snow_pea_shooter","寒冰射手",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<Pea>> SNOW_PEA = registerCreature("snow_pea_shooter","寒冰射手",(type, level)->
             new Pea(type,level, builder().setAttack(SNOW_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", IcePeaAnimation.idle);
                 s.addAnimation("shoot", IcePeaAnimation.shoot);
             })
-                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                    .setUltimate(new CircleMobSkill<Pea>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 3 == 0)
                                 PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.SNOW_PEA_PROJ, e.getRandom().nextFloat()*0.5f - 0.25F);
                             })
@@ -111,11 +111,11 @@ public class PlantEntities {
                     )
             ));
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> REPEATER = registerCreature("repeater","双发射手",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<Pea>> REPEATER = registerCreature("repeater","双发射手",(type, level)->
             new Pea(type,level, builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", RepeaterAnimation.idle);
                 s.addAnimation("shoot", RepeaterAnimation.shoot);
-            }).setUltimate(new CircleSkill<>("ultimate",50, 0)
+            }).setUltimate(new CircleMobSkill<Pea>("ultimate",50, 0)
                     .onTick(e->{ if(e.tickCount % 2 == 0)
                         PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PEA_PROJ, e.getRandom().nextFloat()*0.5f - 0.25F);
                     })
@@ -123,11 +123,11 @@ public class PlantEntities {
             ));
 
     //      tip 投手类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> CABBAGE_PULT = registerCreature("cabbage_pult","卷心菜投手",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<Pea>> CABBAGE_PULT = registerCreature("cabbage_pult","卷心菜投手",(type, level)->
             new Pea(type,level, builder().setAttack(THROWN_PEA_SHOOT).build(), NORMAL_PEA_PLANT.get().setAttackDamage(10).setAnim(s->{
                 s.addAnimation("idle", CabbageAnimation.idle);
                 s.addAnimation("shoot", CabbageAnimation.shoot);
-            }).setUltimate(new CircleSkill<>("ultimate",50, 10)
+            }).setUltimate(new CircleMobSkill<Pea>("ultimate",50, 10)
                     .onInit(e->e.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(Rhyme.space("energy"),100, AttributeModifier.Operation.ADD_VALUE)))
                     .onTick(e->{ if(e.skills.canTrigger()){
                         level.getEntities(e,e.getBoundingBox().inflate(20),target->target instanceof LivingEntity liv &&  e.canAttack(liv)).forEach(tar->{
@@ -146,7 +146,7 @@ public class PlantEntities {
                 s.addAnimation("idle1", WallNutAnimation.idle1,1);
                 s.addAnimation("idle2", WallNutAnimation.idle2,1);
                 s.addAnimation("idle3", WallNutAnimation.idle3,1);
-            }).setUltimate(new CircleSkill<>("ultimate",30, 5)
+            }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
                     .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
             )
             ));
@@ -175,22 +175,22 @@ public class PlantEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> BAKED_POTATO = registerCreature("baked_potato","烤土豆",(type, level)->
             new BakedPotato(type,level, DEFENSE_PLANT.apply(125).setAnim(s->{
                 s.addAnimation("idle", WallNutAnimation.idle1, 1);
-            }).setUltimate(new CircleSkill<>("ultimate",30, 5)
+            }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
                     .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
             )));
 
     //      tip 蘑菇类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<PuffShroom>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->
             new PuffShroom(type,level, builder().setAttack(SPORE_SHOOT).setSound(ModSounds.PUFF).build(), PUFF_SHROOM_PLANT.get()
-                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                    .setUltimate(new CircleMobSkill<PuffShroom>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 3 == 0)
                                 PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
                             })
                     )),0.5f,0.5f);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractGeoPlant>> FUME_SHROOM = registerCreature("fume_shroom","大喷菇",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<PuffShroom>> FUME_SHROOM = registerCreature("fume_shroom","大喷菇",(type, level)->
             new PuffShroom(type,level, builder().setAttack(FUME_SHOOT).setSound(ModSounds.PUFF).build(), PUFF_SHROOM_PLANT.get().setAttackInternalTick(10).setAttackAnimTick(50)
-                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                    .setUltimate(new CircleMobSkill<PuffShroom>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 3 == 0)
                                 PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
                             })
@@ -198,7 +198,7 @@ public class PlantEntities {
 
     public static final DeferredHolder<EntityType<?>, EntityType<SunShroom>> SUN_SHROOM = registerCreature("sun_shroom","阳光菇",(type, level)->
             new SunShroom(type,level,NORMAL_SUNFLOWER_PLANT.get()
-                    .setUltimate(new CircleSkill<>("ultimate",50, 0)
+                    .setUltimate(new CircleMobSkill<SunShroom>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 5 == 0)
                                 produceSun(e, 25);
                             })

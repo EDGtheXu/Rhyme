@@ -19,9 +19,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkills;
+import rhymestudio.rhyme.core.entity.ai.JavaCircleMobSkills;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
-import rhymestudio.rhyme.core.entity.ai.CircleSkills;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.goal.ShootGoal;
 import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
@@ -33,7 +34,7 @@ import rhymestudio.rhyme.utils.RhymeUtils;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
+public abstract class AbstractPlant<T extends AbstractPlant<T>> extends PathfinderMob implements ICafeMob{
 
     public static final EntityDataAccessor<String> DATA_CAFE_POSE_NAME = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> DATA_CARD_LVL = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.INT);
@@ -43,8 +44,8 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     public Builder builder;
     public String lastAnimName = "idle";
     public CafeAnimationState animState = new CafeAnimationState(this);
-    public CircleSkills<AbstractPlant> skills = new CircleSkills<>(this);
-    private CircleSkill ultimate;
+    public CircleMobSkills<T> skills = new JavaCircleMobSkills(this, DATA_CAFE_POSE_NAME);
+    private CircleMobSkill ultimate;
     public boolean canBePush = true;
     public boolean isUltimating = false;
     private int cardLevel = 0;
@@ -196,7 +197,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
                 addSkill(ultimate);
                 skills.forceStart(ultimate);
             }
-            CircleSkill last = skills.getCurSkill();
+            CircleMobSkill last = skills.getCurSkill();
             skills.tick();
 
             if(last == ultimate && skills.getCurSkill() != ultimate){
@@ -216,8 +217,8 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         }
     }
 
-    public void addSkill(CircleSkill bossSkill) {skills.pushSkill(bossSkill);}
-    public void addSkillNoAnim(CircleSkill bossSkill) {skills.pushSkill(bossSkill);}
+    public void addSkill(CircleMobSkill bossSkill) {skills.pushSkill(bossSkill);}
+    public void addSkillNoAnim(CircleMobSkill bossSkill) {skills.pushSkill(bossSkill);}
 
 
     // 动画数据同步
@@ -319,7 +320,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         public int attackInternalTick = 60;
         public  int attackDamage = 1;
 
-        CircleSkill ultimate;
+        CircleMobSkill ultimate;
         CardLevelModifier cardLevelModifier;
 
         public Consumer<CafeAnimationState> anim = (state)->{};
@@ -329,7 +330,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             return this;
         }
 
-        public Builder setUltimate(CircleSkill ultimate) {
+        public Builder setUltimate(CircleMobSkill ultimate) {
             this.ultimate = ultimate;
             return this;
         }

@@ -4,24 +4,24 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks;
 import rhymestudio.rhyme.utils.Computer;
 
-public class PuffShroom extends AbstractShroom {
+public class PuffShroom extends AbstractShroom<PuffShroom> {
 
     private final PresetAttacks attackCallback;
     private LivingEntity target;
 
-    public PuffShroom(EntityType<? extends AbstractPlant> type, Level level, PresetAttacks doAttack, Builder builder) {
+    public PuffShroom(EntityType<PuffShroom> type, Level level, PresetAttacks doAttack, Builder builder) {
         super(type, level,  builder);
         this.attackCallback = doAttack;
     }
 
     @Override
-    protected void addSkills() {
+    public void addSkills() {
         super.addSkills();
-        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle",  999999999, builder.attackInternalTick)
+        CircleMobSkill<PuffShroom> idle = new CircleMobSkill<PuffShroom>( "idle",  999999999, builder.attackInternalTick)
                 .onTick(a-> {
                     if(skills.canContinue() &&
                             getTarget() != null && getTarget().isAlive() &&
@@ -34,7 +34,7 @@ public class PuffShroom extends AbstractShroom {
                         skills.forceEnd();
                     }
                 });
-        CircleSkill<AbstractPlant> shoot = new CircleSkill<>( "shoot", builder.attackAnimTick, builder.attackTriggerTick)
+        CircleMobSkill<PuffShroom> shoot = new CircleMobSkill<PuffShroom>( "shoot", builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
                     if(skills.canTrigger() && target!= null && target.isAlive()){
                         if(attackCallback!= null) attackCallback.getAttack(this).accept(this,target);

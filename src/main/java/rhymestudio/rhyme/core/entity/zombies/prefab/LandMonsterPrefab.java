@@ -21,7 +21,7 @@ import static rhymestudio.rhyme.core.entity.AbstractMonster.copyFrom;
 
 public class LandMonsterPrefab extends AbstractPrefab {
 
-    public static Supplier<AbstractMonster.Builder> NORMAL_ZOMBIE_PREFAB =
+    public static Supplier<AbstractMonster.Builder> SIMPLE_ZOMBIE_PREFAB =
             ()->new LandMonsterPrefab(35,2,4,30,0.5f,0.1f).getPrefab()
                     .setStepHeight(2.4f)
                     .setJumpStrength(0.5f)
@@ -33,6 +33,17 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         t.addGoal(4, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
 
                     })
+                   ;
+
+    public static Supplier<AbstractMonster.Builder> NORMAL_ZOMBIE_PREFAB = ()->
+            copyFrom(SIMPLE_ZOMBIE_PREFAB)
+                    .addAnimation(state->{
+                        state.addAnimation("walk", NormalZombieAnimation.walk);
+                        state.addAnimation("idle", NormalZombieAnimation.idle);
+                        state.addAnimation("attack", NormalZombieAnimation.attack);
+                        state.addAnimation("hurt", NormalZombieAnimation.hurt);
+                        state.addAnimation("run", NormalZombieAnimation.run);
+                    })
                     .addGoal((g,e)-> {
 //                        g.addGoal(1, new JumpAttack(e, 3, 8));
                         g.addGoal(2, new JumpOverBlockGoal(e));
@@ -40,13 +51,6 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
                         g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
 
-                    })
-                    .addAnimation(state->{
-                        state.addAnimation("walk", NormalZombieAnimation.walk);
-                        state.addAnimation("idle", NormalZombieAnimation.idle);
-                        state.addAnimation("attack", NormalZombieAnimation.attack);
-                        state.addAnimation("hurt", NormalZombieAnimation.hurt);
-                        state.addAnimation("run", NormalZombieAnimation.run);
                     })
             ;
 

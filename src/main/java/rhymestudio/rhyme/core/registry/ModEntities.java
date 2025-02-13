@@ -65,6 +65,7 @@ public class ModEntities {
         event.put(Zombies.NORMAL_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(Zombies.CONE_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(Zombies.IRON_BUCKET_ZOMBIE.get(), AbstractMonster.createAttributes().build());
+        event.put(Zombies.POLE_VAULTING_ZOMBIE.get(), AbstractMonster.createAttributes().build());
 
         //疯狂戴夫
         event.put(CRAZY_DAVE.get(), AbstractMonster.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.5f).build());

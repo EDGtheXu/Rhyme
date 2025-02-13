@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class PotatoMine extends AbstractPlant {
+public class PotatoMine extends AbstractPlant<PotatoMine> {
 
     private int readyTime;
     private final float explosionRadius;
@@ -62,9 +62,9 @@ public class PotatoMine extends AbstractPlant {
 
     @Override
     public void addSkills() {
-        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle", readyTime, 0);
-        CircleSkill<AbstractPlant> up = new CircleSkill<>( "up",  29, 0);
-        CircleSkill<AbstractPlant> on = new CircleSkill<>( "idle_on",  999999999, 0)
+        CircleMobSkill<PotatoMine> idle = new CircleMobSkill<>( "idle", readyTime, 0);
+        CircleMobSkill<PotatoMine> up = new CircleMobSkill<>( "up",  29, 0);
+        CircleMobSkill<PotatoMine> on = new CircleMobSkill<PotatoMine>( "idle_on",  999999999, 0)
                 .onTick(a-> {
 
                         AtomicReference<Float> minDistance = new AtomicReference<>((float) 1000000000);
@@ -92,7 +92,7 @@ public class PotatoMine extends AbstractPlant {
                         }
 
                 });
-        CircleSkill<AbstractPlant> boom = new CircleSkill<>( "bomb",  999999999, 20)
+        CircleMobSkill<PotatoMine> boom = new CircleMobSkill<PotatoMine>( "bomb",  999999999, 20)
                 .onTick(a-> {
                     if(skills.canTrigger()){
                         playSound(ModSounds.POTATO_MINE.get());
@@ -118,18 +118,17 @@ public class PotatoMine extends AbstractPlant {
 
     private  final ExplosionDamageCalculator USED_PORTAL_DAMAGE_CALCULATOR = new ExplosionDamageCalculator() {
         @Override
-        public boolean shouldBlockExplode(Explosion p_353087_, BlockGetter p_353096_, BlockPos p_353092_, BlockState p_353086_, float p_353094_) {
+        public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
             return false;
-//            return p_353086_.is(Blocks.NETHER_PORTAL) ? false : super.shouldBlockExplode(p_353087_, p_353096_, p_353092_, p_353086_, p_353094_);
         }
 
         @Override
         public Optional<Float> getBlockExplosionResistance(
-                Explosion p_353090_, BlockGetter p_353088_, BlockPos p_353091_, BlockState p_353093_, FluidState p_353095_
+                Explosion explosion, BlockGetter blockGetter, BlockPos pos, BlockState state, FluidState fluidState
         ) {
-            return p_353093_.is(Blocks.NETHER_PORTAL)
+            return state.is(Blocks.NETHER_PORTAL)
                     ? Optional.empty()
-                    : super.getBlockExplosionResistance(p_353090_, p_353088_, p_353091_, p_353093_, p_353095_);
+                    : super.getBlockExplosionResistance(explosion, blockGetter, pos, state, fluidState);
         }
         @Override
         public float getEntityDamageAmount(Explosion explosion, Entity entity) {

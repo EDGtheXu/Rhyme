@@ -5,9 +5,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 
-public class WallNut extends AbstractPlant {
+public class WallNut<T extends WallNut<T>> extends AbstractPlant<T> {
     public WallNut(EntityType<? extends AbstractPlant> type, Level level,
                    Builder builder) {
         super(type, level,builder);
@@ -15,21 +15,21 @@ public class WallNut extends AbstractPlant {
 
     @Override
     public void addSkills() {
-        CircleSkill<AbstractPlant> idle1 = new CircleSkill<>( "idle1",  999999999, 0)
+        CircleMobSkill<T> idle1 = new CircleMobSkill<T>( "idle1",  999999999, 0)
                 .onTick(a-> {
                     doSmth();
                     if(this.getHealth() / this.getMaxHealth() < 0.666){
                         skills.forceEnd();
                     }
                 });
-        CircleSkill<AbstractPlant>idle2 = new CircleSkill<>( "idle2",  999999999, 0)
+        CircleMobSkill<T> idle2 = new CircleMobSkill<T>( "idle2",  999999999, 0)
                 .onTick(a-> {
                     doSmth();
                     if(this.getHealth() / this.getMaxHealth() < 0.333){
                         skills.forceEnd();
                     }
                 });
-        CircleSkill<AbstractPlant> idle3 = new CircleSkill<>( "idle3",  999999999, 0)
+        CircleMobSkill<T> idle3 = new CircleMobSkill<T>( "idle3",  999999999, 0)
                 .onTick(a-> doSmth());
         this.addSkill(idle1);
         this.addSkill(idle2);

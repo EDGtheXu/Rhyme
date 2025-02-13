@@ -1,0 +1,127 @@
+package rhymestudio.rhyme.core.entity.zombies;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import rhymestudio.rhyme.core.entity.AbstractGeoMonster;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.constant.DefaultAnimations;
+
+import javax.annotation.Nullable;
+
+public class PoleVaultingZombie extends AbstractGeoMonster<PoleVaultingZombie> {
+
+    public static final EntityDataAccessor<Boolean> DATA_HAVE_POLE = SynchedEntityData.defineId(PoleVaultingZombie.class, EntityDataSerializers.BOOLEAN);
+
+    public PoleVaultingZombie(EntityType<PoleVaultingZombie> type, Level level, Builder builder) {
+        super(type, level, builder);
+
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_HAVE_POLE, true);
+
+    }
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("have_pole", entityData.get(DATA_HAVE_POLE));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        entityData.set(DATA_HAVE_POLE, compound.getBoolean("have_pole"));
+    }
+
+    boolean havePole() {
+        return entityData.get(DATA_HAVE_POLE);
+    }
+
+    void setHavePole(boolean havePole) {
+        entityData.set(DATA_HAVE_POLE, havePole);
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        if(!level().isClientSide)
+            setHavePole(true);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+    }
+
+    @Override
+    public void addSkills() {
+
+        CircleMobSkill<PoleVaultingZombie> before = new CircleMobSkill<PoleVaultingZombie>("before", 99999, 5)
+                .onTick(e->{
+                    if(!e.havePole() && tickCount > 20){
+                        skills.forceStartIndex(2);
+                    }
+                    e.setSprinting(getTarget() != null);
+                    if(getTarget() != null && getTarget().distanceToSqr(e) < 5*5){
+                        skills.forceStartIndex(1);
+                    }
+                });
+
+        CircleMobSkill<PoleVaultingZombie> high_jump = new CircleMobSkill<PoleVaultingZombie>("high_jump", 30, 20)
+                .onTick(e->{
+                    if(skills.canTrigger()){
+                        e.setDeltaMovement(e.getDeltaMovement().scale(20).add(0, 2.5, 0));
+                    }
+                    if(e.onGround() && skills.canContinue())
+                        skills.forceEnd();
+                })
+                ;
+
+        CircleMobSkill<PoleVaultingZombie> after = new CircleMobSkill<PoleVaultingZombie>("after", 99999, 5)
+                .onTick(e->{
+                    e.setSprinting(false);
+                    skills.tick = 0;
+                })
+                ;
+
+
+        this.addSkill(before);
+        this.addSkill(high_jump);
+        this.addSkill(after);
+
+    }
+
+    RawAnimation high_jump = RawAnimation.begin().thenPlay("high_jump");
+    RawAnimation hurt = RawAnimation.begin().thenPlay("hurt");
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(DefaultAnimations.genericWalkRunIdleController(this),
+                new AnimationController<GeoAnimatable>(this, "hurt",5,state->{
+                    if(this.hurtTime > 0 ) {
+                        state.setAnimation(hurt);
+                        return PlayState.CONTINUE;
+                    }
+                    state.resetCurrentAnimation();
+                    return PlayState.CONTINUE;
+                })
+                );
+        controllers.add(DefaultAnimations.genericAttackAnimation(this, DefaultAnimations.ATTACK_STRIKE));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "jump",10,state->{
+                    if(this.skills.index == 1) {
+                        state.setAnimation(high_jump);
+                        return PlayState.CONTINUE;
+                    }
+                    return PlayState.CONTINUE;
+                })
+        );
+    }
+}
