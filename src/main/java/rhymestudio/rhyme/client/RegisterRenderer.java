@@ -55,7 +55,7 @@ public class RegisterRenderer {
 
 
         //tip 衍生物
-        registerOne(event,BAKED_POTATO.get(),getRenderSup(WallNutModel.class),0.5f,1f);
+        registerOne(event,BAKED_POTATO.get(),getRenderSup(BackedPotatoModel.class),0.5f,1f);
 
 //        registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);
         event.registerEntityRenderer(PUFF_SHROOM.get(), c -> new GeoPlantRenderer<>(c, PUFF_SHROOM.getId(),false));

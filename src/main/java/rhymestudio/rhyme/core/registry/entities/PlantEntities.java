@@ -13,7 +13,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.animation.plantAnimations.*;
-import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.plants.*;
@@ -41,10 +40,19 @@ public class PlantEntities {
             new SunFlower(level,NORMAL_SUNFLOWER_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", SunflowerAnimation.idle,1);
                 s.addAnimation("sun", SunflowerAnimation.sun,1);
-            }).setUltimate(new CircleMobSkill<SunFlower>("ultimate",50, 0)
-                            .onTick(e->{ if(e.tickCount % 5 == 0)
-                                produceSun(e, 25);
-                            }))
+            })      // 大招
+                    .setUltimate(new CircleMobSkill<SunFlower>("ultimate",50, 0)
+                            .onTick(e->{ if(e.tickCount % 5 == 0) e.produce();}
+                            ))
+
+                    //升级
+                    .setCardLevelModifier(CardLevelModifier.<SunFlower>builder()
+                            .addModifier(1, plant->plant.cdReduction = 0.8f)
+                            .addModifier(2, plant->{plant.singleSun = 50;plant.cdReduction = 0.8f;})
+                            .addModifier(3, plant->{plant.singleSun = 50;plant.cdReduction = 0.6f;})
+                            .addModifier(4, plant->{plant.singleSun = 75;plant.cdReduction = 0.5f;})
+                            .buildLevelModifier()
+                    )
 
             ));
 
@@ -115,11 +123,32 @@ public class PlantEntities {
             new Pea(type,level, builder().setAttack(PEA_SHOOT).setShootCount(2).build(), NORMAL_PEA_PLANT.get().setAnim(s->{
                 s.addAnimation("idle", RepeaterAnimation.idle);
                 s.addAnimation("shoot", RepeaterAnimation.shoot);
-            }).setUltimate(new CircleMobSkill<Pea>("ultimate",50, 0)
+            })
+                    .setUltimate(new CircleMobSkill<Pea>("ultimate",50, 0)
                     .onTick(e->{ if(e.tickCount % 2 == 0)
                         PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PEA_PROJ, e.getRandom().nextFloat()*0.5f - 0.25F);
-                    })
-            )
+                    }))
+
+                    //升级
+                    .setCardLevelModifier(CardLevelModifier.<Pea>builder()
+                            .addModifier(1,pea->pea.attackCallback = builder()
+                                    .setAttack(p->p.getRandom().nextFloat() < 0.2f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                                    .setShootCount(p->2)
+                                    .build())
+                            .addModifier(2,pea->pea.attackCallback = builder()
+                                    .setAttack(p->p.getRandom().nextFloat() < 0.3f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                                    .setShootCount(p->p.getRandom().nextFloat() < 0.4? 2 : 1)
+                                    .build())
+                            .addModifier(3,pea->pea.attackCallback = builder()
+                                    .setAttack(p->p.getRandom().nextFloat() < 0.4f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                                    .setShootCount(p->p.getRandom().nextFloat() < 0.6f? 2 : 1)
+                                    .build())
+                            .addModifier(4,pea->pea.attackCallback = builder()
+                                    .setAttack(p->p.getRandom().nextFloat() < 0.5f? SNOW_PEA_SHOOT: PEA_SHOOT)
+                                    .setShootCount(p->p.getRandom().nextIntBetweenInclusive(3,5))
+                                    .build())
+                            .buildLevelModifier()
+                    )
             ));
 
     //      tip 投手类
@@ -137,11 +166,30 @@ public class PlantEntities {
                     }})
                     .onOver(e-> (e.getAttribute(Attributes.ATTACK_DAMAGE)).removeModifier(Rhyme.space("energy")))
             )
+                    //升级
+                    .setCardLevelModifier(CardLevelModifier.<Pea>builder()
+                            .addModifier(1,pea->pea.attackCallback = builder()
+                                    .setAttack(THROWN_PEA_SHOOT)
+                                    .build())
+                            .addModifier(2,pea->pea.attackCallback = builder()
+                                    .setAttack(THROWN_PEA_SHOOT)
+                                    .setShootCount(p->p.getRandom().nextFloat() < 0.2? 2 : 1)
+                                    .build())
+                            .addModifier(3,pea->pea.attackCallback = builder()
+                                    .setAttack(THROWN_PEA_SHOOT)
+                                    .setShootCount(p->p.getRandom().nextFloat() < 0.3f? 2 : 1)
+                                    .build())
+                            .addModifier(4,pea->pea.attackCallback = builder()
+                                    .setAttack(THROWN_PEA_SHOOT)
+                                    .setShootCount(p->p.getRandom().nextIntBetweenInclusive(1,3))
+                                    .build())
+                            .buildLevelModifier()
+                    )
             ));
 
 
     //      tip 坚果类
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> WALL_NUT = registerCreature("wall_nut","坚果墙",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<WallNut>> WALL_NUT = registerCreature("wall_nut","坚果墙",(type, level)->
             new WallNut(type,level, DEFENSE_PLANT.apply(150).setAnim(s->{
                 s.addAnimation("idle1", WallNutAnimation.idle1,1);
                 s.addAnimation("idle2", WallNutAnimation.idle2,1);
@@ -149,6 +197,7 @@ public class PlantEntities {
             }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
                     .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
             )
+
             ));
 
 
@@ -172,7 +221,7 @@ public class PlantEntities {
             ),0.85f,0.5f);
 
     //      tip 土豆雷衍生物
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractPlant>> BAKED_POTATO = registerCreature("baked_potato","烤土豆",(type, level)->
+    public static final DeferredHolder<EntityType<?>, EntityType<BakedPotato>> BAKED_POTATO = registerCreature("baked_potato","烤土豆",(type, level)->
             new BakedPotato(type,level, DEFENSE_PLANT.apply(125).setAnim(s->{
                 s.addAnimation("idle", WallNutAnimation.idle1, 1);
             }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
@@ -186,29 +235,67 @@ public class PlantEntities {
                             .onTick(e->{ if(e.tickCount % 3 == 0)
                                 PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
                             })
-                    )),0.5f,0.5f);
+                    )
+                    //升级
+                    .setCardLevelModifier(CardLevelModifier.<PuffShroom>builder()
+                            .addModifier(1, plant->{plant.cdReduction = 0.8f;})
+                            .addModifier(2, plant->{plant.cdReduction = 0.7f;})
+                            .addModifier(3, plant->{plant.cdReduction = 0.5f;})
+                            .addModifier(4, plant->{plant.cdReduction = 0.3f;})
+                            .buildLevelModifier()
+                    )
+
+            ),0.5f,0.5f);
 
     public static final DeferredHolder<EntityType<?>, EntityType<PuffShroom>> FUME_SHROOM = registerCreature("fume_shroom","大喷菇",(type, level)->
             new PuffShroom(type,level, builder().setAttack(FUME_SHOOT).setSound(ModSounds.PUFF).build(), NORMAL_PEA_PLANT.get().setAttackInternalTick(10).setAttackAnimTick(50)
                     .setUltimate(new CircleMobSkill<PuffShroom>("ultimate",50, 0)
                             .onTick(e->{ if(e.tickCount % 3 == 0)
-                                PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.PUFF_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
+                                PEA_SHOOT_ATTACK_BASE.accept(e, null, MiscEntities.FUME_SHROOM_PROJ, e.getRandom().nextFloat()*0.5f - 0.4F);
                             })
-                    )));
+                    )
+                    //升级
+                    .setCardLevelModifier(CardLevelModifier.<PuffShroom>builder()
+                            .addModifier(1, plant->{plant.cdReduction = 0.8f;})
+                            .addModifier(2, plant->{plant.cdReduction = 0.7f;})
+                            .addModifier(3, plant->{plant.cdReduction = 0.5f;})
+                            .addModifier(4, plant->{plant.cdReduction = 0.3f;})
+                            .buildLevelModifier()
+                    )
+            ));
 
     public static final DeferredHolder<EntityType<?>, EntityType<SunShroom>> SUN_SHROOM = registerCreature("sun_shroom","阳光菇",(type, level)->
             new SunShroom(type,level,NORMAL_SUNFLOWER_PLANT.get()
                     .setUltimate(new CircleMobSkill<SunShroom>("ultimate",50, 0)
-                            .onTick(e->{ if(e.tickCount % 5 == 0)
-                                produceSun(e, 25);
+                            .onTick(e->{
+                                if(e.tickCount % 5 == 0) produceSun(e, 25);
+                                e.growth++;
                             })
-                    )),0.5f,0.5f);
+                    )
+                    //升级
+                    .setCardLevelModifier(CardLevelModifier.<SunShroom>builder()
+                            .addModifier(1, plant->{plant.growthTick *= 0.8f;plant.cdReduction = 0.8f;})
+                            .addModifier(2, plant->{plant.growthTick *= 0.6f;plant.cdReduction = 0.7f;})
+                            .addModifier(3, plant->{plant.growthTick *= 0.4f;plant.cdReduction = 0.6f;plant.sunCountStage_2 = 100;})
+                            .addModifier(4, plant->{plant.growthTick *= 0.25f;plant.cdReduction = 0.5f;plant.sunCountStage_2 = 100;plant.sunCountStage_1 = 75;plant.sunCountStage_0 = 50;})
+                            .buildLevelModifier()
+                    )
+            ),0.5f,0.5f);
+
 
 
     //      tip 大嘴花类
     public static final DeferredHolder<EntityType<?>, EntityType<Chomper>> CHOMPER = registerCreature("chomper","大嘴花",(type, level)->
             new Chomper(type,level, 20 * 15,200,NORMAL_PEA_PLANT.get()
                     .setUltimate(ChomperSkill)
+                    //升级
+                    .setCardLevelModifier(CardLevelModifier.<Chomper>builder()
+                            .addModifier(1, plant->{plant.cdReduction = 0.8f;})
+                            .addModifier(2, plant->{plant.cdReduction = 0.6f;})
+                            .addModifier(3, plant->{plant.cdReduction = 0.5f;})
+                            .addModifier(4, plant->{plant.cdReduction = 0.4f;})
+                            .buildLevelModifier()
+                    )
             ),0.85F,1.95F);
 
 

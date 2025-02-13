@@ -28,7 +28,7 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.List;
 
-import static rhymestudio.rhyme.config.ServerConfig.PlantConsumeAdditionStep;
+import static rhymestudio.rhyme.config.ServerConfig.*;
 import static rhymestudio.rhyme.utils.Computer.getBlockPosCenter;
 import static rhymestudio.rhyme.utils.Computer.getEyeBlockHitResult;
 
@@ -89,8 +89,8 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         entity.setOwner(player);
         entity.setPos(getBlockPosCenter(pos,player.getRandom()));
         int lvl = stack.getComponents().get(ModDataComponentTypes.CARD_QUALITY.get()).level();
-        entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(Rhyme.space("card_health_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-        entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(Rhyme.space("card_attack_damage_modifier"),0.5f*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(Rhyme.space("card_health_modifier"), PLANT_ATTRIBUTES_MULTIPLIER_HEALTH_PER_LEVEL.get()*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(Rhyme.space("card_attack_damage_modifier"), PLANT_ATTRIBUTES_MULTIPLIER_DAMAGE_PER_LEVEL.get()*lvl,AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         entity.setCardLevel(lvl);
         level.addFreshEntity(entity);
         entity.playSound(ModSounds.PLANT.get());

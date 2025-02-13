@@ -7,6 +7,10 @@ public class ServerConfig {
     public static ModConfigSpec.ConfigValue<Integer> PlantConsumeAdditionStep;
     public static ModConfigSpec.ConfigValue<Double> PLANT_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ModConfigSpec.ConfigValue<Double> PLANT_ATTRIBUTES_MULTIPLIER_DAMAGE ;
+
+    public static ModConfigSpec.ConfigValue<Double> PLANT_ATTRIBUTES_MULTIPLIER_HEALTH_PER_LEVEL;
+    public static ModConfigSpec.ConfigValue<Double> PLANT_ATTRIBUTES_MULTIPLIER_DAMAGE_PER_LEVEL;
+
     public static ModConfigSpec SPEC;
 
     public static ModConfigSpec init() {
@@ -24,6 +28,13 @@ public class ServerConfig {
         PLANT_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for plant attributes damage.")
                 .defineInRange("plant_attributes_multiplier_damage", 0.7F, 0.0625f, 10f);
+
+        PLANT_ATTRIBUTES_MULTIPLIER_HEALTH_PER_LEVEL = BUILDER
+                .comment("Multiplier for plant attributes health every lvl.")
+                .defineInRange("plant_attributes_multiplier_health_per_level", 0.2F, 0.0625f, 10f);
+        PLANT_ATTRIBUTES_MULTIPLIER_DAMAGE_PER_LEVEL = BUILDER
+                .comment("Multiplier for plant attributes damage every lvl.")
+                .defineInRange("plant_attributes_multiplier_damage_per_level", 0.2F, 0.0625f, 10f);
 
         SPEC = BUILDER.build();
         return SPEC;

@@ -16,6 +16,11 @@ public class SunShroom extends AbstractShroom<SunShroom>  {
     public int stage = 0;
     public int growth = 0;
     public int lastGrowthTick = 0;
+    public int growthTick = 60 * 20;
+    public int sunCountStage_0 = 25;
+    public int sunCountStage_1 = 50;
+    public int sunCountStage_2 = 75;
+    public float cdReduction = 1f;
     public static final EntityDataAccessor<Integer> DATA_GROWTH_STAGE = SynchedEntityData.defineId(SunShroom.class, EntityDataSerializers.INT);
 
 
@@ -26,6 +31,7 @@ public class SunShroom extends AbstractShroom<SunShroom>  {
     @Override
     public void addSkills() {
         super.addSkills();
+        builder.attackInternalTick *= cdReduction;
         CircleMobSkill<SunShroom> idleSkill = new CircleMobSkill<>("idle", builder.attackInternalTick, 0);
         CircleMobSkill<SunShroom> sunSkill = new CircleMobSkill<SunShroom>("glow",builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
@@ -41,11 +47,11 @@ public class SunShroom extends AbstractShroom<SunShroom>  {
     protected void actualAiStep() {
         if(!level().isClientSide) {
             growth++;
-            if(growth > 5*20 && stage == 0){
+            if(growth > growthTick && stage == 0){
                 stage = 1;
                 growth = 0;
                 this.entityData.set(DATA_GROWTH_STAGE, stage);
-            }else if(growth > 5*20 && stage == 1){
+            }else if(growth > growthTick && stage == 1){
                 stage = 2;
                 growth = 0;
                 this.entityData.set(DATA_GROWTH_STAGE, stage);
@@ -55,9 +61,9 @@ public class SunShroom extends AbstractShroom<SunShroom>  {
 
     public int getSun(int stage){
         return switch (stage){
-            case 0 -> 15;
-            case 1 -> 25;
-            default -> 50;
+            case 0 -> sunCountStage_0;
+            case 1 -> sunCountStage_1;
+            default -> sunCountStage_2;
         };
     }
 

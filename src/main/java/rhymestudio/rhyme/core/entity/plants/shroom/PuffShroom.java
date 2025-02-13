@@ -12,6 +12,7 @@ public class PuffShroom extends AbstractShroom<PuffShroom> {
 
     private final PresetAttacks attackCallback;
     private LivingEntity target;
+    public float cdReduction = 1f;
 
     public PuffShroom(EntityType<PuffShroom> type, Level level, PresetAttacks doAttack, Builder builder) {
         super(type, level,  builder);
@@ -21,6 +22,9 @@ public class PuffShroom extends AbstractShroom<PuffShroom> {
     @Override
     public void addSkills() {
         super.addSkills();
+        builder.attackInternalTick *= cdReduction;
+        builder.attackAnimTick *= cdReduction;
+        builder.attackTriggerTick *= cdReduction;
         CircleMobSkill<PuffShroom> idle = new CircleMobSkill<PuffShroom>( "idle",  999999999, builder.attackInternalTick)
                 .onTick(a-> {
                     if(skills.canContinue() &&

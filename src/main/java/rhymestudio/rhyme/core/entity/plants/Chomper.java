@@ -14,8 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
-    int eatTime;
+    public int eatTime;
     int killBlood;
+    public float cdReduction = 1f;
     public List<LivingEntity> ultimateTargets = new ArrayList<>();
 
     /**
@@ -31,6 +32,7 @@ public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
     @Override
     public void addSkills() {
         this.entityData.set(DATA_CAFE_POSE_NAME, "misc.idle");
+        eatTime *= cdReduction;
         CircleMobSkill<Chomper> idle = new CircleMobSkill<Chomper>( "misc.idle",  999999999, 0)
                 .onTick(a-> {
                     if(skills.canContinue() &&

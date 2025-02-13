@@ -48,7 +48,7 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     private CircleMobSkill ultimate;
     public boolean canBePush = true;
     public boolean isUltimating = false;
-    private int cardLevel = 0;
+    public int cardLevel = 0;
     protected boolean dirty = true;
     private int cachedId;
 
@@ -59,6 +59,8 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
         if(level.isClientSide) builder.anim.accept(animState);
         else this.ultimate = builder.ultimate;
         this.cachedId = this.getId();
+
+
     }
 
     public void setCardLevel(int level){
@@ -97,13 +99,16 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     public void onAddedToLevel(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.health);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.attackDamage);
+
+        if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
         addSkills();
-        skills.forceStartIndex(0);
+        if(!level().isClientSide)
+            skills.forceStartIndex(0);
+
         if(level().isClientSide)
             animState.playAnim(skills.getCurSkillName(),tickCount);
-        if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
+
         super.onAddedToLevel();
-        if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
 
         if(!level().isClientSide){
             RhymeUtils.attributesBalance(this,dirty);

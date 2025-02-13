@@ -11,10 +11,10 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.model.AbstractPlantModel;
-import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.plants.WallNut;
+import rhymestudio.rhyme.core.entity.plants.derivate.BakedPotato;
 
-public class WallNutModel extends AbstractPlantModel<WallNut> {
+public class BackedPotatoModel extends AbstractPlantModel<BakedPotato> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Rhyme.space("wall_nut_model"), "main");
 	private final ModelPart head;
@@ -22,7 +22,7 @@ public class WallNutModel extends AbstractPlantModel<WallNut> {
 	private final ModelPart bone2;
 	private final ModelPart bone3;
 
-	public WallNutModel(ModelPart root) {
+	public BackedPotatoModel(ModelPart root) {
 		this.head = root.getChild("head");
 		this.bone = this.head.getChild("bone");
 		this.bone2 = this.head.getChild("bone2");
