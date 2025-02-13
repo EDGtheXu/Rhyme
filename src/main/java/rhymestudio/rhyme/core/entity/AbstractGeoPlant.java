@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.entity;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
@@ -24,6 +25,15 @@ public abstract class AbstractGeoPlant<T extends AbstractPlant<T>> extends Abstr
 
     public void addSkill(CircleMobSkill skill) {
         IFSMGeoMob.super.addSkill(skill);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
+            String name = entityData.get(DATA_CAFE_POSE_NAME);
+            this.skills.playSkill(name);
+        }
+        super.onSyncedDataUpdated(key);
     }
 
     @Override

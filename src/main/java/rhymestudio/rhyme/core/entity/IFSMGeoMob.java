@@ -39,7 +39,6 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     }
 
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(DefaultAnimations.genericIdleController(this));
         controllers.add(new AnimationController<>(this, "skills_controller",5, state -> {
             Entity entity = state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;

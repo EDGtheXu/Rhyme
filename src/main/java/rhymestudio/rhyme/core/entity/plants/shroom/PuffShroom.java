@@ -26,7 +26,7 @@ public class PuffShroom extends AbstractShroom<PuffShroom> {
                     if(skills.canContinue() &&
                             getTarget() != null && getTarget().isAlive() &&
                                 (
-                                    Computer.angle(this.calculateViewVector(this.getXRot(),this.yHeadRot), getTarget().getEyePosition().subtract(this.getEyePosition())) < Math.PI / 9 ||
+                                    Computer.angle(this.calculateViewVector(this.getXRot(), this.yHeadRot).multiply(1,0,1), getTarget().getEyePosition().subtract(this.getEyePosition()).multiply(1,0,1)) < Math.PI / 9 ||
                                     distanceToSqr(getTarget()) < 1)
                                 )
                             {
@@ -40,7 +40,7 @@ public class PuffShroom extends AbstractShroom<PuffShroom> {
                         if(attackCallback!= null) attackCallback.getAttack(this).accept(this,target);
                     }})
                 .onOver(a->{
-                    skills.forceStartIndex(0);
+                    skills.forceStartIndex(1);
                 });
         this.addSkill(idle);
         this.addSkill(shoot);

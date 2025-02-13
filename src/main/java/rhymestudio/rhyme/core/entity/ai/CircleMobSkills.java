@@ -36,6 +36,13 @@ public class CircleMobSkills<T extends Mob> {
         return true;
     }
 
+    public void playSkill(String skillName){
+        if(str2intMap.containsKey(skillName)){
+            int index = str2intMap.get(skillName);
+            forceStartIndex(index);
+        }
+    }
+
 
     public void tick(){
         if(owner.level().isClientSide()) return;

@@ -1,9 +1,15 @@
 package rhymestudio.rhyme.core.entity.plants.shroom;
 
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
+import rhymestudio.rhyme.core.entity.plants.prefabs.GeneralCircleSkills;
 
 public abstract class AbstractShroom<T extends AbstractShroom<T>> extends AbstractGeoPlant<T> {
 
@@ -14,13 +20,13 @@ public abstract class AbstractShroom<T extends AbstractShroom<T>> extends Abstra
 
     @Override
     public void addSkills() {
-//        CircleSkill<AbstractPlant> sleep = GeneralCircleSkills.SROOM_SLEEP_SKILLS.get();
-//        addSkill(sleep);
+        CircleMobSkill<AbstractPlant> sleep = GeneralCircleSkills.SROOM_SLEEP_SKILLS.get();
+        addSkill(sleep);
     }
 
     @Override
     public void aiStep() {
-        /*
+
         if(!level().isClientSide && !level().isNight() && !this.isUltimating) {
             if(this.skills.index != 0)
                 skills.forceStartIndex(0);
@@ -50,7 +56,7 @@ public abstract class AbstractShroom<T extends AbstractShroom<T>> extends Abstra
                 this.travel(vec31);
             }
             return;
-        }*/
+        }
 
         actualAiStep();
         super.aiStep();
