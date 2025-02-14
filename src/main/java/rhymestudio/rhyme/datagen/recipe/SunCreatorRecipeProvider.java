@@ -56,11 +56,22 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
                 .add(MaterialItems.GENERAL_SEED)
                 .add(MaterialItems.MUSHROOM_GENE,4).build();
 
+        //阳光菇
+        gen(PlantItems.SUN_SHROOM_ITEM)
+                .add(MaterialItems.GENERAL_SEED, 2)
+                .add(MaterialItems.SOLID_SUN,6)
+                .add(MaterialItems.MUSHROOM_GENE,4).build();
+
+        //大喷菇
+        gen(PlantItems.FUME_SHROOM_ITEM)
+                .add(PlantItems.PUFF_SHROOM_ITEM)
+                .add(MaterialItems.GENERAL_SEED)
+                .add(MaterialItems.MUSHROOM_GENE,2).build();
+
         //坚果
         gen(PlantItems.NUT_WALL_ITEM)
                 .add(MaterialItems.GENERAL_SEED)
                 .add(MaterialItems.NUT_GENE,4).build();
-
 
         //卷心菜
         gen(PlantItems.CABBAGE_PULT_ITEM)

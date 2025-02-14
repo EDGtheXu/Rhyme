@@ -18,6 +18,7 @@ import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 import rhymestudio.rhyme.core.registry.items.ArmorItems;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
+import rhymestudio.rhyme.core.registry.items.ToolItems;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -35,16 +36,47 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
         this.add(Zombies.NORMAL_ZOMBIE.get(),ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable()));
 
         this.add(Zombies.CONE_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
-                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.CONE_HELMET, 0.2F, 0.5F))
-        )
-        ;
-
+                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.CONE_HELMET, 0.2F, 0.5F)));
 
         this.add(Zombies.IRON_BUCKET_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
-                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.IRON_BUCKET_HELMET, 0.2F, 0.3F))
-        )
-        ;
+                .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.IRON_BUCKET_HELMET, 0.2F, 0.3F)));
 
+        this.add(Zombies.POLE_VAULTING_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
+                .withPool(LOOT_POOL_CONDITIONAL.apply(ToolItems.POLE, 0.2F, 0.3F)));
+
+
+/*
+        this.add(EntityType.BOGGED, LootTable.lootTable()
+                .withPool(LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(Items.ARROW)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))))
+                .withPool(LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(Items.BONE)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))))
+                .withPool(LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(Items.TIPPED_ARROW)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
+                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F))
+                                        .setLimit(1))
+                                .apply(SetPotionFunction.setPotion(Potions.POISON)))
+                        .when(LootItemKilledByPlayerCondition.killedByPlayer())));
+
+
+*/
+
+
+//        this.add(ModEntities.KE_YAN.get(), LootTable.lootTable()
+//                .withPool(LootPool.lootPool()
+//                        .setRolls(ConstantValue.exactly(1.0F))
+//                        .add(LootItem.lootTableItem(ModItems.XING_HONG_DING)
+//                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(8.0F, 10.0F)))
+//                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+//                                .when(LootItemKilledByPlayerCondition.killedByPlayer()))));
 
 
     }
@@ -76,6 +108,11 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
 
     @Override
     protected Stream<EntityType<?>> getKnownEntityTypes() {
-        return Zombies.ZOMBIES.getEntries().stream().map(RegistryObject::get);
+        return Stream.of(
+                Zombies.NORMAL_ZOMBIE,
+                Zombies.CONE_ZOMBIE,
+                Zombies.IRON_BUCKET_ZOMBIE,
+                Zombies.POLE_VAULTING_ZOMBIE
+        ).map(RegistryObject::get);
     }
 }

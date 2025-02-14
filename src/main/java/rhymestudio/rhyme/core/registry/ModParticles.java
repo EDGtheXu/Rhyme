@@ -5,6 +5,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 
 
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -17,6 +18,7 @@ public final class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);
 
     public static final RegistryObject<ParticleType<BrokenProjOptions>> BROKEN_PROJ_PARTICLE = register("broken_proj_particle", false, BrokenProjOptions.DESERIALIZER, BrokenProjOptions.CODEC);
+    public static final RegistryObject<SimpleParticleType> PUFF_PROJ_PARTICLE = PARTICLES.register("puff_proj_particle", ()->new SimpleParticleType(false));
 
 
     private static <T extends ParticleOptions> RegistryObject<ParticleType<T>> register(String pKey, boolean pOverrideLimiter, ParticleOptions.Deserializer<T> pDeserializer, final  Codec<T> pCodecFactory) {

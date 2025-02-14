@@ -11,7 +11,7 @@ public class PresetBuilders {
     public static final Supplier<AbstractPlant.Builder> NORMAL_PEA_PLANT = () -> new AbstractPlant.Builder()
             .setAnimSpeed(2)
             .setAttackDamage(3)//子弹伤害
-            .setAttackInternalTick(20)//idle_on
+            .setAttackInternalTick(20)//idle
 
             .setAttackTriggerTick(15)
             .setAttackAnimTick((int)(1.2083F * 20));//shoot
@@ -22,6 +22,15 @@ public class PresetBuilders {
 
             .setAttackTriggerTick(10)//攻击动画触发时间
             .setAttackAnimTick(20);//攻击动画持续时间
+
+    public static final Supplier<AbstractPlant.Builder> PUFF_SHROOM_PLANT = () -> new AbstractPlant.Builder()
+            .setAttackDamage(3)//子弹伤害
+            .setAttackInternalTick(5)
+
+            .setAttackTriggerTick(35)
+            .setAttackAnimTick(40)
+            .setNoRotX();//shoot
+
 
     public static final Function<Integer,AbstractPlant.Builder> DEFENSE_PLANT = (hp) -> new AbstractPlant.Builder()
             .setHealth(hp);

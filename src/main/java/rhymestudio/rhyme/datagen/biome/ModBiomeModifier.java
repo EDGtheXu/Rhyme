@@ -20,6 +20,8 @@ public class ModBiomeModifier {
     public static final ResourceKey<BiomeModifier> NORMAL_ZOMBIE_SPAWN = createModifierKey("spawn/normal_zombie_spawns");
     public static final ResourceKey<BiomeModifier> CONE_ZOMBIE_SPAWN = createModifierKey("spawn/cone_zombie_spawns");
     public static final ResourceKey<BiomeModifier> IRON_BUCKET_ZOMBIE_SPAWN = createModifierKey("spawn/iron_bucket_zombie_spawns");
+    public static final ResourceKey<BiomeModifier> POLE_VAULTING_ZOMBIE_SPAWN = createModifierKey("spawn/pole_vaulting_zombie_spawns");
+
     public static final ResourceKey<BiomeModifier> CRAZY_DAVE_SPAWN = createModifierKey("spawn/crazy_dave_spawns");
 
 
@@ -42,6 +44,15 @@ public class ModBiomeModifier {
                         new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(Zombies.CONE_ZOMBIE.get(),
                                 15, 1, 3,
                                 Zombies.NORMAL_ZOMBIE.get().getCategory())
+                )
+        );
+
+        context.register(POLE_VAULTING_ZOMBIE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(
+                        biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD),
+                        biomeLookup.getOrThrow(BiomeTags.IS_END),
+                        new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(Zombies.POLE_VAULTING_ZOMBIE.get(),
+                                15, 1, 2,
+                                Zombies.POLE_VAULTING_ZOMBIE.get().getCategory())
                 )
         );
 

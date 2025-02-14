@@ -18,9 +18,10 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
+import rhymestudio.rhyme.core.entity.ai.JavaCircleMobSkills;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
-import rhymestudio.rhyme.core.entity.ai.CircleSkills;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkills;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.goal.ShootGoal;
 import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
@@ -28,11 +29,12 @@ import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.network.NetworkHandler;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
+import rhymestudio.rhyme.utils.RhymeUtils;
 
-
+import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
+public abstract class AbstractPlant<T extends AbstractPlant<T>> extends PathfinderMob implements ICafeMob{
 
     public static final EntityDataAccessor<String> DATA_CAFE_POSE_NAME = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> DATA_CARD_LVL = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.INT);
@@ -42,18 +44,23 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     public Builder builder;
     public String lastAnimName = "idle";
     public CafeAnimationState animState = new CafeAnimationState(this);
-    public CircleSkills<AbstractPlant> skills = new CircleSkills<>(this);
-    private CircleSkill ultimate;
+    public CircleMobSkills<T> skills = new JavaCircleMobSkills(this, DATA_CAFE_POSE_NAME);
+    private CircleMobSkill ultimate;
     public boolean canBePush = true;
     public boolean isUltimating = false;
-    private int cardLevel = 0;
+    public int cardLevel = 0;
+    protected boolean dirty = true;
+    private int cachedId;
 
     public <T extends AbstractPlant> AbstractPlant(EntityType<T> entityType, Level level, Builder builder) {
         super(entityType, level);
         this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
         this.builder = builder;
         if(level.isClientSide) builder.anim.accept(animState);
-        else this.ultimate = builder.ultimate;
+        this.ultimate = builder.ultimate;
+        this.cachedId = this.getId();
+
+
     }
 
     public void setCardLevel(int level){
@@ -83,22 +90,37 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         return ultimate != null;
     }
 
+    @Override
     public boolean isPushable(){
-
         return !level().getEntities(this,this.getBoundingBox(),e->e instanceof AbstractPlant).isEmpty() && canBePush;
     }
 
+    @Override
     public void onAddedToWorld(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.health);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.attackDamage);
+
+        if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
         addSkills();
-        skills.forceStartIndex(0);
+        if(level().isClientSide){
+            addSkill(ultimate);
+        }
+        if(!level().isClientSide)
+            skills.forceStartIndex(0);
+
         if(level().isClientSide)
             animState.playAnim(skills.getCurSkillName(),tickCount);
-        if(!level().isClientSide)this.skills.tick+= random.nextIntBetweenInclusive(0,50);
+
         super.onAddedToWorld();
-        if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
+
+        if(!level().isClientSide){
+            RhymeUtils.attributesBalance(this,dirty);
+            if(dirty)
+                firstSpawn();
+
+        }
     }
+    public void firstSpawn(){};
 
     public CafeAnimationState getCafeAnimState(){
         return animState;
@@ -135,6 +157,16 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         });
     }
 
+    @Override
+    public void setXRot(float value){
+        if(builder.shouldRotX) super.setXRot(value);
+    }
+
+    @Override
+    public float getXRot(){
+        if(builder.shouldRotX) return super.getXRot();
+        return 0;
+    }
     @Override
     public boolean hurt(DamageSource source, float damage) {
         if(isUltimating) return false;
@@ -173,7 +205,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
                 addSkill(ultimate);
                 skills.forceStart(ultimate);
             }
-            CircleSkill last = skills.getCurSkill();
+            CircleMobSkill last = skills.getCurSkill();
             skills.tick();
 
             if(last == ultimate && skills.getCurSkill() != ultimate){
@@ -193,8 +225,10 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         }
     }
 
-    public void addSkill(CircleSkill bossSkill) {skills.pushSkill(bossSkill);}
-    public void addSkillNoAnim(CircleSkill bossSkill) {skills.pushSkill(bossSkill);}
+    public void addSkill(CircleMobSkill bossSkill) {skills.pushSkill(bossSkill);}
+
+    public void changeSkill(CircleMobSkill bossSkill) {skills.changeSkill(bossSkill);}
+    public void addSkillNoAnim(CircleMobSkill bossSkill) {skills.pushSkill(bossSkill);}
 
 
     // 动画数据同步
@@ -217,20 +251,42 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.cardLevel = compound.getInt("cardLevel");
-        this.skills.index = compound.getInt("skillIndex");
-        this.skills.tick = compound.getInt("skillTick");
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.cardLevel = tag.getInt("cardLevel");
+        this.skills.index = tag.getInt("skillIndex");
+        this.skills.tick = tag.getInt("skillTick");
         this.entityData.set(DATA_CARD_LVL, this.cardLevel);
         this.entityData.set(DATA_CAFE_POSE_NAME, this.skills.getCurSkillName());
+        if (tag.contains("dirty")) {
+            dirty = false;
+        }
+        this.owner = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
+        this.cachedId = tag.getInt("cachedId");
+
+        if (owner != null && cachedId != this.getId()) {
+            owner.getCapability(ModAttachments.PLANT_RECORDER_STORAGE).resolve().ifPresent(cap -> {
+                var list = cap.ids;
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i) == cachedId) {
+                        list.set(i, this.getId());
+                        break;
+                    }
+                }
+            });
+        }
+
     }
 
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("cardLevel",this.cardLevel);
-        compound.putInt("skillIndex",this.skills.index);
-        compound.putInt("skillTick",this.skills.tick);
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("cardLevel",this.cardLevel);
+        tag.putInt("skillIndex",this.skills.index);
+        tag.putInt("skillTick",this.skills.tick);
+        tag.putBoolean("dirty", dirty);
+        if(owner!=null) tag.putUUID("ownerUUID",owner.getUUID());
+        tag.putInt("cachedId",this.cachedId);
     }
 
 
@@ -249,11 +305,14 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
     public void onRemovedFromWorld() {
         super.onRemovedFromWorld();
         if(owner instanceof ServerPlayer serverPlayer){ // 只在服务端才有owner
-            var list = serverPlayer.getCapability(ModAttachments.PLANT_RECORDER_STORAGE).resolve().get().ids;
-            list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
-            NetworkHandler.CHANNEL.sendTo(new PlantRecorderPacket(list),serverPlayer.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+            serverPlayer.getCapability(ModAttachments.PLANT_RECORDER_STORAGE).resolve().ifPresent(cap -> {
+                var list = cap.ids;
+                list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
+                NetworkHandler.CHANNEL.sendTo(new PlantRecorderPacket(list),serverPlayer.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+            });
         }
     }
+
     @Override
     public void push(Entity entity) {
         if(entity instanceof Player) return;
@@ -266,6 +325,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         public  float animSpeed = 1;
         public float projSpeed = 1;
         public boolean shouldRotHead = true;
+        public boolean shouldRotX = true;
 
         public  int attackTriggerTick = 20;
         public  int attackAnimTick = 30;
@@ -273,7 +333,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
         public int attackInternalTick = 60;
         public  int attackDamage = 1;
 
-        CircleSkill ultimate;
+        CircleMobSkill ultimate;
         CardLevelModifier cardLevelModifier;
 
         public Consumer<CafeAnimationState> anim = (state)->{};
@@ -283,7 +343,7 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             return this;
         }
 
-        public Builder setUltimate(CircleSkill ultimate) {
+        public Builder setUltimate(CircleMobSkill ultimate) {
             this.ultimate = ultimate;
             return this;
         }
@@ -333,6 +393,10 @@ public abstract class AbstractPlant extends PathfinderMob implements ICafeMob{
             return this;
         }
 
+        public Builder setNoRotX() {
+            this.shouldRotX = false;
+            return this;
+        }
 
     }
 

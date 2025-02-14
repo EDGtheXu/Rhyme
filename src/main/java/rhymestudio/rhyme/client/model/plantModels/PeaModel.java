@@ -3,8 +3,6 @@ package rhymestudio.rhyme.client.model.plantModels;// Made with Blockbench 4.11.
 // Paste this class into your mod and generate all required imports
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -12,9 +10,9 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.model.AbstractPlantModel;
-import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.plants.Pea;
 
-public class PeaModel extends AbstractPlantModel<AbstractPlant> {
+public class PeaModel extends AbstractPlantModel<Pea> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Rhyme.space( "pea_model"), "main");
 	private final ModelPart bone2;

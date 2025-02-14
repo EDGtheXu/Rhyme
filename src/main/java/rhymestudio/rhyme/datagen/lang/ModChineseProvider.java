@@ -42,10 +42,20 @@ public class ModChineseProvider extends LanguageProvider {
 
         //config
         add("rhyme.configuration.is_open_bgm", "打开背景音乐");
-        add("rhyme.configuration.dave_drop_rate", "戴夫掉落金币比率");
-        add("rhyme.configuration.plant_consume_addition_step", "额外消耗阳光/植物个");
         add("rhyme.configuration.is_open_effect_overlay", "打开特效颜色遮罩");
 
+
+        add("rhyme.configuration.dave_drop_rate", "戴夫掉落金币比率");
+        add("rhyme.configuration.plant_consume_addition_step", "额外消耗阳光/植物个");
+        add("plant_attributes_multiplier_health", "植物生命值系数");
+        add("plant_attributes_multiplier_damage", "植物伤害系数");
+        add("plant_attributes_multiplier_health_per_level", "植物每级生命值加成系数");
+        add("plant_attributes_multiplier_damage_per_level", "植物每级伤害加成系数");
+
+        // effect
+        add("effect.rhyme.slowdown", "寒冷");
+        add("effect.rhyme.frozen", "霜冻");
+        add("effect.rhyme.bleed", "流血");
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 

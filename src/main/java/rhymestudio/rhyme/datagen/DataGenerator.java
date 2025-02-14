@@ -34,8 +34,12 @@ public class DataGenerator {
 
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
         boolean server = event.includeServer();
+
+
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, RegisterDataPack.DATA_BUILDER, Set.of(MODID));
         lookup = provider.getRegistryProvider();
+
+
         generator.addProvider(server, provider);
         generator.addProvider(server, new ModEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new ModDamageTypeTagsProvider(output, lookup, helper));
@@ -48,7 +52,6 @@ public class DataGenerator {
         generator.addProvider(server, new CardUpperRecipeProvider(output));
         generator.addProvider(server, new DaveShopProvider(output));
         generator.addProvider(server, new SunCreatorSecRecipeProvider(output));
-
 
         boolean client = event.includeClient();
         generator.addProvider(client, new ModChineseProvider(output));

@@ -8,60 +8,64 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.plants.prefabs.GeneralCircleSkills;
 
 import static rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks.produceSun;
 
-public class SunShroom extends AbstractGeoPlant {
+public class SunShroom extends AbstractShroom<SunShroom>  {
 
     public int stage = 0;
     public int growth = 0;
+    public int lastGrowthTick = 0;
+    public int growthTick = 60 * 20;
+    public int sunCountStage_0 = 25;
+    public int sunCountStage_1 = 50;
+    public int sunCountStage_2 = 75;
+    public float cdReduction = 1f;
     public static final EntityDataAccessor<Integer> DATA_GROWTH_STAGE = SynchedEntityData.defineId(SunShroom.class, EntityDataSerializers.INT);
 
 
-    public <T extends AbstractPlant> SunShroom(EntityType<T> entityType, Level level, Builder builder) {
+    public  SunShroom(EntityType<SunShroom> entityType, Level level, Builder builder) {
         super(entityType, level, builder);
     }
 
     @Override
-    protected void addSkills() {
-        CircleSkill<AbstractPlant> sleep = GeneralCircleSkills.SROOM_SLEEP_SKILLS.get();
-        CircleSkill<AbstractPlant> idleSkill = new CircleSkill<>("idle",builder.attackInternalTick,0);
-        CircleSkill<AbstractPlant> sunSkill = new CircleSkill<>("glow",builder.attackAnimTick, builder.attackTriggerTick)
+    public void addSkills() {
+        super.addSkills();
+        builder.attackInternalTick *= cdReduction;
+        CircleMobSkill<SunShroom> idleSkill = new CircleMobSkill<>("idle", builder.attackInternalTick, 0);
+        CircleMobSkill<SunShroom> sunSkill = new CircleMobSkill<SunShroom>("glow",builder.attackAnimTick, builder.attackTriggerTick)
                 .onTick(a->{
                     if(skills.canTrigger()){
                         produceSun(this, getSun(stage));
                     }
                 });
-        addSkill(sleep);
         addSkill(idleSkill);
         addSkill(sunSkill);
     }
+
     @Override
-    public void aiStep() {
-        if(!level().isClientSide && !level().isNight()) {
-            skills.forceStartIndex(0);
-            return;
-        }
+    protected void actualAiStep() {
         if(!level().isClientSide) {
             growth++;
-            if(growth > 60 && stage == 0){
+            if(growth > growthTick && stage == 0){
                 stage = 1;
+                growth = 0;
                 this.entityData.set(DATA_GROWTH_STAGE, stage);
-            }else if(growth > 120 && stage == 1){
+            }else if(growth > growthTick && stage == 1){
                 stage = 2;
+                growth = 0;
                 this.entityData.set(DATA_GROWTH_STAGE, stage);
             }
         }
-        super.aiStep();
     }
 
     public int getSun(int stage){
         return switch (stage){
-            case 0 -> 15;
-            case 1 -> 25;
-            default -> 50;
+            case 0 -> sunCountStage_0;
+            case 1 -> sunCountStage_1;
+            default -> sunCountStage_2;
         };
     }
 
@@ -75,7 +79,9 @@ public class SunShroom extends AbstractGeoPlant {
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if (level().isClientSide && key.equals(DATA_GROWTH_STAGE)) {
-            this.growth = this.entityData.get(DATA_GROWTH_STAGE);
+            this.stage = this.entityData.get(DATA_GROWTH_STAGE);
+            this.growth = 0;
+            this.lastGrowthTick = tickCount;
         }
     }
 

@@ -95,20 +95,45 @@ public class PresetAttacks {
         me.level().addFreshEntity(proj1);
     };
 
+
+
     //普通豌豆
     public static final BiConsumer<AbstractPlant, LivingEntity> PEA_SHOOT = (me, tar) -> {
         PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.PEA_PROJ, 0.1f);
     };
     //冰豌豆
     public static final BiConsumer<AbstractPlant, LivingEntity> SNOW_PEA_SHOOT = (me, tar) -> {
-        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.ICE_PEA_PROJ, 0.1f);
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.SNOW_PEA_PROJ, 0.1f);
+    };
+    //冻结豌豆
+    public static final BiConsumer<AbstractPlant, LivingEntity> FROZEN_PEA_SHOOT_1 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FROZEN_PEA_PROJ_1, 0.1f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> FROZEN_PEA_SHOOT_2 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FROZEN_PEA_PROJ_2, 0.1f);
     };
 
 
 
-    //小喷菇
+    // 小喷菇
     public static final BiConsumer<AbstractPlant, LivingEntity> SPORE_SHOOT = (me, tar) -> {
         PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.PUFF_SHROOM_PROJ, -0.45f);
+    };
+    // 大喷菇
+    public static final BiConsumer<AbstractPlant, LivingEntity> FUME_SHOOT = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FUME_SHROOM_PROJ, 0f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_1 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_1, 0f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_2 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_2, 0f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_3 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_3, 0f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_4 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_4, 0f);
     };
 
     /**

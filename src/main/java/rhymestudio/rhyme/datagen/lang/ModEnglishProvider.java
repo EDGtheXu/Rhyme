@@ -55,10 +55,21 @@ public class ModEnglishProvider extends LanguageProvider {
 
         //config
         add("rhyme.configuration.is_open_bgm", "If Open Bgm");
-        add("rhyme.configuration.dave_drop_rate", "Dave Drop Money Rate");
-        add("rhyme.configuration.plant_consume_addition_step", "Consume Addition Sun Per Plant");
         add("rhyme.configuration.is_open_effect_overlay", "If Open Effect Overlay");
 
+
+        add("rhyme.configuration.dave_drop_rate", "Dave Drop Money Rate");
+        add("rhyme.configuration.plant_consume_addition_step", "Consume Addition Sun Per Plant");
+        add("plant_attributes_multiplier_health", "Plant Health Multiplier");
+        add("plant_attributes_multiplier_damage", "Plant Damage Multiplier");
+        add("plant_attributes_multiplier_health_per_level", "Plant Speed Multiplier Per Level");
+        add("plant_attributes_multiplier_damage_per_level", "Plant Damage Multiplier Per Level");
+
+
+        // effect
+        add("effect.rhyme.slowdown", "Slow Down");
+        add("effect.rhyme.frozen", "Frozen");
+        add("effect.rhyme.bleed", "Bleed");
 
 
 

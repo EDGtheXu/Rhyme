@@ -2,6 +2,10 @@ package rhymestudio.rhyme.core.entity;
 
 import net.minecraft.world.entity.Entity;
 
+import net.minecraft.world.entity.Mob;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkills;
+import rhymestudio.rhyme.mixinauxiliary.SelfGetter;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -10,6 +14,7 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,36 +26,45 @@ import static rhymestudio.rhyme.core.entity.AbstractPlant.DATA_CAFE_POSE_NAME;
  * 适配Geo的状态机接口
  * @param <T>
  */
-public interface IFSMGeoMob<T extends AbstractPlant> extends GeoEntity {
-    Map<String, RawAnimation> getAnimationMap();
+public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
 
-//    default void addGeoAnim(CircleSkill skill){
-//        getSelf().addSkill(skill);
-//        getAnimationMap().put(skill.name, RawAnimation.begin().thenPlay(skill.name));
-//    }
+    CircleMobSkills<T> getSkills();
 
+    ClientBoundAnimationMessage getAnimationMessage();
 
-    default T getSelf(){
-        return (T) this;
+    void addSkills();
+
+    default void addSkill(CircleMobSkill<T> skill) {
+        getSkills().pushSkill(skill);
+        getAnimationMessage().animationMap.put(skill.name, RawAnimation.begin().thenPlay(skill.name));
     }
+
+    default void changeSkill(CircleMobSkill<T> skill) {
+        getSkills().changeSkill(skill);
+    }
+
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-//        controllers.add(DefaultAnimations.genericIdleController(this));
-        controllers.add(new AnimationController<>(this, "skills_controller",20, state -> {
+        controllers.add(new AnimationController<>(this, "skills_controller",5, state -> {
             Entity entity = state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
-            if (getSelf().skills.count() == 0) return PlayState.STOP;
-            String name = getSelf().getEntityData().get(DATA_CAFE_POSE_NAME);
-            RawAnimation skill = getAnimationMap().get(name);
+            if (getSkills().count() == 0) return PlayState.STOP;
+            String name = getSkills().getCurSkillName();
+            RawAnimation skill = getAnimationMessage().animationMap.get(name);
             if(skill == null) return PlayState.STOP;
 
             state.setAnimation(skill);
-            if (!Objects.equals(getSelf().lastAnimName, name)) {
-                getSelf().lastAnimName = name;
+            if (!Objects.equals(getAnimationMessage().lastAnimName, name)) {
+                getAnimationMessage().lastAnimName = name;
 
                 state.resetCurrentAnimation();
                 return PlayState.STOP;
             }
             return PlayState.CONTINUE;
         }));
+    }
+
+    class ClientBoundAnimationMessage {
+        public String lastAnimName = "idle";
+        public Map<String, RawAnimation> animationMap = new HashMap<>();;
     }
 }

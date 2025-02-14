@@ -78,7 +78,7 @@ public class NormalZombieRenderer<T extends NormalZombie, M extends NormalZombie
 
         @Override
     public ResourceLocation getTextureLocation(T entity) {
-        String s = "textures/entity/zombies/"+entity.getNamePath()+".png";
+        String s = "textures/entity/zombie/"+entity.getNamePath()+".png";
         return Rhyme.space(s);
     }
 /*

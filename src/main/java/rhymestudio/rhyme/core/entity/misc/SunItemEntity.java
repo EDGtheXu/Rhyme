@@ -2,7 +2,6 @@ package rhymestudio.rhyme.core.entity.misc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -13,13 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import rhymestudio.rhyme.core.dataSaver.attactment.SunCountAttachment;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.core.registry.ModAttachments;
-import rhymestudio.rhyme.network.NetworkHandler;
-import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -121,7 +117,6 @@ public class SunItemEntity extends ItemEntity implements GeoEntity {
             CompoundTag tag = this.getItem().getTag();
             if (entity.takeXpDelay == 0 && entity instanceof ServerPlayer serverplayer && tag!=null ) {
                 int singleCount = tag.getInt("sun_count");
-
                 serverplayer.getCapability(ModAttachments.PLAYER_STORAGE).ifPresent(d->{
                     d.sunCount += this.getItem().getCount() * singleCount;
                     d.sunCount = Math.min(d.sunCount, d.getMaxSunCount());

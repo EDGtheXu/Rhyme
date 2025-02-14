@@ -8,6 +8,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
+import rhymestudio.rhyme.core.entity.zombies.PoleVaultingZombie;
 import rhymestudio.rhyme.core.entity.zombies.prefab.LandMonsterPrefab;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
@@ -20,6 +21,7 @@ public class Zombies {
     public static final RegistryObject<EntityType<NormalZombie>> NORMAL_ZOMBIE = registerMonster("normal_zombie", "普通僵尸",(e, l)->new NormalZombie(e,l,LandMonsterPrefab.NORMAL_ZOMBIE_PREFAB.get()) ,0.6F,1.95F);
     public static final RegistryObject<EntityType<NormalZombie>> CONE_ZOMBIE = registerMonster("cone_zombie","路障僵尸", (e, l)->new NormalZombie(e,l,LandMonsterPrefab.CONE_ZOMBIE_PREFAB.get()),0.6F,1.95F);
     public static final RegistryObject<EntityType<NormalZombie>> IRON_BUCKET_ZOMBIE = registerMonster("iron_bucket_zombie", "铁桶僵尸", (e,l)->new NormalZombie(e,l,LandMonsterPrefab.IRON_BUCKET_ZOMBIE_PREFAB.get()),0.6F,1.95F);
+    public static final RegistryObject<EntityType<PoleVaultingZombie>> POLE_VAULTING_ZOMBIE = registerMonster("pole_vaulting_zombie", "撑杆僵尸", (e, l)->new PoleVaultingZombie(e,l,LandMonsterPrefab.CONE_ZOMBIE_PREFAB.get()),0.6F,1.95F);
 
 
 

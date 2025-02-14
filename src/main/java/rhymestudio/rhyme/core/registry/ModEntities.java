@@ -21,11 +21,12 @@ import net.minecraftforge.fml.common.Mod;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.entity.AbstractMonster;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
-import rhymestudio.rhyme.core.registry.entities.Zombies;
 import rhymestudio.rhyme.core.registry.entities.PlantEntities;
+import rhymestudio.rhyme.core.registry.entities.Zombies;
 
 import static net.minecraft.world.entity.Mob.checkMobSpawnRules;
 import static rhymestudio.rhyme.Rhyme.MODID;
+import static rhymestudio.rhyme.core.registry.entities.PlantEntities.*;
 
 @Mod.EventBusSubscriber(modid = Rhyme.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntities {
@@ -44,15 +45,19 @@ public class ModEntities {
 
 
         //植物
-        event.put(PlantEntities.SUN_FLOWER.get(), genericPlant.build());
-        event.put(PlantEntities.PEA.get(), genericPlant.build());
-        event.put(PlantEntities.SNOW_PEA.get(), genericPlant.build());
-        event.put(PlantEntities.REPEATER.get(), genericPlant.build());
-        event.put(PlantEntities.PUFF_SHROOM.get(), genericPlant.build());
-        event.put(PlantEntities.SUN_SHROOM.get(), genericPlant.build());
-        event.put(PlantEntities.WALL_NUT.get(), genericPlant.build());
-        event.put(PlantEntities.CABBAGE_PULT.get(), genericPlant.build());
-        event.put(PlantEntities.CHOMPER.get(), genericPlant.build());
+        event.put(SUN_FLOWER.get(), genericPlant.build());
+        event.put(PEA.get(), genericPlant.build());
+        event.put(SNOW_PEA.get(), genericPlant.build());
+        event.put(REPEATER.get(), genericPlant.build());
+        event.put(PUFF_SHROOM.get(), genericPlant.build());
+        event.put(FUME_SHROOM.get(), genericPlant.build());
+        event.put(SUN_SHROOM.get(), genericPlant.build());
+        event.put(WALL_NUT.get(), genericPlant.build());
+        event.put(CABBAGE_PULT.get(), genericPlant.build());
+        event.put(CHOMPER.get(), genericPlant.build());
+
+        //衍生物
+        event.put(BAKED_POTATO.get(), genericPlant.build());
 
 
         event.put(PlantEntities.POTATO_MINE.get(), genericPlant.build());
@@ -61,6 +66,7 @@ public class ModEntities {
         event.put(Zombies.NORMAL_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(Zombies.CONE_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(Zombies.IRON_BUCKET_ZOMBIE.get(), AbstractMonster.createAttributes().build());
+        event.put(Zombies.POLE_VAULTING_ZOMBIE.get(), AbstractMonster.createAttributes().build());
 
         //疯狂戴夫
         event.put(PlantEntities.CRAZY_DAVE.get(), AbstractMonster.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.5f).build());

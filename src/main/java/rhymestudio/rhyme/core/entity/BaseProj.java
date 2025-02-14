@@ -28,6 +28,7 @@ import rhymestudio.rhyme.datagen.tag.ModTags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public abstract class BaseProj extends AbstractHurtingProjectile{
@@ -35,22 +36,48 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     public float damage;
     private List<Integer> hitList = new ArrayList<>();
     public int penetration =1;
-    protected MobEffectInstance effect;
+    protected List<MobEffectInstance> effects = new ArrayList<>();
     public ResourceLocation texture;
     protected RegistryObject<SoundEvent> hitSound;
+    public Consumer<BaseProj> clientTickCallback;
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
-        this.effect = pEffect;
+        this.addEffect(pEffect);
     }
+    public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
+        super(pEntityType, pLevel);
+        this.effects = pEffects;
+    }
+
     public <T extends BaseProj> T setHitSound(RegistryObject<SoundEvent> hitSound){
         this.hitSound = hitSound;
         return (T) this;
     }
-
+    public <T extends BaseProj> T setEffect(List<MobEffectInstance> effects) {
+        this.effects = effects;
+        return (T) this;
+    }
+    public <T extends BaseProj> T addEffect(MobEffectInstance effect) {
+        if (effect != null) {
+            this.effects.add(effect);
+        }
+        return (T) this;
+    }
     public float getDamage() {return damage;}
-    public void addDamage(int damage) {this.damage += damage;}
-    public void setPenetrate(int penetration){this.penetration = penetration;}
+    public void addDamage(float damage) {this.damage += damage;}
+    public <T extends BaseProj> T setDamage(float damage) {
+        this.damage = damage;
+        return (T) this;
+    }
+    public <T extends BaseProj> T setPenetrate(int penetration){
+        this.penetration = penetration;
+        return (T) this;
+    }
+    public <T extends BaseProj> T setClientTickCallback(Consumer<BaseProj> clientTickCallback){
+        this.clientTickCallback = clientTickCallback;
+        return (T) this;
+    }
     public void setTexture(ResourceLocation texture){this.texture = texture;}
     public ResourceLocation getTexture(){return texture;}
     public abstract int waveDur();
@@ -125,10 +152,9 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
 
     protected void doHurt(LivingEntity hurter){
         Entity entity = this.getOwner();
-        if(effect!= null && hurter != entity){
-            if(effect.getEffect() == ModEffects.FROZEN_EFFECT.get()){
-                //todo
-//                NetworkHandler.CHANNEL.send(new ProjHitPacket(hurter.getId(),effect.getDuration()), );
+        for (MobEffectInstance effect : effects) {
+            if(effect.getEffect() == ModEffects.SLOWDOWN_EFFECT.get()){
+//                PacketDistributor.sendToAllPlayers(new ProjHitPacket(hurter.getId(), effect.getDuration()));
             }
             hurter.addEffect(effect);
         }
@@ -141,11 +167,12 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         Vec3 pos = hurter.position();
 
         if(this.level() instanceof ServerLevel serverlevel){
-            serverlevel.sendParticles(new BrokenProjOptions(this.texture.getPath()),
-                    pos.x,
-                    pos.y+1,
-                    pos.z,
-                    20, 0.2, 0, 0.2, 0.1F);
+            if(this.texture != null)
+                serverlevel.sendParticles(new BrokenProjOptions(this.texture.getPath()),
+                        pos.x,
+                        pos.y+1,
+                        pos.z,
+                        20, 0.2, 0, 0.2, 0.1F);
             penetration--;
             if(penetration <= 0) {
                 discard();
@@ -194,6 +221,7 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         public static final ResourceLocation SNOW_PEA = Rhyme.space("textures/entity/snow_pea_bullet.png");
         public static final ResourceLocation PUFF_SHROOM_BULLET = Rhyme.space("textures/entity/puff_shroom_bullet.png");
         public static final ResourceLocation FIRE_PEA = Rhyme.space("textures/entity/fire_pea_bullet.png");
+        public static final ResourceLocation EMPTY = null;
 
     }
 

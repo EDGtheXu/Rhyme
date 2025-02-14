@@ -12,8 +12,9 @@ import net.minecraft.client.model.geom.builders.*;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.model.AbstractPlantModel;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
+import rhymestudio.rhyme.core.entity.plants.Pea;
 
-public class SnowPeaModel extends AbstractPlantModel<AbstractPlant> {
+public class SnowPeaModel extends AbstractPlantModel<Pea> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Rhyme.space( "snow_pea_model"), "main");
 	private final ModelPart bone3;

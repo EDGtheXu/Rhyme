@@ -1,6 +1,5 @@
 package rhymestudio.rhyme;
 
-import com.google.gson.Gson;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -9,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import rhymestudio.rhyme.config.ServerConfig;
-import rhymestudio.rhyme.config.Codec.*;
 import rhymestudio.rhyme.core.attribute.ModAttributes;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.core.registry.ModRecipes;
@@ -90,7 +87,7 @@ public class Rhyme {
 
 
         ModEntityDataSerializer.ENTITY_DATA_SERIALIZERS.register(modEventBus);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 
 
 //        CodecRegister.registerCodecs();

@@ -4,10 +4,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponentType;
 import rhymestudio.rhyme.core.registry.items.*;
 
 import java.util.function.Supplier;

@@ -11,6 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.core.registry.items.PlantItems;
+import rhymestudio.rhyme.core.registry.items.ToolItems;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -69,8 +70,28 @@ public class DaveShopProvider extends AbstractRecipeProvider {
         gen(100, PlantItems.CHOMPER_ITEM, 1)
                 .cost(150)
                 .build();
+
+        gen(20, MaterialItems.TACO, 1)
+                .add(MaterialItems.GENERAL_SEED)
+                .cost(50)
+                .build();
+
+        gen(20, MaterialItems.TACO, 1)
+                .add(MaterialItems.PLANT_GENE)
+                .build();
+
+        gen(20, ToolItems.ENERGY_BEAN, 1)
+                .add(MaterialItems.PLANT_GENE, 2)
+                .cost(50)
+                .build();
     }
-    
+
+    public static void createDataPack(BootstapContext<DaveTrades> context) {
+//        context.
+        System.out.println("createDataPack");
+
+    }
+
     private void genRecipe(DaveTrades.Trade trade){
         JsonElement res = parseCodec(DaveTrades.Trade.CODEC.encodeStart(JsonOps.INSTANCE,trade));
         addJson(res.getAsJsonObject(),trade.result(),"");

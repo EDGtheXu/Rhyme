@@ -2,7 +2,6 @@ package rhymestudio.rhyme.core.registry.items;
 
 import net.minecraft.world.item.Item;
 
-
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -11,7 +10,6 @@ import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.item.AbstractCardItem;
 import rhymestudio.rhyme.core.registry.entities.PlantEntities;
-
 
 import java.util.function.Supplier;
 
@@ -29,7 +27,10 @@ public class PlantItems {
 
     // tip 蘑菇类
     public static final RegistryObject<Item> PUFF_SHROOM_ITEM = registerPlant("puff_shroom", "小喷菇", ()-> builder(PlantEntities.PUFF_SHROOM,0).build());
-    public static final RegistryObject<Item> SUN_SHROOM_ITEM = registerPlant("sun_shroom", "阳光菇", ()-> builder(PlantEntities.SUN_SHROOM,0).build());
+
+    public static final RegistryObject<Item> FUME_SHROOM_ITEM = registerPlant("fume_shroom", "大喷菇", ()-> builder(PlantEntities.FUME_SHROOM,75).build());
+
+    public static final RegistryObject<Item> SUN_SHROOM_ITEM = registerPlant("sun_shroom", "阳光菇", ()-> builder(PlantEntities.SUN_SHROOM,25).build());
 
     // tip 土豆雷类
     public static final RegistryObject<Item> POTATO_MINE_ITEM = registerPlant("potato_mine", "土豆雷", ()-> builder(PlantEntities.POTATO_MINE,25).cd(30).build());

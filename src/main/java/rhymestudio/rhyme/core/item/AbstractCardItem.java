@@ -77,16 +77,13 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem{
 //            if(!Computer.tryCombineInventoryItem(player, MaterialItems.SUN_ITEM.get(), consume)){
 //                return InteractionResultHolder.fail(itemstack);
 //            }
-
         var data =player.getCapability(ModAttachments.PLANT_RECORDER_STORAGE);
-
         AtomicInteger consumeCount = new AtomicInteger();
         data.ifPresent(d-> consumeCount.set(d.ids.size() * PlantConsumeAdditionStep.get() + this.consume));
         AtomicBoolean flag = new AtomicBoolean(false);
         player.getCapability(ModAttachments.PLAYER_STORAGE).ifPresent(
                  d-> flag.set(d.consumeSun(player, consumeCount.get()))
         );
-
         if(!flag.get()) {
             if(!level.isClientSide)
                 player.sendSystemMessage(Component.translatable("plantcard.not_enough_sun").withStyle(Style.EMPTY.withColor(0xff0000)));
@@ -99,6 +96,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem{
             if(itemstack.getDamageValue() >= itemstack.getMaxDamage())
                 itemstack.shrink(1);
         }
+
         return InteractionResultHolder.success(itemstack);
     }
 
@@ -114,7 +112,6 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem{
         var entity = entityType.get().create(level);
         entity.setOwner(player);
         entity.setPos(getBlockPosCenter(pos,player.getRandom()));
-
         var data = new CardQualityComponentType(stack);
         if(!data.isValid()) return false;
         int lvl = data.level;
@@ -151,9 +148,6 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem{
         });
         float percent = (float)stack.getDamageValue()/(float)stack.getMaxDamage();
         int color = (int)((1-percent)*0x0000ff)<<8 | (int)(percent*0x0000ff)<<16;
-
-
-
         if(stack.getTag() != null && !stack.getTag().contains("Unbreakable"))
             tooltipComponents.add(Component.translatable("plantcard.tooltip.damage").append(": ")
                 .append(Component.literal((stack.getMaxDamage()-stack.getDamageValue())+"/"+stack.getMaxDamage()).withStyle(style -> style.withColor(color))));

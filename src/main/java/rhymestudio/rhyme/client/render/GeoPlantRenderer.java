@@ -20,6 +20,10 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
     boolean energy = false;
     public int consumedOverlay = -1;
     public Color consumedColor;
+    public GeoPlantRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
+        super(renderManager, path);
+    }
+
     public GeoPlantRenderer(EntityRendererProvider.Context renderManager, ResourceLocation name, boolean ifRotX) {
         super(renderManager, name,ifRotX);
     }
@@ -41,6 +45,7 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
             q = q.rotateX((float) Math.toRadians(Minecraft.getInstance().player.getXRot()));
             poseStack.mulPose(q);
             poseStack.translate(-10, 0,0);
+
 
             int lvl = entity.getCardLevel();
             CardQualityComponentType quality = CardQualityComponentType.of(lvl);
@@ -68,6 +73,8 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
                     (float) Math.sin(System.currentTimeMillis() / 1000d),
                     (float) Math.cos(System.currentTimeMillis() / 1000d));
         }else{
+//            return RenderType.entityTranslucent(getTextureLocation(animatable));
+
             return super.getRenderType(animatable, texture, bufferSource, partialTick);
         }
     }
@@ -77,7 +84,12 @@ public class GeoPlantRenderer<T extends AbstractPlant & GeoEntity> extends GeoNo
     }
 
     public Color getRenderColor(T animatable, float partialTick, int packedLight) {
-        return consumedColor==null? super.getRenderColor(animatable, partialTick, packedLight) : consumedColor;
+
+
+        return consumedColor==null?
+                super.getRenderColor(animatable, partialTick, packedLight)
+//                Color.ofARGB((int)(256 *( Math.sin((System.currentTimeMillis() / 1000.0) ) + 1 ) * 0.5), 255, 255, 255)
+                : consumedColor;
     }
 
 }

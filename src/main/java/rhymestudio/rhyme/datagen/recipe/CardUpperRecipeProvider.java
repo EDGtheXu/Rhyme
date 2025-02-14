@@ -120,6 +120,41 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
                 .addition1(MaterialItems.MUSHROOM_GENE, 5)
                 .build();
 
+        //阳光菇
+        gen(PlantItems.SUN_SHROOM_ITEM, 1)
+                .addition(MaterialItems.SOLID_SUN, 5)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
+        gen(PlantItems.SUN_SHROOM_ITEM, 2)
+                .addition(MaterialItems.SOLID_SUN, 5)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
+        gen(PlantItems.SUN_SHROOM_ITEM, 3)
+                .addition(MaterialItems.SOLID_SUN, 5)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
+        gen(PlantItems.SUN_SHROOM_ITEM, 4)
+                .addition(MaterialItems.SOLID_SUN, 5)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
+
+        //大喷菇
+        gen(PlantItems.FUME_SHROOM_ITEM, 1)
+                .addition(MaterialItems.MUSHROOM_GENE, 8)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
+        gen(PlantItems.FUME_SHROOM_ITEM, 2)
+                .addition(MaterialItems.MUSHROOM_GENE, 8)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
+        gen(PlantItems.FUME_SHROOM_ITEM, 3)
+                .addition(MaterialItems.MUSHROOM_GENE, 8)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
+        gen(PlantItems.FUME_SHROOM_ITEM, 4)
+                .addition(MaterialItems.MUSHROOM_GENE, 8)
+                .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .build();
         //土豆雷
         gen(PlantItems.POTATO_MINE_ITEM, 1)
                 .addition(MaterialItems.HIDDEN_GENE, 5)
@@ -197,8 +232,6 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
                 .addition(MaterialItems.TACO, 32)
                 .addition1(MaterialItems.PEA_GENE, 32)
                 .build();
-
-
     }
 
     @Override
@@ -309,7 +342,6 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
             if(level == 0){
                 res.getOrCreateTag().putBoolean("Unbreakable", true);
             }
-
             if(template == null){
                 template = switch (level){
                     case 0 -> MaterialItems.TACO.get();

@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
@@ -16,17 +15,20 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
-import rhymestudio.rhyme.core.entity.ai.CircleSkill;
+import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.registry.ModSounds;
+import rhymestudio.rhyme.core.registry.entities.PlantEntities;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class PotatoMine extends AbstractPlant {
+public class PotatoMine extends AbstractPlant<PotatoMine> {
 
     private int readyTime;
     private final float explosionRadius;
+
+    public Boolean triggerDeathSpeech;
 
     public PotatoMine(EntityType<? extends AbstractPlant> type, Level level,
                       int readyTick,
@@ -35,7 +37,7 @@ public class PotatoMine extends AbstractPlant {
         super(type, level,builder);
         this.readyTime = readyTick;
         this.explosionRadius = explosionRadius;
-
+        this.triggerDeathSpeech = false;
     }
 
     public static final EntityDataAccessor<Float> DATA_SPEED = SynchedEntityData.defineId(PotatoMine.class, EntityDataSerializers.FLOAT);
@@ -59,9 +61,9 @@ public class PotatoMine extends AbstractPlant {
 
     @Override
     public void addSkills() {
-        CircleSkill<AbstractPlant> idle = new CircleSkill<>( "idle", readyTime, 0);
-        CircleSkill<AbstractPlant> up = new CircleSkill<>( "up",  29, 0);
-        CircleSkill<AbstractPlant> on = new CircleSkill<>( "idle_on",  999999999, 0)
+        CircleMobSkill<PotatoMine> idle = new CircleMobSkill<>( "idle", readyTime, 0);
+        CircleMobSkill<PotatoMine> up = new CircleMobSkill<>( "up",  29, 0);
+        CircleMobSkill<PotatoMine> on = new CircleMobSkill<PotatoMine>( "idle_on",  999999999, 0)
                 .onTick(a-> {
 
                         AtomicReference<Float> minDistance = new AtomicReference<>((float) 1000000000);
@@ -89,12 +91,19 @@ public class PotatoMine extends AbstractPlant {
                         }
 
                 });
-        CircleSkill<AbstractPlant> boom = new CircleSkill<>( "bomb",  999999999, 20)
+        CircleMobSkill<PotatoMine> boom = new CircleMobSkill<PotatoMine>( "bomb",  999999999, 20)
                 .onTick(a-> {
                     if(skills.canTrigger()){
                         playSound(ModSounds.POTATO_MINE.get());
                         this.discard();
                         this.explode();
+                        if(triggerDeathSpeech){
+                            var bakedPotato = PlantEntities.BAKED_POTATO.get().create(this.level());
+                            this.level().addFreshEntity(bakedPotato);
+                            bakedPotato.setPos(this.getX(), this.getY(), this.getZ());
+                            bakedPotato.setCardLevel(this.getCardLevel());
+//                            bakedPotato.setHealth(bakedPotato.getMaxHealth());
+                        }
                     }
                 });
         this.addSkill(idle);
@@ -110,7 +119,6 @@ public class PotatoMine extends AbstractPlant {
         @Override
         public boolean shouldBlockExplode(Explosion p_353087_, BlockGetter p_353096_, BlockPos p_353092_, BlockState p_353086_, float p_353094_) {
             return false;
-//            return p_353086_.is(Blocks.NETHER_PORTAL) ? false : super.shouldBlockExplode(p_353087_, p_353096_, p_353092_, p_353086_, p_353094_);
         }
 
         @Override
@@ -136,5 +144,11 @@ public class PotatoMine extends AbstractPlant {
     }
     public boolean isInWall(){
         return false;
+    }
+
+    public void setReadyTime(int readyTime) {
+        this.readyTime = readyTime;
+        CircleMobSkill<PotatoMine> idle = new CircleMobSkill<>( "idle", this.readyTime, 0);
+        changeSkill(idle);
     }
 }

@@ -19,12 +19,13 @@ import rhymestudio.rhyme.client.model.zombieModels.NormalZombieModel;
 import rhymestudio.rhyme.client.render.GeoNormalRenderer;
 import rhymestudio.rhyme.client.render.GeoPlantRenderer;
 import rhymestudio.rhyme.client.render.entity.BasePlantRenderer;
-
 import rhymestudio.rhyme.client.render.entity.misc.SunRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.HelmetEntityRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.ModelPartRenderer;
+import rhymestudio.rhyme.client.render.entity.plant.SunShroomRenderer;
 import rhymestudio.rhyme.client.render.entity.proj.ProjRenderer;
 import rhymestudio.rhyme.client.render.entity.zombie.NormalZombieRenderer;
+import rhymestudio.rhyme.client.render.entity.zombie.PoleVaultingZombieRenderer;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.BaseProj;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
@@ -52,9 +53,14 @@ public class RegisterRenderer {
         registerOne(event,WALL_NUT.get(),getRenderSup(WallNutModel.class),0.5f,1f);
         registerOne(event,POTATO_MINE.get(),getRenderSup(PotatoMineModel.class),0,1f);
 
+
+        //tip 衍生物
+        registerOne(event,BAKED_POTATO.get(),getRenderSup(BackedPotatoModel.class),0.5f,1f);
+
 //        registerOne(event,PUFF_SHROOM.get(),getRenderSup(PuffShroomModel.class),0.2f,0.5f);
         event.registerEntityRenderer(PUFF_SHROOM.get(), c -> new GeoPlantRenderer<>(c, PUFF_SHROOM.getId(),false));
-        event.registerEntityRenderer(SUN_SHROOM.get(), c -> new GeoPlantRenderer<>(c, SUN_SHROOM.getId(),false));
+        event.registerEntityRenderer(FUME_SHROOM.get(), c -> new GeoPlantRenderer<>(c, FUME_SHROOM.getId(),false));
+        event.registerEntityRenderer(SUN_SHROOM.get(), c -> new SunShroomRenderer<>(c, SUN_SHROOM.getId()));
         registerOne(event,CABBAGE_PULT.get(),getRenderSup(CabbageModel.class));
 
         event.registerEntityRenderer(CHOMPER.get(), c -> new GeoPlantRenderer<>(c, CHOMPER.getId(),false));
@@ -63,8 +69,15 @@ public class RegisterRenderer {
 
         // tip 子弹
         registerProj(event,PEA_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
-        registerProj(event,ICE_PEA_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
+        registerProj(event, SNOW_PEA_PROJ.get(), c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
+        registerProj(event, FROZEN_PEA_PROJ_1.get(), c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
+        registerProj(event, FROZEN_PEA_PROJ_2.get(), c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
         registerProj(event,PUFF_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
+        registerProj(event,FUME_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_1.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_2.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_3.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_4.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
 
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
 
@@ -73,6 +86,7 @@ public class RegisterRenderer {
         event.registerEntityRenderer(Zombies.NORMAL_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
         event.registerEntityRenderer(Zombies.CONE_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
         event.registerEntityRenderer(Zombies.IRON_BUCKET_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
+        event.registerEntityRenderer(Zombies.POLE_VAULTING_ZOMBIE.get(), c-> new PoleVaultingZombieRenderer(c, Rhyme.space("zombie/pole_vaulting_zombie")));
 
 
         // 其他

@@ -5,16 +5,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
-import rhymestudio.rhyme.core.item.tool.DebugRangeKiller;
-import rhymestudio.rhyme.core.item.tool.EnergyBean;
-import rhymestudio.rhyme.core.item.tool.PlantPutter;
-import rhymestudio.rhyme.core.item.tool.PlantShovel;
+import rhymestudio.rhyme.core.item.tool.*;
 
 import java.util.function.Supplier;
 
@@ -35,6 +33,17 @@ public class ToolItems {
 ));
     public static final RegistryObject<Item> PLANT_PUTTER = register("plant_putter", "手推车", () -> new PlantPutter(new Item.Properties().stacksTo(1), ModRarity.PURPLE));
 
+    public static final RegistryObject<Item> POLE = register("pole", "金属跳杆", () -> new Pole(new Item.Properties()
+            .durability(200),
+            ImmutableMultimap.of(
+                    Attributes.ATTACK_DAMAGE,
+                    new AttributeModifier("15169af8-39c4-489d-ba0d-f28e66bc765d", 5.0, AttributeModifier.Operation.ADDITION),
+                    Attributes.ATTACK_SPEED,
+                    new AttributeModifier("af613f76-f71a-46d8-8563-f23dc01cc23b", 1.5, AttributeModifier.Operation.ADDITION),
+                    ForgeMod.ENTITY_REACH.get(),
+                    new AttributeModifier("af613f76-f71a-46d8-8563-f23dc01cc23b", 2, AttributeModifier.Operation.ADDITION)
+            )
+    ));
 
 
 

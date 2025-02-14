@@ -7,9 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,8 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.particle.options.BrokenProjOptions;
-
-import java.awt.image.RenderedImage;
 
 public class BrokenProjParticle extends TextureSheetParticle {
     private final ResourceLocation texture;
