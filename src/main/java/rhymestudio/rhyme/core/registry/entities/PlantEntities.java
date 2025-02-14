@@ -16,7 +16,6 @@ import rhymestudio.rhyme.client.animation.plantAnimations.*;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.plants.*;
-import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.plants.derivate.BakedPotato;
 import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.plants.shroom.PuffShroom;

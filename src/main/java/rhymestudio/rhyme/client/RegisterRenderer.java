@@ -26,6 +26,7 @@ import rhymestudio.rhyme.client.render.entity.misc.SunRenderer;
 import rhymestudio.rhyme.client.render.entity.plant.SunShroomRenderer;
 import rhymestudio.rhyme.client.render.entity.proj.ProjRenderer;
 import rhymestudio.rhyme.client.render.entity.zombie.NormalZombieRenderer;
+import rhymestudio.rhyme.client.render.entity.zombie.PoleVaultingZombieRenderer;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.BaseProj;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
@@ -82,7 +83,7 @@ public class RegisterRenderer {
         event.registerEntityRenderer(Zombies.NORMAL_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
         event.registerEntityRenderer(Zombies.CONE_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
         event.registerEntityRenderer(Zombies.IRON_BUCKET_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
-        event.registerEntityRenderer(Zombies.POLE_VAULTING_ZOMBIE.get(), c-> new GeoNormalRenderer<>(c, Rhyme.space("zombie/pole_vaulting_zombie")));
+        event.registerEntityRenderer(Zombies.POLE_VAULTING_ZOMBIE.get(), c-> new PoleVaultingZombieRenderer(c, Rhyme.space("zombie/pole_vaulting_zombie")));
 
 
         // 其他

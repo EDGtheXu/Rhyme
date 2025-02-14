@@ -13,6 +13,7 @@ import rhymestudio.rhyme.core.item.CustomRarityItem;
 import rhymestudio.rhyme.core.item.tool.EnergyBean;
 import rhymestudio.rhyme.core.item.tool.PlantPutter;
 import rhymestudio.rhyme.core.item.tool.PlantShovel;
+import rhymestudio.rhyme.core.item.tool.Pole;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
 import java.util.function.Supplier;
@@ -32,17 +33,43 @@ public class ToolItems {
                 .add(
                         Attributes.ATTACK_DAMAGE,
                         new AttributeModifier(Rhyme.space("plant_shovel_attack_damage"), 4.0, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND
+                        EquipmentSlotGroup.MAINHAND
                 ).add(
                         Attributes.ATTACK_SPEED,
                         new AttributeModifier(Rhyme.space("plant_shovel_attack_speed"), 1.2, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND
+                        EquipmentSlotGroup.MAINHAND
                 )
         .build())
 
 ));
     public static final DeferredItem<Item> PLANT_PUTTER = register("plant_putter", "手推车", () -> new  PlantPutter(new Item.Properties().stacksTo(1).component(ModDataComponentTypes.MOD_RARITY, ModRarity.PURPLE)));
 
+    public static final DeferredItem<Item> POLE = register("pole", "金属跳杆", () -> new Pole(new Item.Properties()
+            .durability(200).component(ModDataComponentTypes.MOD_RARITY, ModRarity.BLUE)
+            .attributes(ItemAttributeModifiers.builder()
+                    .add(
+                            Attributes.ATTACK_DAMAGE,
+                            new AttributeModifier(Rhyme.space("attack_damage"), 5.0, AttributeModifier.Operation.ADD_VALUE),
+                            EquipmentSlotGroup.MAINHAND
+                            )
+                    .add(
+                            Attributes.ATTACK_SPEED,
+                            new AttributeModifier(Rhyme.space("attack_speed"), 1.5, AttributeModifier.Operation.ADD_VALUE),
+                            EquipmentSlotGroup.MAINHAND
+                    )
+                    .add(
+                            Attributes.ENTITY_INTERACTION_RANGE,
+                            new AttributeModifier(Rhyme.space("range"), 2, AttributeModifier.Operation.ADD_VALUE),
+                            EquipmentSlotGroup.MAINHAND
+                    )
+                    .add(
+                            Attributes.SAFE_FALL_DISTANCE,
+                            new AttributeModifier(Rhyme.space("fall_distance"), 10, AttributeModifier.Operation.ADD_VALUE),
+                            EquipmentSlotGroup.MAINHAND
+                    )
+                    .build()
+            )
+    ));
 
 
 

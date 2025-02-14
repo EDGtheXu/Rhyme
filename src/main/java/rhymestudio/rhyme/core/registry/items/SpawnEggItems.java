@@ -22,6 +22,8 @@ public class SpawnEggItems{
     public static final DeferredItem<Item> NORMAL_ZOMBIE_EGG = register("normal_zombie_egg", "普通僵尸刷怪蛋", Zombies.NORMAL_ZOMBIE,0x216853,0x2e5c43);
     public static final DeferredItem<Item> CONE_ZOMBIE_EGG = register("cone_zombie_egg", "路障僵尸刷怪蛋", Zombies.CONE_ZOMBIE, 0x216853,0xc37612);
     public static final DeferredItem<Item> IRON_BUCKET_ZOMBIE_EGG = register("pyramid_zombie_egg", "铁桶僵尸刷怪蛋", Zombies.IRON_BUCKET_ZOMBIE,0x216853,0xffffff);
+    public static final DeferredItem<Item> POLE_VAULTING_ZOMBIE_EGG = register("pole_vaulting_zombie_egg", "撑杆跳僵尸刷怪蛋", Zombies.POLE_VAULTING_ZOMBIE,0x216853,0xA0522D);
+
     public static final DeferredItem<Item> CRAZY_DAVE_EGG = register("crazy_dave_egg", "疯狂戴夫刷怪蛋", PlantEntities.CRAZY_DAVE,0xFFFFFF,0xe5af2c);
 
 

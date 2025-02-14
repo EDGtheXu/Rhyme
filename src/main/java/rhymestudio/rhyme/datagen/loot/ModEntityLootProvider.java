@@ -19,6 +19,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 import rhymestudio.rhyme.core.registry.items.ArmorItems;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
+import rhymestudio.rhyme.core.registry.items.ToolItems;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -39,9 +40,11 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
         this.add(Zombies.CONE_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
                 .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.CONE_HELMET, 0.2F, 0.5F)));
 
-
         this.add(Zombies.IRON_BUCKET_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
                 .withPool(LOOT_POOL_CONDITIONAL.apply(ArmorItems.IRON_BUCKET_HELMET, 0.2F, 0.3F)));
+
+        this.add(Zombies.POLE_VAULTING_ZOMBIE.get(), ZOMBIE_COMMON_LOOT_TABLE.apply(LootTable.lootTable())
+                .withPool(LOOT_POOL_CONDITIONAL.apply(ToolItems.POLE, 0.2F, 0.3F)));
 
 
 /*
@@ -110,7 +113,8 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
         return Stream.of(
                 Zombies.NORMAL_ZOMBIE,
                 Zombies.CONE_ZOMBIE,
-                Zombies.IRON_BUCKET_ZOMBIE
+                Zombies.IRON_BUCKET_ZOMBIE,
+                Zombies.POLE_VAULTING_ZOMBIE
         ).map(DeferredHolder::get);
     }
 }

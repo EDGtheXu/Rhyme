@@ -12,6 +12,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import rhymestudio.rhyme.core.entity.AbstractGeoMonster;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
+import rhymestudio.rhyme.core.entity.misc.HelmetEntity;
+import rhymestudio.rhyme.core.registry.entities.MiscEntities;
+import rhymestudio.rhyme.core.registry.items.ToolItems;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -48,7 +51,7 @@ public class PoleVaultingZombie extends AbstractGeoMonster<PoleVaultingZombie> {
         entityData.set(DATA_HAVE_POLE, compound.getBoolean("have_pole"));
     }
 
-    boolean havePole() {
+    public boolean havePole() {
         return entityData.get(DATA_HAVE_POLE);
     }
 
@@ -85,10 +88,20 @@ public class PoleVaultingZombie extends AbstractGeoMonster<PoleVaultingZombie> {
                     if(e.onGround() && skills.canContinue())
                         skills.forceEnd();
                 })
+                .onOver(e->{
+                    HelmetEntity entity = MiscEntities.HELMET_ENTITY.get().create(level());
+                    entity.setPos(this.position().subtract(e.getDeltaMovement().scale(5)));
+                    entity.setDeltaMovement(getDeltaMovement());
+                    entity.setOwner(this);
+                    entity.setHelmetStack(ToolItems.POLE.toStack());
+
+                    level().addFreshEntity(entity);
+                })
                 ;
 
         CircleMobSkill<PoleVaultingZombie> after = new CircleMobSkill<PoleVaultingZombie>("after", 99999, 5)
                 .onTick(e->{
+                    e.setHavePole(false);
                     e.setSprinting(false);
                     skills.tick = 0;
                 })
