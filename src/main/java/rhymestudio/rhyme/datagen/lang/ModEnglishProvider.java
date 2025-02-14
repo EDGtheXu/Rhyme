@@ -66,6 +66,10 @@ public class ModEnglishProvider extends LanguageProvider {
         add("plant_attributes_multiplier_damage_per_level", "Plant Damage Multiplier Per Level");
 
 
+        // effect
+        add("effect.rhyme.slowdown", "Slow Down");
+        add("effect.rhyme.frozen", "Frozen");
+        add("effect.rhyme.bleed", "Bleed");
 
 
 

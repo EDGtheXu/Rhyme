@@ -10,6 +10,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import rhymestudio.rhyme.core.entity.AbstractGeoMonster;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.misc.HelmetEntity;
@@ -83,7 +84,11 @@ public class PoleVaultingZombie extends AbstractGeoMonster<PoleVaultingZombie> {
         CircleMobSkill<PoleVaultingZombie> high_jump = new CircleMobSkill<PoleVaultingZombie>("high_jump", 30, 20)
                 .onTick(e->{
                     if(skills.canTrigger()){
-                        e.setDeltaMovement(e.getDeltaMovement().scale(20).add(0, 2.5, 0));
+                        double f = Math.min(e.getDeltaMovement().length() * 20, 2);
+                        Vec3 v = e.getDeltaMovement().normalize().scale(f).add(0, 2.5, 0);
+                        Vec3 v2 = new Vec3(v.x, Math.min(v.y, 1.5), v.z);
+                        System.out.println(v);
+                        e.setDeltaMovement(v2);
                     }
                     if(e.onGround() && skills.canContinue())
                         skills.forceEnd();

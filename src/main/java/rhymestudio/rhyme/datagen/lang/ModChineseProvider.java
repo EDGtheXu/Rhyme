@@ -52,6 +52,10 @@ public class ModChineseProvider extends LanguageProvider {
         add("plant_attributes_multiplier_health_per_level", "植物每级生命值加成系数");
         add("plant_attributes_multiplier_damage_per_level", "植物每级伤害加成系数");
 
+        // effect
+        add("effect.rhyme.slowdown", "寒冷");
+        add("effect.rhyme.frozen", "霜冻");
+        add("effect.rhyme.bleed", "流血");
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 
