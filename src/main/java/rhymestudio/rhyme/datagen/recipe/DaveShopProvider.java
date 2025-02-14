@@ -69,6 +69,15 @@ public class DaveShopProvider extends AbstractRecipeProvider {
         gen(100, PlantItems.CHOMPER_ITEM, 1)
                 .cost(150)
                 .build();
+
+        gen(20, MaterialItems.TACO, 1)
+                .add(MaterialItems.GENERAL_SEED)
+                .cost(50)
+                .build();
+
+        gen(20, MaterialItems.TACO, 1)
+                .add(MaterialItems.PLANT_GENE)
+                .build();
     }
 
     public static void createDataPack(BootstrapContext<DaveTrades> context) {

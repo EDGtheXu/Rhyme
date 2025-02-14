@@ -57,7 +57,7 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
         this.namePath = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()).getPath();
         this.builder = builder;
         if(level.isClientSide) builder.anim.accept(animState);
-        else this.ultimate = builder.ultimate;
+        this.ultimate = builder.ultimate;
         this.cachedId = this.getId();
 
 
@@ -102,6 +102,9 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
 
         if(builder.cardLevelModifier!=null) builder.cardLevelModifier.applyModifiers(this, this.cardLevel);
         addSkills();
+        if(level().isClientSide){
+            addSkill(ultimate);
+        }
         if(!level().isClientSide)
             skills.forceStartIndex(0);
 
