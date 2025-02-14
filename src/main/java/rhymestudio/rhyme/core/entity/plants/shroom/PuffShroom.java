@@ -3,14 +3,13 @@ package rhymestudio.rhyme.core.entity.plants.shroom;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks;
 import rhymestudio.rhyme.utils.Computer;
 
 public class PuffShroom extends AbstractShroom<PuffShroom> {
 
-    private final PresetAttacks attackCallback;
+    public PresetAttacks attackCallback;
     private LivingEntity target;
     public float cdReduction = 1f;
 

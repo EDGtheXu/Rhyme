@@ -7,11 +7,7 @@ import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkills;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class AbstractGeoPlant<T extends AbstractPlant<T>> extends AbstractPlant<T> implements GeoEntity, IFSMGeoMob<T> {
 
@@ -25,6 +21,10 @@ public abstract class AbstractGeoPlant<T extends AbstractPlant<T>> extends Abstr
 
     public void addSkill(CircleMobSkill skill) {
         IFSMGeoMob.super.addSkill(skill);
+    }
+
+    public void changeSkill(CircleMobSkill skill) {
+        IFSMGeoMob.super.changeSkill(skill);
     }
 
     @Override

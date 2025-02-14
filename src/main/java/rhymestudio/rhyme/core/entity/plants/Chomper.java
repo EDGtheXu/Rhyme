@@ -7,7 +7,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.entity.AbstractGeoPlant;
-import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 
 import java.util.ArrayList;
@@ -15,8 +14,10 @@ import java.util.List;
 
 public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
     public int eatTime;
-    int killBlood;
-    public float cdReduction = 1f;
+    public int killBlood;
+    public int cdReduction = 0;
+    public float recoverHealth = 0f;
+    private double attackRangePower = 4.0 * 4.0;
     public List<LivingEntity> ultimateTargets = new ArrayList<>();
 
     /**
@@ -32,12 +33,11 @@ public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
     @Override
     public void addSkills() {
         this.entityData.set(DATA_CAFE_POSE_NAME, "misc.idle");
-        eatTime *= cdReduction;
         CircleMobSkill<Chomper> idle = new CircleMobSkill<Chomper>( "misc.idle",  999999999, 0)
                 .onTick(a-> {
                     if(skills.canContinue() &&
                             getTarget() != null && getTarget().isAlive() &&
-                            getTarget().distanceToSqr(this) < 16){
+                            getTarget().distanceToSqr(this) < attackRangePower){
                         target = getTarget();
                         skills.forceEnd();
                     }
@@ -54,7 +54,13 @@ public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
                     }
                 });
         CircleMobSkill<Chomper> eating = new CircleMobSkill<>( "eating", eatTime, 0);
-        CircleMobSkill<Chomper> eatingFinish = new CircleMobSkill<>( "eating_finish", 60, 0);
+        CircleMobSkill<Chomper> eatingFinish = new CircleMobSkill<Chomper>( "eating_finish", 60, 0)
+                .onOver(a -> {
+                    setHealth(this.getHealth() + recoverHealth);
+                    if (eatTime > 0 && cdReduction > 0) {
+                        setEatTime(cdReduction < eatTime ? eatTime - cdReduction : 0);
+                    }
+                });
 
         addSkill(idle);
         addSkill(attack);
@@ -78,5 +84,13 @@ public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
         }
     }
 
+    public void setAttackRange(double distance) {
+        this.attackRangePower = distance * distance;
+    }
 
+    public void setEatTime(int eatTime) {
+        this.eatTime = eatTime;
+        CircleMobSkill<Chomper> eating = new CircleMobSkill<>( "eating", this.eatTime, 0);
+        changeSkill(eating);
+    }
 }

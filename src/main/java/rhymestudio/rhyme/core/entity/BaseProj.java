@@ -46,9 +46,7 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
-        if (pEffect != null){
-            this.effects.add(pEffect);
-        }
+        this.addEffect(pEffect);
     }
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
         super(pEntityType, pLevel);

@@ -11,13 +11,10 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import static rhymestudio.rhyme.core.entity.AbstractPlant.DATA_CAFE_POSE_NAME;
 
 //@SuppressWarnings("all")
 
@@ -36,6 +33,10 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     default void addSkill(CircleMobSkill<T> skill) {
         getSkills().pushSkill(skill);
         getAnimationMessage().animationMap.put(skill.name, RawAnimation.begin().thenPlay(skill.name));
+    }
+
+    default void changeSkill(CircleMobSkill<T> skill) {
+        getSkills().changeSkill(skill);
     }
 
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

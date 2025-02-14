@@ -6,13 +6,11 @@ import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.client.model.GeoNormalModel;
 import rhymestudio.rhyme.client.model.plantModels.*;
 import rhymestudio.rhyme.client.model.proj.CabbageProjModel;
 import rhymestudio.rhyme.client.model.proj.PeaProjModel;
@@ -75,6 +73,10 @@ public class RegisterRenderer {
         registerProj(event, FROZEN_PEA_PROJ_2.get(), c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
         registerProj(event,PUFF_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),1,-0.6F);
         registerProj(event,FUME_SHROOM_PROJ.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_1.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_2.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_3.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
+        registerProj(event, BLEED_FUME_SHROOM_PROJ_4.get(),c->new PeaProjModel<>(c.bakeLayer(PeaProjModel.LAYER_LOCATION)),3,0F);
 
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
 

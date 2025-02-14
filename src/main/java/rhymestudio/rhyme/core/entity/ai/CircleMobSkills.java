@@ -2,7 +2,6 @@ package rhymestudio.rhyme.core.entity.ai;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Mob;
-import rhymestudio.rhyme.core.entity.AbstractPlant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +33,15 @@ public class CircleMobSkills<T extends Mob> {
         str2intMap.put(skill.name, bossSkills.size()-1);
         if(bossSkills.size()==1) tick = 0;
         return true;
+    }
+
+    public boolean changeSkill(CircleMobSkill<T> skill){
+        if(str2intMap.containsKey(skill.name)){
+            int index = str2intMap.get(skill.name);
+            bossSkills.set(index, skill);
+            return true;
+        }
+        return false;
     }
 
     public void playSkill(String skillName){

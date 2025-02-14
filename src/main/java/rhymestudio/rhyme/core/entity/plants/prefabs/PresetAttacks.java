@@ -124,7 +124,18 @@ public class PresetAttacks {
     public static final BiConsumer<AbstractPlant, LivingEntity> FUME_SHOOT = (me, tar) -> {
         PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.FUME_SHROOM_PROJ, 0f);
     };
-
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_1 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_1, 0f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_2 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_2, 0f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_3 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_3, 0f);
+    };
+    public static final BiConsumer<AbstractPlant, LivingEntity> BLEED_FUME_SHOOT_4 = (me, tar) -> {
+        PEA_SHOOT_ATTACK_BASE.accept(me, tar, MiscEntities.BLEED_FUME_SHROOM_PROJ_4, 0f);
+    };
 
     /**
      * 投掷物弹幕

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class CardLevelModifier<T extends AbstractPlant> {
+    public static final int MIN_LEVEL = 1;
     private final Map<Integer, List<Consumer<T>>> levelModifiers;
     public CardLevelModifier(Map<Integer, List<Consumer<T>>> levelModifiers) {
         this.levelModifiers = levelModifiers;
@@ -40,7 +41,12 @@ public class CardLevelModifier<T extends AbstractPlant> {
             if (levelModifiers.containsKey(level)) {
                 levelModifiers.get(level).add(modifier);
             } else {
-                levelModifiers.put(level, new ArrayList<>(Collections.singletonList(modifier)));
+                List<Consumer<T>> modifiers = new ArrayList<>();
+                if (level > MIN_LEVEL) {
+                    modifiers.addAll(levelModifiers.get(level - 1));
+                }
+                modifiers.addAll(Collections.singletonList(modifier));
+                levelModifiers.put(level, modifiers);
             }
             return this;
         }

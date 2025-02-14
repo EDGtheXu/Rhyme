@@ -255,10 +255,34 @@ public class PlantEntities {
                     )
                     //升级
                     .setCardLevelModifier(CardLevelModifier.<PuffShroom>builder()
-                            .addModifier(1, plant->{plant.cdReduction = 0.8f;})
-                            .addModifier(2, plant->{plant.cdReduction = 0.7f;})
-                            .addModifier(3, plant->{plant.cdReduction = 0.5f;})
-                            .addModifier(4, plant->{plant.cdReduction = 0.3f;})
+                            .addModifier(1, plant->{
+                                plant.attackCallback = builder()
+                                        .setAttack(BLEED_FUME_SHOOT_1)
+                                        .setSound(ModSounds.PUFF)
+                                        .build();
+                                plant.cdReduction = 0.8f;
+                            })
+                            .addModifier(2, plant->{
+                                plant.attackCallback = builder()
+                                        .setAttack(BLEED_FUME_SHOOT_2)
+                                        .setSound(ModSounds.PUFF)
+                                        .build();
+                                plant.cdReduction = 0.7f;
+                            })
+                            .addModifier(3, plant->{
+                                plant.attackCallback = builder()
+                                        .setAttack(BLEED_FUME_SHOOT_3)
+                                        .setSound(ModSounds.PUFF)
+                                        .build();
+                                plant.cdReduction = 0.5f;
+                            })
+                            .addModifier(4, plant->{
+                                plant.attackCallback = builder()
+                                        .setAttack(BLEED_FUME_SHOOT_4)
+                                        .setSound(ModSounds.PUFF)
+                                        .build();
+                                plant.cdReduction = 0.3f;
+                            })
                             .buildLevelModifier()
                     )
             ));
@@ -289,10 +313,10 @@ public class PlantEntities {
                     .setUltimate(ChomperSkill)
                     //升级
                     .setCardLevelModifier(CardLevelModifier.<Chomper>builder()
-                            .addModifier(1, plant->{plant.cdReduction = 0.8f;})
-                            .addModifier(2, plant->{plant.cdReduction = 0.6f;})
-                            .addModifier(3, plant->{plant.cdReduction = 0.5f;})
-                            .addModifier(4, plant->{plant.cdReduction = 0.4f;})
+                            .addModifier(1, plant->{plant.setEatTime(20 * 16);})
+                            .addModifier(2, plant->{plant.setAttackRange(6.0);})
+                            .addModifier(3, plant->{plant.cdReduction = 20 * 3;plant.recoverHealth = 1.5f;})
+                            .addModifier(4, plant->{plant.killBlood = 300;plant.recoverHealth = 4f;})
                             .buildLevelModifier()
                     )
             ),0.85F,1.95F);
