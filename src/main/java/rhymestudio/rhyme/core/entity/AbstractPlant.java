@@ -226,6 +226,8 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     }
 
     public void addSkill(CircleMobSkill bossSkill) {skills.pushSkill(bossSkill);}
+
+    public void changeSkill(CircleMobSkill bossSkill) {skills.changeSkill(bossSkill);}
     public void addSkillNoAnim(CircleMobSkill bossSkill) {skills.pushSkill(bossSkill);}
 
 

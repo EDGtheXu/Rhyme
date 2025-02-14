@@ -146,4 +146,10 @@ public class PotatoMine extends AbstractPlant<PotatoMine> {
     public boolean isInWall(){
         return false;
     }
+
+    public void setReadyTime(int readyTime) {
+        this.readyTime = readyTime;
+        CircleMobSkill<PotatoMine> idle = new CircleMobSkill<>( "idle", this.readyTime, 0);
+        changeSkill(idle);
+    }
 }

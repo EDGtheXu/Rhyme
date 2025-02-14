@@ -211,10 +211,22 @@ public class PlantEntities {
                     .setUltimate(PotatoEnergy)
 
                     .setCardLevelModifier(CardLevelModifier.<PotatoMine>builder()
-                            .addModifier(1, potatoMine -> potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.2f)
-                            .addModifier(2, potatoMine -> potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.5f)
-                            .addModifier(3, potatoMine -> potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.75f)
-                            .addModifier(4, potatoMine -> potatoMine.triggerDeathSpeech = true)
+                            .addModifier(1, potatoMine -> {
+                                potatoMine.setReadyTime(20 * 12);
+                                potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.2f;
+                            })
+                            .addModifier(2, potatoMine -> {
+                                potatoMine.setReadyTime(20 * 9);
+                                potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.5f;
+                            })
+                            .addModifier(3, potatoMine -> {
+                                potatoMine.setReadyTime(20 * 6);
+                                potatoMine.triggerDeathSpeech = potatoMine.getRandom().nextFloat() < 0.75f;
+                            })
+                            .addModifier(4, potatoMine -> {
+                                potatoMine.setReadyTime(20 * 3);
+                                potatoMine.triggerDeathSpeech = true;
+                            })
                             .buildLevelModifier()
                     )
             ),0.85f,0.5f);
