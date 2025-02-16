@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.registries.DeferredItem;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkills;
 import rhymestudio.rhyme.core.entity.ai.JavaCircleMobSkills;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
@@ -26,6 +27,7 @@ import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.goal.ShootGoal;
 import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.zombies.NormalZombie;
+import rhymestudio.rhyme.core.item.AbstractCardItem;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
@@ -314,6 +316,14 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     public void push(Entity entity) {
         if(entity instanceof Player) return;
         super.push(entity);
+    }
+
+    public void setCardCd(DeferredItem<AbstractCardItem<?>> cardItem, int second) {
+        cardItem.get().setCd(second);
+    }
+
+    public void setCardCd(DeferredItem<AbstractCardItem<?>> cardItem, double second) {
+        cardItem.get().setCd(second);
     }
 
     public static class Builder{

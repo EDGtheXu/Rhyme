@@ -94,7 +94,7 @@ public class DaveShopProvider extends AbstractRecipeProvider {
     private Builder gen(int weight,Supplier<ItemStack> result){
         return new Builder(result,weight);
     }
-    private Builder gen(int weight,DeferredItem<Item> result, int amount){
+    private Builder gen(int weight,DeferredItem<? extends Item> result, int amount){
         return new Builder(() -> result.toStack(amount),weight);
     }
     private Builder gen(int weight,DeferredItem<Item> result){

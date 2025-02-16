@@ -256,7 +256,7 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
         addJson(jo,result,suffix);
     }
 
-    protected Builder gen(DeferredItem<Item> result, int level) {
+    protected Builder gen(DeferredItem<? extends Item> result, int level) {
         return new Builder(result, level);
     }
     protected Builder gen(Ingredient result, int level){return new Builder(result, level);}
@@ -276,7 +276,7 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
         private Item template;
         int templateAmount;
 
-        public Builder(DeferredItem<Item> result, int level) {
+        public Builder(DeferredItem<? extends Item> result, int level) {
             this.result = Ingredient.of(result.get());
             this.base = Ingredient.of(result);
             this.level = level;

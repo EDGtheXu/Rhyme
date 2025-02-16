@@ -28,6 +28,7 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.List;
 
+import static rhymestudio.rhyme.Rhyme.second2ticks;
 import static rhymestudio.rhyme.config.ServerConfig.*;
 import static rhymestudio.rhyme.utils.Computer.getBlockPosCenter;
 import static rhymestudio.rhyme.utils.Computer.getEyeBlockHitResult;
@@ -36,20 +37,24 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
     public DeferredHolder<EntityType<?>, EntityType<T>> entityType;
 
     public int consume;
-    public int cd = 5*20;
+    public int cd = second2ticks(5);
     public AbstractCardItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume){
         super(properties);
         this.entityType = entityType;
         this.consume = consume;
     }
 
-    public AbstractCardItem<T> setCd(int cd){
-        this.cd = cd*20;
+    public AbstractCardItem<T> setCd(int second){
+        this.cd = second2ticks(second);
         return this;
     }
 
+    public AbstractCardItem<T> setCd(double second){
+        this.cd = second2ticks(second);
+        return this;
+    }
 
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)  {
         ItemStack itemstack = player.getItemInHand(hand);
         if(!player.canBeSeenAsEnemy()){ // 创造
             summon(player, level, itemstack);
@@ -148,8 +153,8 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
             this.consume = consume;
             properties.component(ModDataComponentTypes.CARD_QUALITY.get(), CardQualityComponent.COPPER);
         }
-        public Builder<T> cd(int cd){
-            this.cd = cd;
+        public Builder<T> cd(int second){
+            this.cd = second;
             return this;
         }
         public Builder<T> rarity(ModRarity rarity){

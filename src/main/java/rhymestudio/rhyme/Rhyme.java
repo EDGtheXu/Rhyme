@@ -5,7 +5,6 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -20,20 +19,21 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-
+import rhymestudio.rhyme.config.Codec.CodecRegister;
+import rhymestudio.rhyme.config.Codec.ICodec;
+import rhymestudio.rhyme.config.Codec.Price;
 import rhymestudio.rhyme.config.ServerConfig;
-import rhymestudio.rhyme.config.Codec.*;
 import rhymestudio.rhyme.core.attribute.ModAttributes;
-import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
-import rhymestudio.rhyme.datagen.biome.ModBiomes;
-import rhymestudio.rhyme.core.registry.ModRecipes;
 import rhymestudio.rhyme.core.registry.*;
+import rhymestudio.rhyme.datagen.biome.ModBiomes;
+import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
 import rhymestudio.rhyme.datagen.lang.ModEnglishProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static net.minecraft.SharedConstants.TICKS_PER_SECOND;
 import static rhymestudio.rhyme.datagen.lang.ModEnglishProvider.toTitleCase;
 
 @Mod(Rhyme.MODID)
@@ -47,10 +47,11 @@ public class Rhyme {
     public static <T> ResourceKey<Registry<T>> createResourceKey(String path) {
         return ResourceKey.createRegistryKey(space(path));
     }
-
+    public static int second2ticks(double second){return (int)(second*TICKS_PER_SECOND);}
+    public static int second2ticks(int second){return second*TICKS_PER_SECOND;}
     public static List<Consumer<ModChineseProvider>> chineseProviders = new ArrayList<>();
     public static List<Consumer<ModEnglishProvider>> englishProviders = new ArrayList<>();
-    public static void add_zh_en(DeferredItem<Item> item, String zh){
+    public static void add_zh_en(DeferredItem<? extends Item> item, String zh){
         Rhyme.chineseProviders.add((c)->c.add(item.get(),zh));
         Rhyme.englishProviders.add((c)->c.add(item.get(),toTitleCase(item.getId().getPath())));
     }

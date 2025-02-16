@@ -111,10 +111,11 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
 //        futures.add(DataProvider.saveStable(cachedOutput,obj, getPath(result.get().getItemHolder().getKey().location())));
     }
 
+
     protected AmountIngredientBuilder gen(Supplier<ItemStack> result){
         return new AmountIngredientBuilder(result);
     }
-    protected AmountIngredientBuilder gen(DeferredItem<Item> result){
+    protected AmountIngredientBuilder gen(DeferredItem<? extends Item> result){
         return new AmountIngredientBuilder(result.get()::getDefaultInstance);
     }
     protected AmountIngredientBuilder gen(DeferredItem<Item> result, int count){
