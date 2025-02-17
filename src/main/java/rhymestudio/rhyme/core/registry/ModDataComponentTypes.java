@@ -3,10 +3,7 @@ package rhymestudio.rhyme.core.registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.CardQualityComponent;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.EntitySaverComponent;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.ItemDataMapComponent;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.*;
 
 import java.util.function.Supplier;
 
@@ -24,6 +21,9 @@ public final class ModDataComponentTypes {
 
     public static final Supplier<DataComponentType<EntitySaverComponent>> ITEM_ENTITY_TAG =
             TYPES.register("item_entity_tag_component", () -> DataComponentType.<EntitySaverComponent>builder().persistent(EntitySaverComponent.CODEC).networkSynchronized(EntitySaverComponent.STREAM_CODEC).cacheEncoding().build());
+
+    public static final Supplier<DataComponentType<StructureStaffComponent>> STRUCTURE_STAFF =
+            TYPES.register("structure_staff_component", () -> DataComponentType.<StructureStaffComponent>builder().persistent(StructureStaffComponent.CODEC).networkSynchronized(StructureStaffComponent.STREAM_CODEC).cacheEncoding().build());
 
 
 }

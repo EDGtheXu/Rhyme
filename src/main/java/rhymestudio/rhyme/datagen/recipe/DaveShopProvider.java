@@ -11,6 +11,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.core.registry.items.PlantItems;
+import rhymestudio.rhyme.core.registry.items.ToolItems;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -77,6 +78,11 @@ public class DaveShopProvider extends AbstractRecipeProvider {
 
         gen(20, MaterialItems.TACO, 1)
                 .add(MaterialItems.PLANT_GENE)
+                .build();
+
+        gen(20, ToolItems.ENERGY_BEAN, 1)
+                .add(MaterialItems.PLANT_GENE, 2)
+                .cost(50)
                 .build();
     }
 

@@ -64,7 +64,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
 //                return InteractionResultHolder.fail(itemstack);
 //            }
         var data =player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
-        int consumeCount = data.ids.size() * PlantConsumeAdditionStep.get() + this.consume;
+        int consumeCount = data.uuids.size() * PlantConsumeAdditionStep.get() + this.consume;
         var flag = player.getData(ModAttachments.PLAYER_STORAGE).consumeSun(player,consumeCount);
         if(!flag) {
             if(!level.isClientSide)
@@ -101,7 +101,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
         entity.playSound(ModSounds.PLANT.get());
 //        entity.setHealth(entity.getMaxHealth());
         var plantData = player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
-        plantData.ids.add(entity.getId());
+        plantData.uuids.add(entity.getUUID());
         if(player.canBeSeenAsEnemy())
             player.getCooldowns().addCooldown(stack.getItem(), this.cd);
         if(!level.isClientSide){
@@ -120,7 +120,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
 
 
         var data = Minecraft.getInstance().player.getData(ModAttachments.PLANT_RECORDER_STORAGE);
-        int consumeCount = data.ids.size() * PlantConsumeAdditionStep.get();
+        int consumeCount = data.uuids.size() * PlantConsumeAdditionStep.get();
         tooltipComponents.add(Component.translatable("plantcard.tooltip.consumed_sun").append(": "+this.consume + " + "+consumeCount).withColor(0xffff00));
         float percent = (float)stack.getDamageValue()/(float)stack.getMaxDamage();
         int color = (int)((1-percent)*0x0000ff)<<8 | (int)(percent*0x0000ff)<<16;

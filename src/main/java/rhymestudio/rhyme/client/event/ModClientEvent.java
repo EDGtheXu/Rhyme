@@ -14,6 +14,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.render.gui.CardUpLevelScreen;
 import rhymestudio.rhyme.client.render.gui.DaveTradeScreen;
+import rhymestudio.rhyme.client.render.gui.StaffScreen;
 import rhymestudio.rhyme.client.render.gui.SunCreatorScreen;
 import rhymestudio.rhyme.client.model.ModelUtils;
 import rhymestudio.rhyme.config.ClientConfig;
@@ -71,5 +72,7 @@ public class ModClientEvent {
         event.register(ModMenus.SUN_CREATOR_MENU.get(), SunCreatorScreen::new);
         event.register(ModMenus.CARD_UP_LEVEL_MENU.get(), CardUpLevelScreen::new);
         event.register(ModMenus.DAVE_TRADES_MENU.get(), DaveTradeScreen::new);
+        event.register(ModMenus.STAFF_MENU.get(), StaffScreen::new);
+
     }
 }

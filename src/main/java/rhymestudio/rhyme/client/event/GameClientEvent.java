@@ -1,14 +1,13 @@
 package rhymestudio.rhyme.client.event;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.Music;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.event.SelectMusicEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import rhymestudio.rhyme.client.render.buffer.DebugEntityHelper;
 import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.client.animate.ExpertColorAnimation;
@@ -66,4 +65,22 @@ public class GameClientEvent {
 
     }
 
+    @SubscribeEvent
+    public static void keyInput(InputEvent.Key event) {
+//        System.out.println(event.getKey());
+
+    }
+
+    @SubscribeEvent
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (Minecraft.getInstance().player != null) {
+            try {
+                ModKeyBindings.isShifting =  Minecraft.getInstance().player.input.shiftKeyDown;
+            }
+            catch (Exception ignored) {
+
+            }
+//            System.out.println(ModKeyBindings.isShifting);
+        }
+    }
 }

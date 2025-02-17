@@ -172,9 +172,9 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         if(hitSound != null)
             level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
         if(entity!= null)
-            hurter.hurt(entity.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
+            hurter.hurt(entity.damageSources().source(ModTags.DamageTypes.PLANT_PROJ, entity), getDamage());
         else if(hurter!= null)
-            hurter.hurt(this.damageSources().source(ModTags.DamageTypes.PLANT_PROJ), getDamage());
+            hurter.hurt(this.damageSources().source(ModTags.DamageTypes.PLANT_PROJ,this), getDamage());
         Vec3 pos = hurter.position();
 
         if(this.level() instanceof ServerLevel serverlevel){

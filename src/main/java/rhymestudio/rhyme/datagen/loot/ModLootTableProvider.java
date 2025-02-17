@@ -22,7 +22,9 @@ public class ModLootTableProvider extends LootTableProvider {
         return new LootTableProvider(output, Collections.emptySet(),
                 List.of(
                         new LootTableProvider.SubProviderEntry(ModBlockLootProvider::new, LootContextParamSets.BLOCK),
-                        new LootTableProvider.SubProviderEntry(ModEntityLootProvider::new, LootContextParamSets.ENTITY)),
-                lookupProviderFuture);
+                        new LootTableProvider.SubProviderEntry(ModEntityLootProvider::new, LootContextParamSets.ENTITY),
+                        new LootTableProvider.SubProviderEntry(ModChestLoot::new, LootContextParamSets.CHEST)
+
+                ), lookupProviderFuture);
     }
 }

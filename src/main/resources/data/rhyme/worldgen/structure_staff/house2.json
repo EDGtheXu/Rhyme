@@ -1,0 +1,125 @@
+[
+  {
+    "block": {
+      "Name": "minecraft:stone"
+    },
+    "position": [
+      0,
+      0,
+      1
+    ]
+  },
+  {
+    "block": {
+      "Name": "minecraft:andesite"
+    },
+    "position": [
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "block": {
+      "Name": "minecraft:stone"
+    },
+    "position": [
+      1,
+      0,
+      1
+    ]
+  },
+  {
+    "block": {
+      "Properties": {
+        "waterlogged": "false",
+        "type": "single",
+        "facing": "west"
+      },
+      "Name": "minecraft:chest"
+    },
+    "position": [
+      1,
+      1,
+      1
+    ],
+    "nbt": {
+      "x": -2443,
+      "y": 64,
+      "Items": [],
+      "z": 1885,
+      "LootTable": "rhyme:chests/dave_chest",
+      "CustomName": "{\"translate\":\"block.rhyme.blocks.dave_chest\"}",
+
+      "id": "minecraft:chest"
+    }
+  },
+  {
+    "block": {
+      "Properties": {
+        "waterlogged": "false",
+        "type": "single",
+        "facing": "west"
+      },
+      "Name": "minecraft:chest"
+    },
+    "position": [
+      1,
+      5,
+      1
+    ],
+    "nbt": {
+      "x": -2443,
+      "y": 64,
+      "Items": [],
+      "z": 1885,
+      "LootTable": "rhyme:chests/dave_chest",
+      "CustomName": "{\"translate\":\"block.rhyme.blocks.dave_chest\"}",
+
+      "id": "minecraft:chest"
+    }
+  },
+  {
+    "block": {
+      "Name": "minecraft:andesite"
+    },
+    "position": [
+      2,
+      0,
+      0
+    ]
+  },
+  {
+    "block": {
+      "Name": "minecraft:andesite"
+    },
+    "position": [
+      2,
+      0,
+      1
+    ]
+  },
+  {
+    "block": {
+      "Name": "minecraft:stone"
+    },
+    "position": [
+      2,
+      0,
+      2
+    ]
+  },
+  {
+    "block": {
+      "Properties": {
+        "snowy": "false"
+      },
+      "Name": "minecraft:grass_block"
+    },
+    "position": [
+      2,
+      1,
+      2
+    ]
+  }
+]

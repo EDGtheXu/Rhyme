@@ -1,0 +1,14 @@
+{
+  "type": "rhyme:simple_block_nbt",
+  "config": {
+    "to_place": {
+      "type": "simple_state_provider",
+      "state": {
+        "Name": "minecraft:chest"
+      }
+    },
+    "nbt": {
+      "LootTable": "rhyme:chests/dave_chest"
+    }
+  }
+}

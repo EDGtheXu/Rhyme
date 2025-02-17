@@ -12,13 +12,15 @@ import rhymestudio.rhyme.core.registry.ModAttachments;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public record PlantRecorderPacket (List<Integer> ids) implements CustomPacketPayload {
+public record PlantRecorderPacket (List<UUID> ids) implements CustomPacketPayload {
 
     public static final Type<PlantRecorderPacket> TYPE = new Type<>(Rhyme.space("plant_recorder_packet_s2c"));
     public static final StreamCodec<ByteBuf, PlantRecorderPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodec(Codec.INT.listOf()),PlantRecorderPacket::ids,
+            ByteBufCodecs.fromCodec(Codec.STRING.xmap(UUID::fromString, UUID::toString).listOf()), PlantRecorderPacket::ids,
             PlantRecorderPacket::new
     );
 
@@ -30,7 +32,7 @@ public record PlantRecorderPacket (List<Integer> ids) implements CustomPacketPay
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().isLocalPlayer()) {
-                context.player().getData(ModAttachments.PLANT_RECORDER_STORAGE).ids = Arrays.stream(ids.toArray()).mapToInt(obj->(int)obj).boxed().collect(Collectors.toList());
+                context.player().getData(ModAttachments.PLANT_RECORDER_STORAGE).uuids = new CopyOnWriteArrayList<>(ids);
             }
         });
     }

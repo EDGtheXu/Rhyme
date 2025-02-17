@@ -10,10 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
-import rhymestudio.rhyme.core.item.tool.EnergyBean;
-import rhymestudio.rhyme.core.item.tool.PlantPutter;
-import rhymestudio.rhyme.core.item.tool.PlantShovel;
-import rhymestudio.rhyme.core.item.tool.Pole;
+import rhymestudio.rhyme.core.item.tool.*;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
 import java.util.function.Supplier;
@@ -71,6 +68,7 @@ public class ToolItems {
             )
     ));
 
+    public static final DeferredItem<Item> STRUCTURE_STAFF = register("structure_staff", "构造法杖", () -> new StructureStaff(new Item.Properties()));
 
 
 

@@ -3,6 +3,7 @@ package rhymestudio.rhyme.datagen.dataPack;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import rhymestudio.rhyme.core.registry.ModFeatures;
 import rhymestudio.rhyme.datagen.biome.ModBiomeModifier;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 
@@ -11,6 +12,8 @@ public class RegisterDataPack {
 
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifier::createBiomeModifier)
             .add(Registries.DAMAGE_TYPE, ModTags.DamageTypes::createDamageTypes)
+            .add(Registries.PLACED_FEATURE, ModFeatures::createPlacedFeatures)
+            .add(Registries.CONFIGURED_FEATURE, ModFeatures::createConfiguredFeatures)
 //            .add(ModRegistry.DAVE_SHOP, DaveShopProvider::createDataPack)
             ;
 

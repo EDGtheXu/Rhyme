@@ -79,6 +79,8 @@ public class Rhyme {
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         ModAttributes.ATTRIBUTES_TYPES.register(modEventBus);
+        ModStructures.register(modEventBus);
+        ModFeatures.register(modEventBus);
 
 
 

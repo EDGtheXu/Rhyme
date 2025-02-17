@@ -5,7 +5,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -33,13 +36,17 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
 import rhymestudio.rhyme.utils.RhymeUtils;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class AbstractPlant<T extends AbstractPlant<T>> extends PathfinderMob implements ICafeMob{
 
     public static final EntityDataAccessor<String> DATA_CAFE_POSE_NAME = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> DATA_CARD_LVL = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.OPTIONAL_UUID);
 
     public String namePath;
     public Player owner;
@@ -52,7 +59,6 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     public boolean isUltimating = false;
     public int cardLevel = 0;
     protected boolean dirty = true;
-    private int cachedId;
 
     public <T extends AbstractPlant> AbstractPlant(EntityType<T> entityType, Level level, Builder builder) {
         super(entityType, level);
@@ -60,8 +66,6 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
         this.builder = builder;
         if(level.isClientSide) builder.anim.accept(animState);
         this.ultimate = builder.ultimate;
-        this.cachedId = this.getId();
-
 
     }
 
@@ -233,12 +237,22 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     public void addSkillNoAnim(CircleMobSkill bossSkill) {skills.pushSkill(bossSkill);}
 
 
+    public UUID summon_getOwnerUUID(){
+        return (UUID)((Optional) getEntityData().get(DATA_OWNERUUID_ID)).orElse(null);
+    }
+
+    public void summon_setOwnerUUID(@Nullable UUID uuid){
+        getEntityData().set(DATA_OWNERUUID_ID, Optional.ofNullable(uuid));
+    }
+
     // 动画数据同步
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_CAFE_POSE_NAME, "idle");
         builder.define(DATA_CARD_LVL, 0);
+        builder.define(DATA_OWNERUUID_ID, Optional.empty());
+
     }
 
     @Override
@@ -264,16 +278,21 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
             dirty = false;
         }
         this.owner = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
-        this.cachedId = tag.getInt("cachedId");
 
-        if(owner!=null && cachedId!=this.getId()){
-            List<Integer> list = owner.getData(ModAttachments.PLANT_RECORDER_STORAGE).ids;
-            for(int i=0;i<list.size();i++){
-                if(list.get(i)==cachedId){
-                    list.set(i,this.getId());
-                    break;
-                }
+        UUID uuid=null;
+        if (tag.hasUUID("Owner")) {
+            uuid = tag.getUUID("Owner");
+        } else {
+            String s = tag.getString("Owner");
+            MinecraftServer server = getServer();
+            if(server!=null) {
+                uuid = OldUsersConverter.convertMobOwnerIfNecessary(server, s);
             }
+        }
+        if (uuid != null && owner!= null) {
+            this.summon_setOwnerUUID(uuid);
+            List<UUID> uuids = owner.getData(ModAttachments.PLANT_RECORDER_STORAGE).uuids;
+            uuids.add(this.uuid);
         }
 
     }
@@ -286,7 +305,10 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
         tag.putInt("skillTick",this.skills.tick);
         tag.putBoolean("dirty", dirty);
         if(owner!=null) tag.putUUID("ownerUUID",owner.getUUID());
-        tag.putInt("cachedId",this.cachedId);
+//        tag.putInt("cachedId",this.cachedId);
+        if (this.summon_getOwnerUUID() != null) {
+            tag.putUUID("Owner", this.summon_getOwnerUUID());
+        }
     }
 
 
@@ -305,9 +327,9 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     public void onRemovedFromLevel() {
         super.onRemovedFromLevel();
         if(owner instanceof ServerPlayer serverPlayer){ // 只在服务端才有owner
-            var list = serverPlayer.getData(ModAttachments.PLANT_RECORDER_STORAGE).ids;
-
-            list.removeIf(id->id==this.getId() || level().getEntity(id)==null || level().getEntity(id).isRemoved());
+            var list = serverPlayer.getData(ModAttachments.PLANT_RECORDER_STORAGE).uuids;
+            Entity entity = ((ServerLevel)level()).getEntity(this.uuid);
+            list.removeIf(id->id == this.uuid || entity == null || entity .isRemoved());
             PacketDistributor.sendToPlayer(serverPlayer, new PlantRecorderPacket(list));
         }
     }
