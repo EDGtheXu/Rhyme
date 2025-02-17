@@ -1,5 +1,6 @@
 package rhymestudio.rhyme.core.recipe;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
@@ -19,16 +20,18 @@ public class CardUpLevelRecipe implements Recipe<CardUpLevelRecipe.CardUpLevelRe
     public final Ingredient base;
     public final AmountIngredient am_addition1;
     public final AmountIngredient am_template;
+    public final int damage;
 
     public ItemStack result;
 
-    public CardUpLevelRecipe(AmountIngredient addition, Ingredient base, AmountIngredient addition1,AmountIngredient template, ItemStack result) {
+    public CardUpLevelRecipe(AmountIngredient addition, Ingredient base, AmountIngredient addition1,AmountIngredient template, ItemStack result, int damage) {
 
         this.base = base;
         this.result = result;
         this.am_template = template;
         this.am_addition = addition;
         this.am_addition1 = addition1;
+        this.damage = damage;
     }
 
     public ItemStack getResultItem(HolderLookup.Provider registries) {
@@ -60,8 +63,6 @@ public class CardUpLevelRecipe implements Recipe<CardUpLevelRecipe.CardUpLevelRe
 
         ItemStack itemstack = input.base().transmuteCopy(input.base().getItem(), input.base().getCount());
         itemstack.applyComponents(result.getComponentsPatch());
-        int damage = itemstack.getComponents().get(DataComponents.MAX_DAMAGE).intValue();
-        damage += 5;
         itemstack.set(DataComponents.MAX_DAMAGE, damage);
         return itemstack;
     }
@@ -97,7 +98,8 @@ public class CardUpLevelRecipe implements Recipe<CardUpLevelRecipe.CardUpLevelRe
                 Ingredient.CODEC.fieldOf("base").forGetter((p_300938_) -> p_300938_.base),
                 AmountIngredient.CODEC.fieldOf("addition1").forGetter((p_301153_) -> p_301153_.am_addition1),
                 AmountIngredient.CODEC.fieldOf("template").forGetter((p_301156_) -> p_301156_.am_template),
-                ItemStack.STRICT_CODEC.fieldOf("result").forGetter((p_300935_) -> p_300935_.getResultItem(null))
+                ItemStack.STRICT_CODEC.fieldOf("result").forGetter((p_300935_) -> p_300935_.getResultItem(null)),
+                Codec.INT.fieldOf("damage").forGetter(r -> r.damage)
         ).apply(ins, CardUpLevelRecipe::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, CardUpLevelRecipe> STREAM_CODEC = StreamCodec.of(CardUpLevelRecipe.Serializer::toNetwork, CardUpLevelRecipe.Serializer::fromNetwork);
 
@@ -118,7 +120,8 @@ public class CardUpLevelRecipe implements Recipe<CardUpLevelRecipe.CardUpLevelRe
             AmountIngredient ingredient2 = AmountIngredient.STREAM_CODEC.decode(buffer);
             AmountIngredient ingredient3 = AmountIngredient.STREAM_CODEC.decode(buffer);
             ItemStack itemstack = ItemStack.STREAM_CODEC.decode(buffer);
-            return new CardUpLevelRecipe(ingredient, ingredient1, ingredient2,ingredient3, itemstack);
+            int damage = buffer.readInt();
+            return new CardUpLevelRecipe(ingredient, ingredient1, ingredient2,ingredient3, itemstack, damage);
         }
 
         private static void toNetwork(RegistryFriendlyByteBuf buffer, CardUpLevelRecipe recipe) {
@@ -126,7 +129,8 @@ public class CardUpLevelRecipe implements Recipe<CardUpLevelRecipe.CardUpLevelRe
             Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.base);
             AmountIngredient.STREAM_CODEC.encode(buffer, recipe.am_addition1);
             AmountIngredient.STREAM_CODEC.encode(buffer, recipe.am_template);
-            ItemStack.STREAM_CODEC.encode(buffer, recipe.getResultItem(null));
+            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+            buffer.writeInt(recipe.damage);
         }
     }
 

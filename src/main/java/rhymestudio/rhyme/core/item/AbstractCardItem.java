@@ -28,7 +28,7 @@ import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.List;
 
-import static rhymestudio.rhyme.Rhyme.second2ticks;
+import static rhymestudio.rhyme.Rhyme.seconds2ticks;
 import static rhymestudio.rhyme.config.ServerConfig.*;
 import static rhymestudio.rhyme.utils.Computer.getBlockPosCenter;
 import static rhymestudio.rhyme.utils.Computer.getEyeBlockHitResult;
@@ -37,7 +37,7 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
     public DeferredHolder<EntityType<?>, EntityType<T>> entityType;
 
     public int consume;
-    public int cd = second2ticks(5);
+    public int cd = seconds2ticks(5);
     public AbstractCardItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume){
         super(properties);
         this.entityType = entityType;
@@ -45,12 +45,12 @@ public class AbstractCardItem<T extends AbstractPlant> extends CustomRarityItem 
     }
 
     public AbstractCardItem<T> setCd(int second){
-        this.cd = second2ticks(second);
+        this.cd = seconds2ticks(second);
         return this;
     }
 
     public AbstractCardItem<T> setCd(double second){
-        this.cd = second2ticks(second);
+        this.cd = Rhyme.seconds2ticks(second);
         return this;
     }
 

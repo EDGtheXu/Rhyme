@@ -21,8 +21,10 @@ import rhymestudio.rhyme.core.entity.plants.prefabs.CardLevelModifier;
 import rhymestudio.rhyme.core.entity.plants.shroom.PuffShroom;
 import rhymestudio.rhyme.core.entity.plants.shroom.SunShroom;
 import rhymestudio.rhyme.core.registry.ModSounds;
+import rhymestudio.rhyme.core.registry.items.PlantItems;
 
 import static rhymestudio.rhyme.Rhyme.add_zh_en;
+import static rhymestudio.rhyme.Rhyme.seconds2ticks;
 import static rhymestudio.rhyme.core.entity.plants.prefabs.EnergyBeanSkills.ChomperSkill;
 import static rhymestudio.rhyme.core.entity.plants.prefabs.EnergyBeanSkills.PotatoEnergy;
 import static rhymestudio.rhyme.core.entity.plants.prefabs.PresetAttacks.*;
@@ -196,6 +198,25 @@ public class PlantEntities {
             }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
                     .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
             )
+                    .setCardLevelModifier(CardLevelModifier.<WallNut>builder()
+                            .addModifier(1,wallNut->{
+                                wallNut.healthRecoverAmount = 0.7f;
+                            })
+                            .addModifier(2,wallNut->{
+                                wallNut.healthRecoverAmount = 0.95f;
+                                wallNut.recoverIntervalTicks = seconds2ticks(0.8);
+                            })
+                            .addModifier(3,wallNut->{
+                                wallNut.healthRecoverAmount = 1.3f;
+                                wallNut.recoverIntervalTicks = seconds2ticks(0.7);
+                            })
+                            .addModifier(4,wallNut->{
+                                wallNut.healthRecoverAmount = 1.4f;
+                                wallNut.recoverIntervalTicks = seconds2ticks(0.5);
+                                wallNut.noDamageCooldownTicks = seconds2ticks(6);
+                            })
+                            .buildLevelModifier()
+                    )
 
             ));
 
@@ -249,10 +270,10 @@ public class PlantEntities {
                     )
                     //升级
                     .setCardLevelModifier(CardLevelModifier.<PuffShroom>builder()
-                            .addModifier(1, plant->{plant.cdReduction = 0.8f;})
-                            .addModifier(2, plant->{plant.cdReduction = 0.7f;})
-                            .addModifier(3, plant->{plant.cdReduction = 0.5f;})
-                            .addModifier(4, plant->{plant.cdReduction = 0.3f;})
+                            .addModifier(1, plant->{plant.setCardCd(PlantItems.PUFF_SHROOM_ITEM,4.5);})
+                            .addModifier(2, plant->{plant.setCardCd(PlantItems.PUFF_SHROOM_ITEM,4);})
+                            .addModifier(3, plant->{plant.setCardCd(PlantItems.PUFF_SHROOM_ITEM,3.5);})
+                            .addModifier(4, plant->{plant.setCardCd(PlantItems.PUFF_SHROOM_ITEM,3);})
                             .buildLevelModifier()
                     )
 
@@ -327,8 +348,8 @@ public class PlantEntities {
                     .setCardLevelModifier(CardLevelModifier.<Chomper>builder()
                             .addModifier(1, plant->{plant.setEatTime(20 * 16);})
                             .addModifier(2, plant->{plant.setAttackRange(6.0);})
-                            .addModifier(3, plant->{plant.cdReduction = 20 * 3;plant.recoverHealth = 1.5f;})
-                            .addModifier(4, plant->{plant.killBlood = 300;plant.recoverHealth = 4f;})
+                            .addModifier(3, plant->{plant.cdReduction = 20 * 3;plant.healthRecoverAmount = 1.5f;})
+                            .addModifier(4, plant->{plant.killBlood = 300;plant.healthRecoverAmount = 4f;})
                             .buildLevelModifier()
                     )
             ),0.85F,1.95F);

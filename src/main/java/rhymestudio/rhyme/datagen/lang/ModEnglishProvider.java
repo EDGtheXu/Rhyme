@@ -69,7 +69,7 @@ public class ModEnglishProvider extends LanguageProvider {
         // effect
         add("effect.rhyme.slowdown", "Slow Down");
         add("effect.rhyme.frozen", "Frozen");
-        add("effect.rhyme.bleed", "Bleed");
+        add("effect.rhyme.severe_poison", "Severe Poison");
 
 
 

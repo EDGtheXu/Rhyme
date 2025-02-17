@@ -7,7 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import rhymestudio.rhyme.core.effect.BleedEffect;
+import rhymestudio.rhyme.core.effect.SeverePoisonEffect;
 import rhymestudio.rhyme.core.effect.FrozenEffect;
 import rhymestudio.rhyme.core.effect.SlowDownEffect;
 
@@ -22,7 +22,7 @@ public class ModEffects {
 
     public static final DeferredHolder<MobEffect,MobEffect> FROZEN_EFFECT =registerDeferredHolder("frozen",()->new FrozenEffect(MobEffectCategory.HARMFUL,0x80FFFF));
 
-    public static final DeferredHolder<MobEffect,MobEffect> BLEED_EFFECT =registerDeferredHolder("bleed",()->new BleedEffect(MobEffectCategory.HARMFUL,0x80FF80));
+    public static final DeferredHolder<MobEffect,MobEffect> SEVERE_POISON_EFFECT =registerDeferredHolder("severe_poison",()->new SeverePoisonEffect(MobEffectCategory.HARMFUL,0x80FF80));
 
     public static DeferredHolder<MobEffect,MobEffect> registerDeferredHolder(String name, Supplier<MobEffect> supplier){
         return EFFECTS.register(name,supplier);

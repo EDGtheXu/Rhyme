@@ -35,203 +35,248 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
         gen(PlantItems.SUN_FLOWER, 1)
                 .addition(MaterialItems.SOLID_SUN, 8)
                 .addition1(MaterialItems.SOLID_SUN, 8)
+                .damage(15)
                 .build();
         gen(PlantItems.SUN_FLOWER, 2)
                 .addition(MaterialItems.SOLID_SUN, 8)
                 .addition1(MaterialItems.SOLID_SUN, 8)
+                .damage(20)
                 .build();
         gen(PlantItems.SUN_FLOWER, 3)
                 .addition(MaterialItems.SOLID_SUN, 8)
                 .addition1(MaterialItems.SOLID_SUN, 8)
+                .damage(25)
                 .build();
         gen(PlantItems.SUN_FLOWER, 4)
                 .addition(MaterialItems.SOLID_SUN, 8)
                 .addition1(MaterialItems.SOLID_SUN, 8)
+                .damage(30)
                 .build();
 
         //豌豆射手
         gen(PlantItems.PEA_ITEM, 1)
                 .addition(MaterialItems.PLANT_GENE, 5)
                 .addition1(MaterialItems.PLANT_GENE, 5)
+                .damage(15)
                 .build();
         gen(PlantItems.PEA_ITEM, 2)
                 .addition(MaterialItems.PLANT_GENE, 5)
                 .addition1(MaterialItems.PLANT_GENE, 5)
+                .damage(20)
                 .build();
         gen(PlantItems.PEA_ITEM, 3)
                 .addition(MaterialItems.PLANT_GENE, 5)
                 .addition1(MaterialItems.PLANT_GENE, 5)
+                .damage(25)
                 .build();
         gen(PlantItems.PEA_ITEM, 4)
                 .addition(MaterialItems.PLANT_GENE, 5)
                 .addition1(MaterialItems.PLANT_GENE, 5)
+                .damage(30)
                 .build();
 
         //寒冰射手
         gen(PlantItems.SNOW_PEA_ITEM, 1)
                 .addition(MaterialItems.SNOW_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(15)
                 .build();
         gen(PlantItems.SNOW_PEA_ITEM, 2)
                 .addition(MaterialItems.SNOW_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(20)
                 .build();
         gen(PlantItems.SNOW_PEA_ITEM, 3)
                 .addition(MaterialItems.SNOW_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(25)
                 .build();
         gen(PlantItems.SNOW_PEA_ITEM, 4)
                 .addition(MaterialItems.SNOW_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(30)
                 .build();
 
         //双重射手
         gen(PlantItems.REPEATER_ITEM, 1)
                 .addition(MaterialItems.PEA_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(15)
                 .build();
         gen(PlantItems.REPEATER_ITEM, 2)
                 .addition(MaterialItems.PEA_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(20)
                 .build();
         gen(PlantItems.REPEATER_ITEM, 3)
                 .addition(MaterialItems.PEA_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(25)
                 .build();
         gen(PlantItems.REPEATER_ITEM, 4)
                 .addition(MaterialItems.PEA_GENE, 5)
                 .addition1(MaterialItems.PEA_GENE, 5)
+                .damage(30)
                 .build();
 
         //小喷菇
         gen(PlantItems.PUFF_SHROOM_ITEM, 1)
                 .addition(MaterialItems.MUSHROOM_GENE, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 5)
+                .damage(20)
                 .build();
         gen(PlantItems.PUFF_SHROOM_ITEM, 2)
                 .addition(MaterialItems.MUSHROOM_GENE, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 5)
+                .damage(30)
                 .build();
         gen(PlantItems.PUFF_SHROOM_ITEM, 3)
                 .addition(MaterialItems.MUSHROOM_GENE, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 5)
+                .damage(40)
                 .build();
         gen(PlantItems.PUFF_SHROOM_ITEM, 4)
                 .addition(MaterialItems.MUSHROOM_GENE, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 5)
+                .damage(50)
                 .build();
 
         //阳光菇
         gen(PlantItems.SUN_SHROOM_ITEM, 1)
                 .addition(MaterialItems.SOLID_SUN, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(15)
                 .build();
         gen(PlantItems.SUN_SHROOM_ITEM, 2)
                 .addition(MaterialItems.SOLID_SUN, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(20)
                 .build();
         gen(PlantItems.SUN_SHROOM_ITEM, 3)
                 .addition(MaterialItems.SOLID_SUN, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(25)
                 .build();
         gen(PlantItems.SUN_SHROOM_ITEM, 4)
                 .addition(MaterialItems.SOLID_SUN, 5)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(30)
                 .build();
 
         //大喷菇
         gen(PlantItems.FUME_SHROOM_ITEM, 1)
                 .addition(MaterialItems.MUSHROOM_GENE, 8)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(15)
                 .build();
         gen(PlantItems.FUME_SHROOM_ITEM, 2)
                 .addition(MaterialItems.MUSHROOM_GENE, 8)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(20)
                 .build();
         gen(PlantItems.FUME_SHROOM_ITEM, 3)
                 .addition(MaterialItems.MUSHROOM_GENE, 8)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(25)
                 .build();
         gen(PlantItems.FUME_SHROOM_ITEM, 4)
                 .addition(MaterialItems.MUSHROOM_GENE, 8)
                 .addition1(MaterialItems.MUSHROOM_GENE, 8)
+                .damage(30)
                 .build();
         //土豆雷
         gen(PlantItems.POTATO_MINE_ITEM, 1)
                 .addition(MaterialItems.HIDDEN_GENE, 5)
                 .addition1(MaterialItems.HIDDEN_GENE, 5)
+                .damage(15)
                 .build();
         gen(PlantItems.POTATO_MINE_ITEM, 2)
                 .addition(MaterialItems.HIDDEN_GENE, 5)
                 .addition1(MaterialItems.HIDDEN_GENE, 5)
+                .damage(20)
                 .build();
         gen(PlantItems.POTATO_MINE_ITEM, 3)
                 .addition(MaterialItems.HIDDEN_GENE, 5)
                 .addition1(MaterialItems.HIDDEN_GENE, 5)
+                .damage(25)
                 .build();
         gen(PlantItems.POTATO_MINE_ITEM, 4)
                 .addition(MaterialItems.HIDDEN_GENE, 5)
                 .addition1(MaterialItems.HIDDEN_GENE, 5)
+                .damage(30)
                 .build();
 
         //坚果墙，我硬死你
         gen(PlantItems.NUT_WALL_ITEM, 1)
                 .addition(Items.IRON_INGOT, 8)
                 .addition1(Items.COPPER_INGOT, 8)
+                .damage(15)
                 .build();
         gen(PlantItems.NUT_WALL_ITEM, 2)
                 .addition(Items.GOLD_INGOT, 4)
                 .addition1(Items.LAPIS_LAZULI, 6)
+                .damage(20)
                 .build();
         gen(PlantItems.NUT_WALL_ITEM, 3)
                 .addition(Items.REDSTONE, 8)
                 .addition1(Items.EMERALD, 8)
+                .damage(25)
                 .build();
         gen(PlantItems.NUT_WALL_ITEM, 4)
                 .addition(Items.DIAMOND, 4)
                 .addition1(Items.NETHERITE_INGOT, 1)
+                .damage(30)
                 .build();
 
         //卷心菜投手
         gen(PlantItems.CABBAGE_PULT_ITEM, 1)
                 .addition(MaterialItems.THROWABLE_GENE, 5)
                 .addition1(MaterialItems.THROWABLE_GENE, 5)
+                .damage(15)
                 .build();
         gen(PlantItems.CABBAGE_PULT_ITEM, 2)
                 .addition(MaterialItems.THROWABLE_GENE, 5)
                 .addition1(MaterialItems.THROWABLE_GENE, 5)
+                .damage(20)
                 .build();
         gen(PlantItems.CABBAGE_PULT_ITEM, 3)
                 .addition(MaterialItems.THROWABLE_GENE, 5)
                 .addition1(MaterialItems.THROWABLE_GENE, 5)
+                .damage(25)
                 .build();
         gen(PlantItems.CABBAGE_PULT_ITEM, 4)
                 .addition(MaterialItems.THROWABLE_GENE, 5)
                 .addition1(MaterialItems.THROWABLE_GENE, 5)
+                .damage(30)
                 .build();
 
         //大嘴花
         gen(PlantItems.CHOMPER_ITEM, 1)
                 .addition(MaterialItems.STRONG_GENE, 5)
                 .addition1(MaterialItems.STRONG_GENE, 5)
+                .damage(15)
                 .build();
         gen(PlantItems.CHOMPER_ITEM, 2)
                 .addition(MaterialItems.STRONG_GENE, 5)
                 .addition1(MaterialItems.STRONG_GENE, 5)
+                .damage(20)
                 .build();
         gen(PlantItems.CHOMPER_ITEM, 3)
                 .addition(MaterialItems.STRONG_GENE, 5)
                 .addition1(MaterialItems.STRONG_GENE, 5)
+                .damage(25)
                 .build();
         gen(PlantItems.CHOMPER_ITEM, 4)
                 .addition(MaterialItems.STRONG_GENE, 5)
                 .addition1(MaterialItems.STRONG_GENE, 5)
+                .damage(30)
                 .build();
 
         // level == 0 为永久卡片
         gen(Ingredient.of(ModTags.Items.CARD),0)
                 .addition(MaterialItems.TACO, 32)
                 .addition1(MaterialItems.PEA_GENE, 32)
+                .damage(100)
                 .build();
     }
 
@@ -246,10 +291,11 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
     }
 
 
-    public void genRecipe(ItemStack result, int level, AmountIngredient addition,  Ingredient base, AmountIngredient addition2,AmountIngredient template,String suffix){
+    public void genRecipe(ItemStack result, int level, AmountIngredient addition,  Ingredient base, AmountIngredient addition2,AmountIngredient template,String suffix, int damage){
         result.set(ModDataComponentTypes.CARD_QUALITY.get(), CardQualityComponent.of(level));
-        JsonElement je = parseCodec(CardUpLevelRecipe.CODEC.encodeStart(JavaOps.INSTANCE, new CardUpLevelRecipe( addition,base, addition2,template,result)));
+        JsonElement je = parseCodec(CardUpLevelRecipe.CODEC.encodeStart(JavaOps.INSTANCE, new CardUpLevelRecipe( addition,base, addition2,template,result, damage)));
         JsonObject jo = je.getAsJsonObject();
+        jo.addProperty("damage", damage);
         jo.get("addition").getAsJsonObject().addProperty("type",amountIngredientType());
         jo.get("addition1").getAsJsonObject().addProperty("type",amountIngredientType());
         jo.get("template").getAsJsonObject().addProperty("type",amountIngredientType());
@@ -275,6 +321,8 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
 
         private Item template;
         int templateAmount;
+
+        int damage;
 
         public Builder(DeferredItem<? extends Item> result, int level) {
             this.result = Ingredient.of(result.get());
@@ -320,6 +368,11 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
             return this;
         }
 
+        public Builder damage(int damage) {
+            this.damage = damage;
+            return this;
+        }
+
         public void build(String suffix) {
             ItemStack res = result.getItems()[0];
             if(level == 0)
@@ -341,7 +394,8 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
                     base,
                     new AmountIngredient(Ingredient.of(addition1), addition1Amount),
                     new AmountIngredient(Ingredient.of(template), templateAmount),
-                    suffix);
+                    suffix,
+                    damage);
             }
 
         public void build() {

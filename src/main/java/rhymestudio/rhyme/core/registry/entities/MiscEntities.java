@@ -66,25 +66,25 @@ public class MiscEntities {
             }), 1F,1F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> BLEED_FUME_SHROOM_PROJ_1 = registerMisc("bleed_fume_shroom_proj_1",(e,l)->
-            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.BLEED_EFFECT,20*5,0))).setExistTick(10).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
+            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.SEVERE_POISON_EFFECT,20*5,0))).setExistTick(10).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
                 for(int i=0;i<5;i++)
                     p.level().addParticle(ModParticles.PUFF_PROJ_PARTICLE.get(),p.getX(),p.getY()+0.5,p.getZ(),0.0D,0,0);
             }), 1F,1F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> BLEED_FUME_SHROOM_PROJ_2 = registerMisc("bleed_fume_shroom_proj_2",(e,l)->
-            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.BLEED_EFFECT,20*5,1), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT, 20*3))).setExistTick(10).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
+            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.SEVERE_POISON_EFFECT,20*5,1), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT, 20*3))).setExistTick(10).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
                 for(int i=0;i<5;i++)
                     p.level().addParticle(ModParticles.PUFF_PROJ_PARTICLE.get(),p.getX(),p.getY()+0.5,p.getZ(),0.0D,0,0);
             }), 1F,1F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> BLEED_FUME_SHROOM_PROJ_3 = registerMisc("bleed_fume_shroom_proj_3",(e,l)->
-            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.BLEED_EFFECT,20*8,1), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT, 20*5))).setExistTick(20).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
+            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.SEVERE_POISON_EFFECT,20*8,1), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT, 20*5))).setExistTick(20).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
                 for(int i=0;i<5;i++)
                     p.level().addParticle(ModParticles.PUFF_PROJ_PARTICLE.get(),p.getX(),p.getY()+0.5,p.getZ(),0.0D,0,0);
             }), 1F,1F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> BLEED_FUME_SHROOM_PROJ_4 = registerMisc("bleed_fume_shroom_proj_4",(e,l)->
-            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.BLEED_EFFECT,20*8,2), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT, 20*6))).setExistTick(20).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
+            new LineProj(e,l,BaseProj.TextureLib.EMPTY,List.of(new MobEffectInstance(ModEffects.SEVERE_POISON_EFFECT,20*8,2), new MobEffectInstance(ModEffects.SLOWDOWN_EFFECT, 20*6))).setExistTick(20).setPenetrate(99).setHitSound(ModSounds.SPLAT).setClientTickCallback(p->{
                 for(int i=0;i<5;i++)
                     p.level().addParticle(ModParticles.PUFF_PROJ_PARTICLE.get(),p.getX(),p.getY()+0.5,p.getZ(),0.0D,0,0);
             }), 1F,1F);

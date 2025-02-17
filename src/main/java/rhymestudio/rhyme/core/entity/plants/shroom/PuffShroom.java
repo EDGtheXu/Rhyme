@@ -53,5 +53,4 @@ public class PuffShroom extends AbstractShroom<PuffShroom> {
     protected void actualAiStep() {
 
     }
-
 }

@@ -55,7 +55,7 @@ public class ModChineseProvider extends LanguageProvider {
         // effect
         add("effect.rhyme.slowdown", "寒冷");
         add("effect.rhyme.frozen", "霜冻");
-        add("effect.rhyme.bleed", "流血");
+        add("effect.rhyme.severe_poison", "剧毒");
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 

@@ -47,8 +47,9 @@ public class Rhyme {
     public static <T> ResourceKey<Registry<T>> createResourceKey(String path) {
         return ResourceKey.createRegistryKey(space(path));
     }
-    public static int second2ticks(double second){return (int)(second*TICKS_PER_SECOND);}
-    public static int second2ticks(int second){return second*TICKS_PER_SECOND;}
+    public static int seconds2ticks(double second){return (int)(second*TICKS_PER_SECOND);}
+    public static int seconds2ticks(int second){return second*TICKS_PER_SECOND;}
+    public static int ticks2seconds(int ticks){return ticks/TICKS_PER_SECOND;}
     public static List<Consumer<ModChineseProvider>> chineseProviders = new ArrayList<>();
     public static List<Consumer<ModEnglishProvider>> englishProviders = new ArrayList<>();
     public static void add_zh_en(DeferredItem<? extends Item> item, String zh){

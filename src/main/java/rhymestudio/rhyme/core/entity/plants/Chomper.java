@@ -16,7 +16,7 @@ public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
     public int eatTime;
     public int killBlood;
     public int cdReduction = 0;
-    public float recoverHealth = 0f;
+    public float healthRecoverAmount = 0f;
     private double attackRangePower = 4.0 * 4.0;
     public List<LivingEntity> ultimateTargets = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class Chomper<T extends Chomper<T>> extends AbstractGeoPlant<T> {
         CircleMobSkill<Chomper> eating = new CircleMobSkill<>( "eating", eatTime, 0);
         CircleMobSkill<Chomper> eatingFinish = new CircleMobSkill<Chomper>( "eating_finish", 60, 0)
                 .onOver(a -> {
-                    setHealth(this.getHealth() + recoverHealth);
+                    setHealth(this.getHealth() + healthRecoverAmount);
                     if (eatTime > 0 && cdReduction > 0) {
                         setEatTime(cdReduction < eatTime ? eatTime - cdReduction : 0);
                     }

@@ -15,11 +15,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
-import rhymestudio.rhyme.core.registry.ModSounds;
 
 import java.util.Optional;
 
+import static rhymestudio.rhyme.Rhyme.seconds2ticks;
+
 public class WallNut<T extends WallNut<T>> extends AbstractPlant<T> {
+
+    public float healthRecoverAmount = 0f;
+    public int recoverIntervalTicks = seconds2ticks(1);
+    public int noDamageCooldownTicks = seconds2ticks(10);
+    private int recoverTimer;
+    private int lastDamageTime = -9999;
+
     public WallNut(EntityType<? extends AbstractPlant> type, Level level,
                    Builder builder) {
         super(type, level,builder);
@@ -89,4 +97,29 @@ public class WallNut<T extends WallNut<T>> extends AbstractPlant<T> {
 
     };
 
+    private void recoverHealth() {
+        if (tickCount - lastDamageTime > noDamageCooldownTicks) {
+            recoverTimer++;
+            if (recoverTimer % recoverIntervalTicks == 0) {
+                float newHealth = Math.min(getHealth() + healthRecoverAmount, getMaxHealth());
+                setHealth(newHealth);
+            }
+        } else {
+            recoverTimer = 0; // 重置计时器
+        }
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        lastDamageTime = this.tickCount; // 记录受伤时间
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!level().isClientSide && isAlive()) {
+            recoverHealth();
+        }
+    }
 }
