@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
@@ -17,16 +16,13 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.StructureStaffComponent;
-import rhymestudio.rhyme.core.registry.ModAttachments;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
@@ -35,6 +31,8 @@ public class StructureStaffAttachment implements INBTSerializable<CompoundTag> {
     private long lastUpdate;
     public BlockPos first;
     public BlockPos second;
+
+    public BlockPos targetPos;
 
     public StructureStaffComponent tempStructureStaffComponent;
     public StructureStaffComponent selectedStructureStaffComponent;

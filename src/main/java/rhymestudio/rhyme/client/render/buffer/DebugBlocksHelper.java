@@ -2,6 +2,7 @@ package rhymestudio.rhyme.client.render.buffer;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import org.lwjgl.opengl.GL11;
 
@@ -46,12 +47,17 @@ public class DebugBlocksHelper extends AbstractBufferManager{
         this.continueTick = continueTick;
     }
 
-    public void refresh(){
-        super.refresh();
+    public void refresh(PoseStack poseStack){
+        super.refresh(poseStack);
         if(lastTime!= null && lastTime + continueTick * 20L < System.currentTimeMillis()) {
             blocks.clear();
             lastTime = null;
         }
+    }
+
+    @Override
+    protected boolean shouldRender() {
+        return !blocks.isEmpty();
     }
 
     @Override
@@ -70,7 +76,7 @@ public class DebugBlocksHelper extends AbstractBufferManager{
     }
 
     @Override
-    protected void buildBuffer(BufferBuilder buffer) {
+    protected void buildBuffer(BufferBuilder buffer, PoseStack poseStack) {
         for(BlockPos pos : blocks) {
             float progress = 1 - (float) (System.currentTimeMillis() - lastTime) / (continueTick * 21L);
             renderDebugBlock(buffer, pos,1.0F,255,255,255, (int) (255 * progress));

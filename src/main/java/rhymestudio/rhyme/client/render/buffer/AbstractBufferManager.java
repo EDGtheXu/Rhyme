@@ -28,20 +28,22 @@ public abstract class AbstractBufferManager {
         return System.currentTimeMillis() - lastRefreshTime > refreshInterval;
     }
 
+    protected abstract boolean shouldRender();
+
     protected abstract void beforeRender();
 
     protected abstract void afterRender(PoseStack poseStack);
 
-    protected abstract void buildBuffer(BufferBuilder buffer);
+    protected abstract void buildBuffer(BufferBuilder buffer, PoseStack poseStack);
 
-    public void refresh() {
+    public void refresh(PoseStack poseStack) {
         lastRefreshTime = System.currentTimeMillis();
 
         vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
-        buildBuffer(buffer);
+        buildBuffer(buffer, poseStack);
 
         var build = buffer.build();
         if (build == null) {
@@ -59,15 +61,19 @@ public abstract class AbstractBufferManager {
 
     }
     public void render(PoseStack poseStack, Matrix4f modelMatrix, Vec3 playerPos, Matrix4f projectMatrix){
+
+        if(!shouldRender()) return;
+
+        poseStack.pushPose();
+
         if(shouldRefresh())
-            refresh();
+            refresh(poseStack);
 
         if (vertexBuffer != null) {
 
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             beforeRender();
 
-            poseStack.pushPose();
             poseStack.mulPose(modelMatrix);
             poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
 //            poseStack.mulPose(event.getCamera().rotation());
@@ -76,10 +82,11 @@ public abstract class AbstractBufferManager {
             vertexBuffer.bind();
             vertexBuffer.drawWithShader(poseStack.last().pose(), projectMatrix, RenderSystem.getShader());
             VertexBuffer.unbind();
-            poseStack.popPose();
+
 
             afterRender(poseStack);
 
         }
+        poseStack.popPose();
     }
 }
