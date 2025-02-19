@@ -26,6 +26,7 @@ public class FakeBlocksHelper extends AbstractBufferManager{
     private final int continueTick;
     private Long lastTime;
     protected VertexBuffer lineVertexBuffer;
+    protected VertexBuffer blockBuffer;
     private static final FakeBlocksHelper instance = new FakeBlocksHelper(50,100);
 
     public void addBlock(BlockPos pos, BlockState state) {
@@ -87,11 +88,9 @@ public class FakeBlocksHelper extends AbstractBufferManager{
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 //        GameRenderer.getPositionTexShader().apply();
-        RenderSystem.disableCull();
-
+//        RenderSystem.disableCull();
     }
 
     @Override
@@ -101,11 +100,8 @@ public class FakeBlocksHelper extends AbstractBufferManager{
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
-
-
     @Override
     protected void buildBuffer(BufferBuilder buffer, PoseStack poseStack) {
-
 
         if(targetPos!=null){
             int x = maxX;
@@ -122,9 +118,50 @@ public class FakeBlocksHelper extends AbstractBufferManager{
                     255,255,255,100,
                     5, (float)offsetU, (float)offsetV
             );
+        }
+    }
 
+    public void buildBlocks(PoseStack poseStack){
+        if(blockBuffer != null)
+            blockBuffer.close();
+        blockBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+        BufferBuilder blockBufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+
+        BlockPos pos = targetPos;
+        if(pos!=null){
+            poseStack.pushPose();
+            for (Map.Entry<BlockPos,BlockState> entry : blocks.entrySet()){
+               poseStack.pushPose();
+                BlockPos pos1 = entry.getKey();
+                BlockState state = entry.getValue();
+
+                poseStack.translate(pos1.getX(), pos1.getY(), pos1.getZ());
+                Minecraft.getInstance().getBlockRenderer().getModelRenderer().tesselateBlock(
+                        Minecraft.getInstance().level,
+                        Minecraft.getInstance().getBlockRenderer().getBlockModel(state),
+                        state,
+                        pos1,
+                        poseStack, blockBufferBuilder,
+                        false,
+                        Minecraft.getInstance().player.getRandom(),
+                        0,
+                        OverlayTexture.NO_OVERLAY);
+                poseStack.popPose();
+            }
+            poseStack.popPose();
         }
 
+        var build = blockBufferBuilder.build();
+        if(build != null) {
+            blockBuffer.bind();
+            blockBuffer.upload(build);
+            VertexBuffer.unbind();
+        }
+    }
+
+    boolean reBuild = true;
+    public void setRebuild(boolean reBuild) {
+        this.reBuild = reBuild;
     }
 
     public void render(PoseStack poseStack, Matrix4f modelMatrix, Vec3 playerPos, Matrix4f projectMatrix){
@@ -133,23 +170,14 @@ public class FakeBlocksHelper extends AbstractBufferManager{
         RenderSystem.enableCull();
         // 渲染方块虚影
         poseStack.pushPose();
-        poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
+//        poseStack.mulPose(modelMatrix);
+//        poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
 
-
-        for(Map.Entry<BlockPos,BlockState> entry : blocks.entrySet()) {
-            BlockPos pos = entry.getKey();
-
-            BlockState state = entry.getValue();
-            poseStack.pushPose();
-            poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-
-
-            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack,
-                    Minecraft.getInstance().renderBuffers().bufferSource(),0xF000F0, OverlayTexture.NO_OVERLAY);
-
-            poseStack.popPose();
+        if(reBuild){
+            buildBlocks(poseStack);
+            reBuild = false;
         }
-
+//        buildBlocks(poseStack);
         // 取消遮挡
         Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
         poseStack.popPose();
@@ -159,12 +187,14 @@ public class FakeBlocksHelper extends AbstractBufferManager{
         if(shouldRefresh()){
             // 刷新选择框
             refreshLineBuffer(poseStack);
+
+            updateTime();
         }
         // 刷新AABB
         refresh(poseStack);
         beforeRender();
 
-        if (vertexBuffer != null && lineVertexBuffer!= null) {
+        if (vertexBuffer != null && lineVertexBuffer!= null && blockBuffer!= null) {
             // 渲染选择框
 
             poseStack.pushPose();
@@ -172,9 +202,16 @@ public class FakeBlocksHelper extends AbstractBufferManager{
             poseStack.mulPose(modelMatrix);
             poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
 
+            afterRender(poseStack);
+            blockBuffer.bind();
+            blockBuffer.drawWithShader(poseStack.last().pose(), projectMatrix, RenderSystem.getShader());
+
+            beforeRender();
+            RenderSystem.disableCull();
             RenderSystem.setShaderTexture(0, Rhyme.space("textures/gui/mask.png"));
 
 //            minecraft.getBlockRenderer().renderSingleBlock(minecraft.level.getBlockState(BlockPos.containing(playerPos.subtract(0,-1,0))),poseStack,minecraft.renderBuffers().bufferSource(),15, OverlayTexture.NO_OVERLAY);
+
             vertexBuffer.bind();
             vertexBuffer.drawWithShader(poseStack.last().pose(), projectMatrix, RenderSystem.getShader());
 
@@ -191,6 +228,8 @@ public class FakeBlocksHelper extends AbstractBufferManager{
 
     public void refreshLineBuffer(PoseStack poseStack) {
 
+        if(lineVertexBuffer != null)
+            lineVertexBuffer.close();
         lineVertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         BufferBuilder lineBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
@@ -220,4 +259,6 @@ public class FakeBlocksHelper extends AbstractBufferManager{
             VertexBuffer.unbind();
         }
     }
+
+
 }

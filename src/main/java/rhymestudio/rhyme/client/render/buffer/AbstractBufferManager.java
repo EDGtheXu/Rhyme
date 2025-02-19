@@ -36,9 +36,14 @@ public abstract class AbstractBufferManager {
 
     protected abstract void buildBuffer(BufferBuilder buffer, PoseStack poseStack);
 
-    public void refresh(PoseStack poseStack) {
+    public void updateTime() {
         lastRefreshTime = System.currentTimeMillis();
+    }
 
+    public void refresh(PoseStack poseStack) {
+
+        if(vertexBuffer!= null)
+            vertexBuffer.close();
         vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -66,8 +71,10 @@ public abstract class AbstractBufferManager {
 
         poseStack.pushPose();
 
-        if(shouldRefresh())
+        if(shouldRefresh()) {
+            updateTime();
             refresh(poseStack);
+        }
 
         if (vertexBuffer != null) {
 

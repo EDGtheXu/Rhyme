@@ -90,6 +90,7 @@ public class StaffScreen extends AbstractContainerScreen<StaffMenu> {
                     );
                 }
             }
+            FakeBlocksHelper.Singleton().setRebuild(true);
 
         });
         this.generateBt = new ImageButton(5,65,30,30, GEN_SPRITES, p->{
