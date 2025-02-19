@@ -24,7 +24,7 @@ public abstract class AbstractBufferManager {
         this.refreshInterval = refreshTime;
     }
 
-    boolean shouldRefresh() {
+    protected boolean shouldRefresh() {
         return System.currentTimeMillis() - lastRefreshTime > refreshInterval;
     }
 

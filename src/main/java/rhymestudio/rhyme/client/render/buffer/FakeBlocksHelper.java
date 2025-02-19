@@ -11,7 +11,6 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.registry.ModAttachments;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +71,14 @@ public class FakeBlocksHelper extends AbstractBufferManager{
 
     @Override
     protected boolean shouldRender() {
-        return !blocks.isEmpty();
+        if(blocks.isEmpty())
+            return false;
+        boolean flag = Minecraft.getInstance().player.distanceToSqr(Vec3.atLowerCornerOf(blocks.keySet().stream().toList().getFirst())) > 100 * 100;
+        if(flag){
+            clear();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -94,6 +100,8 @@ public class FakeBlocksHelper extends AbstractBufferManager{
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
+
+
 
     @Override
     protected void buildBuffer(BufferBuilder buffer, PoseStack poseStack) {
@@ -126,8 +134,11 @@ public class FakeBlocksHelper extends AbstractBufferManager{
         // 渲染方块虚影
         poseStack.pushPose();
         poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
+
+
         for(Map.Entry<BlockPos,BlockState> entry : blocks.entrySet()) {
             BlockPos pos = entry.getKey();
+
             BlockState state = entry.getValue();
             poseStack.pushPose();
             poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -147,9 +158,10 @@ public class FakeBlocksHelper extends AbstractBufferManager{
         ;
         if(shouldRefresh()){
             // 刷新选择框
-            refresh(poseStack);
             refreshLineBuffer(poseStack);
         }
+        // 刷新AABB
+        refresh(poseStack);
         beforeRender();
 
         if (vertexBuffer != null && lineVertexBuffer!= null) {

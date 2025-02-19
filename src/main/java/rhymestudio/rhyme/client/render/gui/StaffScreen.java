@@ -4,12 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiSpriteManager;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -17,6 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
+import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.client.render.buffer.FakeBlocksHelper;
 import rhymestudio.rhyme.core.dataSaver.attactment.StructureStaffAttachment;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.StructureStaffComponent;
@@ -42,40 +46,35 @@ public class StaffScreen extends AbstractContainerScreen<StaffMenu> {
     public StaffScreen(StaffMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
-    private static final WidgetSprites WEBSITE_LINK_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("icon/link"), ResourceLocation.withDefaultNamespace("icon/link_highlighted")
+    private static final WidgetSprites SAVE_SPRITES = new WidgetSprites(
+            Rhyme.space("down"),  Rhyme.space("down_highlight")
+    );
+    private static final WidgetSprites GEN_SPRITES = new WidgetSprites(
+            Rhyme.space("gen"),  Rhyme.space("gen_highlight")
+    );
+    private static final WidgetSprites TEST_SPRITES = new WidgetSprites(
+            Rhyme.space("generate"),  Rhyme.space("generate_highlight")
+    );
+    private static final WidgetSprites DELETE_SPRITES = new WidgetSprites(
+            Rhyme.space("delete"),  Rhyme.space("delete_highlight")
     );
 
     protected void init() {
         super.init();
+
+
         attachment = minecraft.player.getData(ModAttachments.STRUCTURE_STAFF_STORAGE.get());
         if(attachment.structureStaffComponents.isEmpty()){
             attachment.loadStructures();
         }
         this.editBox = new EditBox(this.font, 50, 5, 100, 20, Component.empty());
-        this.saveBt = new ImageButton(0,0,30,30,WEBSITE_LINK_SPRITES, p->{
+
+        this.saveBt = new ImageButton(5,5,30,30, SAVE_SPRITES, p->{
             // 保存文件名
             if(!editBox.getValue().isEmpty())
                 attachment.saveStructure(editBox.getValue());
         });
-        this.generateBt = new ImageButton(0,60,30,30,WEBSITE_LINK_SPRITES,p->{
-            // 生成地形
-            if(attachment.selectedStructureStaffComponent!= null && attachment.targetPos!= null) {
-                var list = attachment.selectedStructureStaffComponent.split(50);
-                for (var c : list) {
-                    AdapterUtils.sendPacketToServer(new GenerateStructurePacket(c, attachment.targetPos));
-                }
-            }
-            FakeBlocksHelper.Singleton().clear();
-            attachment.selectedStructureStaffComponent = null;
-            attachment.targetPos = null;
-
-        });
-        this.deleteBt = new ImageButton(0,90,30,30,WEBSITE_LINK_SPRITES,p->{
-            FakeBlocksHelper.Singleton().clear();
-        });
-
-        this.chooseBt = new ImageButton(0,120,30,30,WEBSITE_LINK_SPRITES,p->{
+        this.chooseBt = new ImageButton(5,35,30,30, TEST_SPRITES, p->{
             // 生成虚影
             attachment.targetPos = Computer.getEyeBlockHitResult(minecraft.player);
             if(attachment.selectedStructureStaffComponent!= null) {
@@ -88,11 +87,29 @@ public class StaffScreen extends AbstractContainerScreen<StaffMenu> {
                             attachment.selectedStructureStaffComponent.maxx(),
                             attachment.selectedStructureStaffComponent.maxy(),
                             attachment.selectedStructureStaffComponent.maxz()
-                            );
+                    );
                 }
             }
 
         });
+        this.generateBt = new ImageButton(5,65,30,30, GEN_SPRITES, p->{
+            // 生成地形
+            if(attachment.selectedStructureStaffComponent!= null && attachment.targetPos!= null) {
+                var list = attachment.selectedStructureStaffComponent.split(50);
+                for (var c : list) {
+                    AdapterUtils.sendPacketToServer(new GenerateStructurePacket(c, attachment.targetPos));
+                }
+            }
+            FakeBlocksHelper.Singleton().clear();
+            attachment.selectedStructureStaffComponent = null;
+            attachment.targetPos = null;
+
+        });
+        this.deleteBt = new ImageButton(5,95,30,30, DELETE_SPRITES, p->{
+            FakeBlocksHelper.Singleton().clear();
+        });
+
+
 
         this.addRenderableWidget(this.saveBt);
         this.addRenderableWidget(this.editBox);
@@ -117,9 +134,10 @@ public class StaffScreen extends AbstractContainerScreen<StaffMenu> {
             int x = 75;
             int y = 0;
             hoverIndex = -1;
-            var values = components.values().stream().toList();
-            for(int i = 0; i < values.size(); i++) {
-                var component = values.get(i);
+            var entries = components.entrySet().stream().toList();
+            for(int i = 0; i < entries.size(); i++) {
+                var component = entries.get(i).getValue();
+                var name = entries.get(i).getKey();
 
                 if (component != null) {
                     PoseStack pose = guiGraphics.pose();
@@ -150,6 +168,8 @@ public class StaffScreen extends AbstractContainerScreen<StaffMenu> {
                         this.hoverIndex = hoverIndex;
                     }
                     if(hoverIndex < 0 && this.selectIndex != i){
+                        // 未选中，渲染文件名
+                        guiGraphics.drawCenteredString(this.font, name, 0,-5, 0xFFFFFFFF);
                         pose.popPose();
                         continue;
                     }
