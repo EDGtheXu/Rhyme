@@ -17,6 +17,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.block.CardUpLevelBlock;
 import rhymestudio.rhyme.core.block.SunCreatorBlock;
+import rhymestudio.rhyme.core.block.ZombieFlagBlock;
 
 import java.util.function.Supplier;
 
@@ -36,6 +37,11 @@ public class ModBlocks {
     public static final Supplier<BaseEntityBlock> CARD_UP_LEVEL_BLOCK = register("card_up_level_block","卡片升阶台", () -> new CardUpLevelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).destroyTime(30).noOcclusion()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CardUpLevelBlock.CardUpLevelBlockEntity>> CARD_UP_LEVEL_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("card_up_level_block_entity", () -> BlockEntityType.Builder.of(CardUpLevelBlock.CardUpLevelBlockEntity::new, CARD_UP_LEVEL_BLOCK.get()).build(DSL.remainderType()));
+
+    public static final Supplier<BaseEntityBlock> ZOMBIE_FLAG_BLOCK = register("zombie_flag_block","僵尸旗帜", () -> new ZombieFlagBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).destroyTime(10).noOcclusion()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ZombieFlagBlock.ZombieFlagBlockEntity>> ZOMBIE_FLAG_BLOCK_ENTITY =
+            BLOCK_ENTITIES.register("zombie_flag_block_entity", () -> BlockEntityType.Builder.of(ZombieFlagBlock.ZombieFlagBlockEntity::new, ZOMBIE_FLAG_BLOCK.get()).build(DSL.remainderType()));
+
 
 
 //    public static final Supplier<Block> CONE_BLOCK = register("cone","路障", ()->new BaseModelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD).noOcclusion()){

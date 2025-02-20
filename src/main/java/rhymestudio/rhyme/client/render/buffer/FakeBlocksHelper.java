@@ -72,9 +72,16 @@ public class FakeBlocksHelper extends AbstractBufferManager{
 
     @Override
     protected boolean shouldRender() {
-        if(blocks.isEmpty())
+        if(blocks.isEmpty()) {
+            if (blockBuffer != null)
+                blockBuffer.close();
+            if (lineVertexBuffer != null)
+                lineVertexBuffer.close();
+            if (vertexBuffer != null)
+                vertexBuffer.close();
             return false;
-        boolean flag = Minecraft.getInstance().player.distanceToSqr(Vec3.atLowerCornerOf(blocks.keySet().stream().toList().getFirst())) > 100 * 100;
+        }
+        boolean flag = Minecraft.getInstance().player.distanceToSqr(Vec3.atLowerCornerOf(blocks.keySet().stream().toList().getFirst())) > 1000 * 1000;
         if(flag){
             clear();
             return false;
