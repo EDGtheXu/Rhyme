@@ -10,8 +10,11 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -19,13 +22,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.checkpoint.*;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPoint;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPointManager;
+import rhymestudio.rhyme.core.checkpoint.entitygroup.IEntityTypeGroup;
+import rhymestudio.rhyme.core.checkpoint.spawner.IZombieSpawner;
 import rhymestudio.rhyme.core.registry.ModBlocks;
-import rhymestudio.rhyme.core.registry.entities.Zombies;
-import rhymestudio.rhyme.core.wave.IZombieSpawner;
-import rhymestudio.rhyme.core.wave.WaveManager;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,9 +44,11 @@ public class ZombieFlagBlock extends BaseEntityBlock {
         super(properties);
     }
 
+    public static final MapCodec<ZombieFlagBlock> CODEC = simpleCodec(ZombieFlagBlock::new);
+
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
-        return null;
+        return CODEC;
     }
 
     @Override
@@ -47,6 +56,15 @@ public class ZombieFlagBlock extends BaseEntityBlock {
         return new ZombieFlagBlockEntity(blockPos, blockState);
     }
 
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if(!level.isClientSide){
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if(blockEntity instanceof ZombieFlagBlockEntity entity) {
+
+            }
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
 
 
     @Override
@@ -54,8 +72,15 @@ public class ZombieFlagBlock extends BaseEntityBlock {
         return createTickerHelper(pBlockEntityType, ModBlocks.ZOMBIE_FLAG_BLOCK_ENTITY.get(), (level, pos, state, blockEntity)->{
 
             if(!level.isClientSide()) {
-                // 服务端更新状态
+
                 blockEntity.time++;
+                if( blockEntity.time < ZombieFlagBlockEntity.TIME_PRE_SPAWN) return;
+                if(blockEntity.waveManager == null) {
+                    blockEntity.time = 0;
+                    return;
+                }
+                // 服务端更新状态
+
                 blockEntity.state = blockEntity.waveManager.update();
                 var players = level.players();
                 for (Player player : players) {
@@ -65,7 +90,7 @@ public class ZombieFlagBlock extends BaseEntityBlock {
 
                 // 更新怪物列表
                 if(--blockEntity.checkInterval <= 0) {
-                    blockEntity.checkInterval = 50;
+                    blockEntity.checkInterval = blockEntity._checkInterval;
                     for (Iterator<UUID> iterator = blockEntity.monsters.iterator(); iterator.hasNext(); ) {
                         UUID uuid = iterator.next();
                         var entity = ((ServerLevel) level).getEntity(uuid);
@@ -75,19 +100,23 @@ public class ZombieFlagBlock extends BaseEntityBlock {
                     }
                 }
 
+                // 结束
                 if (blockEntity.state == WaveManager.State.OVER) {
                     --blockEntity.timeDelay;
-                    if (blockEntity.isOver())
+                    if (blockEntity.isOver()) {
                         level.setBlock(pos, Blocks.BONE_BLOCK.defaultBlockState(), 2);
+
+                    }
                 }
             }else{
-                System.out.println(blockEntity.time + " " + blockEntity.remain);
+//                System.out.println(blockEntity.time + " " + blockEntity.remain);
             }
         });
     }
 
     public static final class  ZombieFlagBlockEntity extends BlockEntity implements IZombieSpawner {
 
+        static final int TIME_PRE_SPAWN = 50;
         // common
         int time = 0;
 
@@ -95,38 +124,27 @@ public class ZombieFlagBlock extends BaseEntityBlock {
         int remain = 0;
 
         // server side only
-        WaveManager waveManager;
+        WaveManager waveManager = WaveManager.EMPTY;
         WaveManager.State state = WaveManager.State.IN_PROGRESS;
         List<UUID> monsters = new LinkedList<>();
+        final int _checkInterval = 50;
         int checkInterval = 50;
         int timeDelay = 100;
 
         public ZombieFlagBlockEntity(BlockPos pos, BlockState blockState) {
             super(ModBlocks.ZOMBIE_FLAG_BLOCK_ENTITY.get(), pos, blockState);
-            this.waveManager = WaveManager.builder(this)
 
-                    .addWave(false)
-                    .addZombie(20, EntityType.ZOMBIE, 1)
-                    .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 1)
-                    .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
-                    .buildWave()
+            this.waveManager = new WaveManager(this, CheckPointManager.<CheckPoint>getCheckPoint(Rhyme.space("lvl_1")).get());
 
-                    .addWave(false)
-                    .addZombie(20, EntityType.ZOMBIE, 1)
-                    .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 1)
-                    .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
-                    .buildWave()
-
-                    .build();
         }
 
 
 
         @Override
-        public void spawnZombie(WaveManager manager, WaveManager.SingleZombie zombieInfo) {
-            EntityType<?> type = zombieInfo.type();
+        public void spawnZombie(WaveManager manager, IEntityTypeGroup zombieInfo) {
+            EntityType<?> type = zombieInfo.getType();
             if (level != null) {
-                int count = zombieInfo.count();
+                int count = zombieInfo.getCount();
                 for (int i = 0; i < count; i++) {
                     var entity = type.create(level);
                     monsters.add(entity.getUUID());

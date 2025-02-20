@@ -4,6 +4,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import rhymestudio.rhyme.core.registry.ModRegistry;
 import rhymestudio.rhyme.network.c2s.ClientEventBoundPacket;
 import rhymestudio.rhyme.network.c2s.DaveShopPacket;
 import rhymestudio.rhyme.network.c2s.GenerateStructurePacket;
@@ -30,9 +32,19 @@ public class ModEvent {
         registrar.playToServer(GenerateStructurePacket.TYPE, GenerateStructurePacket.STREAM_CODEC, GenerateStructurePacket::handle);
         registrar.playToServer(ClientEventBoundPacket.TYPE, ClientEventBoundPacket.STREAM_CODEC, ClientEventBoundPacket::handle);
 
-
     }
 
+    @SubscribeEvent
+    public static void registerEvent(RegisterEvent event) {
+        if(event.getRegistry() == ModRegistry.CHECK_POINT_REGISTRY){
+
+//            Registries.rec
+//            ModCheckPoints.registerFromJson();
+//            ResourceManager
+//            ModCheckPoints.CHECK_POINTS.register("lvl_2", ()-> (spawn)-> WaveManager.builder(spawn).build());
+
+        }
+    }
 
 
 

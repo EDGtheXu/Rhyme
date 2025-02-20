@@ -51,6 +51,7 @@ public class DataGenerator {
         generator.addProvider(server, new CardUpperRecipeProvider(output));
         generator.addProvider(server, new DaveShopProvider(output));
         generator.addProvider(server, new SunCreatorSecRecipeProvider(output));
+        generator.addProvider(server, new CheckPointDataProvider(output));
 
         boolean client = event.includeClient();
         generator.addProvider(client, new ModChineseProvider(output));

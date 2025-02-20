@@ -1,6 +1,5 @@
 package rhymestudio.rhyme;
 
-import com.google.gson.Gson;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -8,22 +7,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import rhymestudio.rhyme.config.Codec.CodecRegister;
-import rhymestudio.rhyme.config.Codec.ICodec;
-import rhymestudio.rhyme.config.Codec.Price;
 import rhymestudio.rhyme.config.ServerConfig;
 import rhymestudio.rhyme.core.attribute.ModAttributes;
+import rhymestudio.rhyme.core.checkpoint.ModCheckPoints;
+import rhymestudio.rhyme.core.checkpoint.entitygroup.EntityTypeGroupProviderTypes;
 import rhymestudio.rhyme.core.registry.*;
 import rhymestudio.rhyme.datagen.biome.ModBiomes;
 import rhymestudio.rhyme.datagen.lang.ModChineseProvider;
@@ -61,6 +56,8 @@ public class Rhyme {
         Rhyme.englishProviders.add((c)->c.add(e.get(),toTitleCase(e.getId().getPath())));
     }
     public Rhyme(IEventBus modEventBus, ModContainer modContainer) {
+        modEventBus.addListener(ModRegistry::newRegistry);
+
         ModItems.registerItems(modEventBus);
         ModEntities.registerEntities(modEventBus);
         ModArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
@@ -81,6 +78,7 @@ public class Rhyme {
         ModAttributes.ATTRIBUTES_TYPES.register(modEventBus);
         ModStructures.register(modEventBus);
         ModFeatures.register(modEventBus);
+        ModCheckPoints.register(modEventBus);
 
 
 
@@ -90,19 +88,17 @@ public class Rhyme {
 
         CodecRegister.registerCodecs();
 
-        Gson gson = ICodec.getGson();
+//        Gson gson = ICodec.getGson();
 
-        Price price = new Price(10, ItemStack.EMPTY);
-        String json = gson.toJson(price, Price.class);
-        LOGGER.info(json);
-
-        Price price2 = gson.fromJson(json, Price.class);
-        LOGGER.info(price2.toString());
+//        Price price = new Price(10, ItemStack.EMPTY);
+//        String json = gson.toJson(price, Price.class);
+//        LOGGER.info(json);
+//
+//        Price price2 = gson.fromJson(json, Price.class);
+//        LOGGER.info(price2.toString());
 
     }
 
-    @SubscribeEvent
-    public void onNewDatapackRegistries(@NotNull DataPackRegistryEvent.NewRegistry event) {
-//        event.dataPackRegistry(DAVE_SHOP, DaveTrades.CODEC, DaveTrades.CODEC);
-    }
+
+
 }

@@ -6,6 +6,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPointManager;
 import rhymestudio.rhyme.core.recipe.DaveTrades;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
@@ -18,6 +19,7 @@ public class GameEvent {
     @SubscribeEvent
     public static void setUp(ServerStartedEvent event){
         DaveTrades.readTradesFromJson(event.getServer().getResourceManager());
+        CheckPointManager.registerFromJson(event.getServer().getResourceManager());
     }
 
     @SubscribeEvent
