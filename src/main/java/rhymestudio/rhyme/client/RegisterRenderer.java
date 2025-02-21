@@ -17,6 +17,7 @@ import rhymestudio.rhyme.client.model.proj.PeaProjModel;
 import rhymestudio.rhyme.client.model.zombieModels.NormalZombieModel;
 import rhymestudio.rhyme.client.render.GeoNormalRenderer;
 import rhymestudio.rhyme.client.render.GeoPlantRenderer;
+import rhymestudio.rhyme.client.render.block.ZombieFlagBlockRenderer;
 import rhymestudio.rhyme.client.render.entity.BasePlantRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.HelmetEntityRenderer;
 import rhymestudio.rhyme.client.render.entity.misc.ModelPartRenderer;
@@ -27,6 +28,7 @@ import rhymestudio.rhyme.client.render.entity.zombie.NormalZombieRenderer;
 import rhymestudio.rhyme.client.render.entity.zombie.PoleVaultingZombieRenderer;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.BaseProj;
+import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 
@@ -87,11 +89,14 @@ public class RegisterRenderer {
         event.registerEntityRenderer(Zombies.IRON_BUCKET_ZOMBIE.get(), c-> new NormalZombieRenderer<>(c, new NormalZombieModel<>(c.bakeLayer(NormalZombieModel.LAYER_LOCATION))));
         event.registerEntityRenderer(Zombies.POLE_VAULTING_ZOMBIE.get(), c-> new PoleVaultingZombieRenderer(c, Rhyme.space("zombie/pole_vaulting_zombie")));
 
+        // 方块
+        event.registerBlockEntityRenderer(ModBlocks.ZOMBIE_FLAG_BLOCK_ENTITY.get(), ZombieFlagBlockRenderer::new);
 
         // 其他
         event.registerEntityRenderer(MiscEntities.HELMET_ENTITY.get(),HelmetEntityRenderer::new);
         event.registerEntityRenderer(MODEL_PART_ENTITY.get(), ModelPartRenderer::new);
         event.registerEntityRenderer(CRAZY_DAVE.get(), c -> new GeoNormalRenderer<>(c, CRAZY_DAVE.getId()));
+
 
     }
 

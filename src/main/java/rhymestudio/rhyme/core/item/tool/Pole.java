@@ -20,8 +20,9 @@ public class Pole extends CustomRarityItem {
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if(player.onGround()) {
-            player.setDeltaMovement(player.getDeltaMovement().add(new Vec3(0, 0.3, 0)).scale(7));
+        if(usedHand == InteractionHand.MAIN_HAND && player.onGround()) {
+            Vec3 v2 = getVelocity(player.getDeltaMovement());
+            player.setDeltaMovement(v2);
             ItemStack itemstack = player.getItemInHand(usedHand);
             if (level instanceof ServerLevel sl)
                 itemstack.hurtAndBreak(1, sl, player, c -> {
@@ -34,6 +35,13 @@ public class Pole extends CustomRarityItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
 
 
+    }
+
+    public static Vec3 getVelocity(Vec3 ori) {
+        double f = Math.min(ori.length() * 20, 2);
+        Vec3 v = ori.normalize().scale(f).add(0, 2.5, 0);
+        Vec3 v2 = new Vec3(v.x, Math.min(v.y, 1.5), v.z);
+        return v2;
     }
 
 }

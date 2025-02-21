@@ -14,6 +14,7 @@ import net.minecraft.world.phys.Vec3;
 import rhymestudio.rhyme.core.entity.AbstractGeoMonster;
 import rhymestudio.rhyme.core.entity.ai.CircleMobSkill;
 import rhymestudio.rhyme.core.entity.misc.HelmetEntity;
+import rhymestudio.rhyme.core.item.tool.Pole;
 import rhymestudio.rhyme.core.registry.entities.MiscEntities;
 import rhymestudio.rhyme.core.registry.items.ToolItems;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -84,10 +85,7 @@ public class PoleVaultingZombie extends AbstractGeoMonster<PoleVaultingZombie> {
         CircleMobSkill<PoleVaultingZombie> high_jump = new CircleMobSkill<PoleVaultingZombie>("high_jump", 30, 20)
                 .onTick(e->{
                     if(skills.canTrigger()){
-                        double f = Math.min(e.getDeltaMovement().length() * 20, 2);
-                        Vec3 v = e.getDeltaMovement().normalize().scale(f).add(0, 2.5, 0);
-                        Vec3 v2 = new Vec3(v.x, Math.min(v.y, 1.5), v.z);
-                        System.out.println(v);
+                        Vec3 v2 = Pole.getVelocity(e.getDeltaMovement());
                         e.setDeltaMovement(v2);
                     }
                     if(e.onGround() && skills.canContinue())

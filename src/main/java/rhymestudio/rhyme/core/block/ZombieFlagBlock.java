@@ -5,11 +5,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -56,11 +60,19 @@ public class ZombieFlagBlock extends BaseEntityBlock {
         return new ZombieFlagBlockEntity(blockPos, blockState);
     }
 
+    @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(!level.isClientSide){
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if(blockEntity instanceof ZombieFlagBlockEntity entity) {
+                ResourceLocation location = Rhyme.space("lvl_1");
+                if(entity.waveManager == WaveManager.EMPTY) {
 
+                    entity.waveManager = new WaveManager(entity, CheckPointManager.<CheckPoint>getCheckPoint(location).get());
+                    entity.bossEvent = (ServerBossEvent) new ServerBossEvent(Component.translatable(location.toLanguageKey()), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
+
+                    return ItemInteractionResult.SUCCESS;
+                }
             }
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -75,7 +87,7 @@ public class ZombieFlagBlock extends BaseEntityBlock {
 
                 blockEntity.time++;
                 if( blockEntity.time < ZombieFlagBlockEntity.TIME_PRE_SPAWN) return;
-                if(blockEntity.waveManager == null) {
+                if(blockEntity.waveManager == WaveManager.EMPTY) {
                     blockEntity.time = 0;
                     return;
                 }
@@ -83,9 +95,17 @@ public class ZombieFlagBlock extends BaseEntityBlock {
 
                 blockEntity.state = blockEntity.waveManager.update();
                 var players = level.players();
+
                 for (Player player : players) {
-                    if(player.distanceToSqr(Vec3.atCenterOf(blockEntity.getBlockPos())) < 5*5)
-                        ((ServerPlayer)player).connection.send(ClientboundBlockEntityDataPacket.create(blockEntity));
+                    if(player.distanceToSqr(Vec3.atCenterOf(blockEntity.getBlockPos())) < 5*5) {
+                        ((ServerPlayer) player).connection.send(ClientboundBlockEntityDataPacket.create(blockEntity));
+
+                        if(blockEntity.bossEvent != null)
+                            blockEntity.bossEvent.addPlayer((ServerPlayer) player);
+                    }else{
+                        if(blockEntity.bossEvent != null)
+                            blockEntity.bossEvent.removePlayer((ServerPlayer) player);
+                    }
                 }
 
                 // 更新怪物列表
@@ -108,15 +128,28 @@ public class ZombieFlagBlock extends BaseEntityBlock {
 
                     }
                 }
+
             }else{
 //                System.out.println(blockEntity.time + " " + blockEntity.remain);
             }
         });
     }
 
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if(!level.isClientSide){
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if(blockEntity instanceof ZombieFlagBlockEntity entity) {
+                if(entity.bossEvent != null)
+                    entity.bossEvent.removeAllPlayers();
+            }
+        }
+    }
+
     public static final class  ZombieFlagBlockEntity extends BlockEntity implements IZombieSpawner {
 
         static final int TIME_PRE_SPAWN = 50;
+        ServerBossEvent bossEvent;
         // common
         int time = 0;
 
@@ -134,7 +167,6 @@ public class ZombieFlagBlock extends BaseEntityBlock {
         public ZombieFlagBlockEntity(BlockPos pos, BlockState blockState) {
             super(ModBlocks.ZOMBIE_FLAG_BLOCK_ENTITY.get(), pos, blockState);
 
-            this.waveManager = new WaveManager(this, CheckPointManager.<CheckPoint>getCheckPoint(Rhyme.space("lvl_1")).get());
 
         }
 

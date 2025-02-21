@@ -56,7 +56,7 @@ public class ToolItems {
                     )
                     .add(
                             Attributes.ENTITY_INTERACTION_RANGE,
-                            new AttributeModifier(Rhyme.space("range"), 2, AttributeModifier.Operation.ADD_VALUE),
+                            new AttributeModifier(Rhyme.space("range"), 0.5, AttributeModifier.Operation.ADD_VALUE),
                             EquipmentSlotGroup.MAINHAND
                     )
                     .add(
