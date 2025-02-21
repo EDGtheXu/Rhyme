@@ -9,6 +9,8 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -24,11 +26,13 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import rhymestudio.rhyme.core.dataSaver.attactment.PlantRecorderAttachment;
+import rhymestudio.rhyme.core.dataSaver.dataComponent.CheckpointComponent;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
 import rhymestudio.rhyme.core.entity.CrazyDave;
 import rhymestudio.rhyme.core.entity.misc.SunItemEntity;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 import rhymestudio.rhyme.core.registry.items.MaterialItems;
+import rhymestudio.rhyme.datagen.CheckPointDataProvider;
 import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.mixinauxiliary.IPlayer;
@@ -91,10 +95,17 @@ public class EntityEvent {
     // 死亡掉落金币
     @SubscribeEvent
     public static void livingDead(LivingDeathEvent event) {
-        if(!event.getEntity().level().isClientSide && event.getEntity() instanceof Monster){
-            ItemEntity ite = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), MaterialItems.SILVER_COIN.toStack());
-            event.getEntity().level().addFreshEntity(ite);
-
+        if(!event.getEntity().level().isClientSide && event.getEntity() instanceof Monster || event.getEntity() instanceof Slime){
+            if(event.getEntity().getRandom().nextFloat() < 0.2f) {
+                ItemEntity ite = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), MaterialItems.SILVER_COIN.toStack());
+                event.getEntity().level().addFreshEntity(ite);
+            }
+            if(event.getEntity().getRandom().nextFloat() < 1f){
+                ItemStack stack =MaterialItems.CHECKPOINT_ITEM.toStack();
+                stack.set(ModDataComponentTypes.CHECKPOINT_LOCATION.get(), new CheckpointComponent(CheckPointDataProvider.L1_1));
+                ItemEntity key = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), stack);
+                event.getEntity().level().addFreshEntity(key);
+            }
 
         }
     }

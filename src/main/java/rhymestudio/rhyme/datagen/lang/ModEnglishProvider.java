@@ -37,6 +37,8 @@ public class ModEnglishProvider extends LanguageProvider {
         add("plantcard.cannot_put_plant","You Cannot Put Plant Here!");
 
         add("tooltip.rhyme.plant_putter.entity_picked","Entity Picked: ");
+        add("tooltip.structure_staff.info","'Two point define a Box'");
+        add("tooltip.rhyme.open_checkpoint","Open Checkpoint: ");
 
 
 

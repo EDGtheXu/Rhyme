@@ -11,11 +11,13 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ItemDataMapComponent;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.ModRarity;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
+import rhymestudio.rhyme.core.item.misc.CheckpointItem;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static rhymestudio.rhyme.Rhyme.add_zh_en;
 
@@ -46,6 +48,14 @@ public class MaterialItems {
                     new FoodProperties.PossibleEffect(()->new MobEffectInstance(MobEffects.SATURATION, 50, 0),1f)
     ))));
 
+    public static final DeferredItem<Item> CHECKPOINT_ITEM = register("checkpoint_key", "关卡钥匙", ()->new CheckpointItem(new Item.Properties()));
+
+
+    public static DeferredItem<Item> register(String en, String zh, Supplier<Item> supplier) {
+        DeferredItem<Item> item =  MATERIALS.register("material/"+en, supplier);
+        add_zh_en(item, zh);
+        return item;
+    }
 
     public static DeferredItem<Item> register(String en, String zh, Function<Item.Properties, Item.Properties> properties) {
         DeferredItem<Item> item =  MATERIALS.register("material/"+en, () -> new CustomRarityItem(properties.apply(new Item.Properties())));

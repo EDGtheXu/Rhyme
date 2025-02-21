@@ -25,5 +25,8 @@ public final class ModDataComponentTypes {
     public static final Supplier<DataComponentType<StructureStaffComponent>> STRUCTURE_STAFF =
             TYPES.register("structure_staff_component", () -> DataComponentType.<StructureStaffComponent>builder().persistent(StructureStaffComponent.CODEC).networkSynchronized(StructureStaffComponent.STREAM_CODEC).cacheEncoding().build());
 
+    public static final Supplier<DataComponentType<CheckpointComponent>> CHECKPOINT_LOCATION =
+            TYPES.register("checkpoint_location_component", () -> DataComponentType.<CheckpointComponent>builder().persistent(CheckpointComponent.CODEC).networkSynchronized(CheckpointComponent.STREAM_CODEC).cacheEncoding().build());
+
 
 }

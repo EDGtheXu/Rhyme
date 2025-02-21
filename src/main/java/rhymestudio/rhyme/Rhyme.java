@@ -36,6 +36,8 @@ public class Rhyme {
     public static final String MODID = "rhyme";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static ResourceLocation space(String path){return ResourceLocation.fromNamespaceAndPath(MODID, path);}
+    public static ResourceLocation fromSpaceAndPath(String space, String path){return ResourceLocation.fromNamespaceAndPath(space, path);}
+    public static String toLang(ResourceLocation location){return location.toLanguageKey().replace("/",".");}
     public static <T> ResourceKey<T> createResourceKey(ResourceKey<? extends Registry<T>> registryKey, String path) {
         return ResourceKey.create(registryKey, space(path));
     }
@@ -54,6 +56,10 @@ public class Rhyme {
     public static <T extends Entity> void add_zh_en(DeferredHolder<EntityType<?>,EntityType<T>> e, String zh){
         Rhyme.chineseProviders.add((c)->c.add(e.get(),zh));
         Rhyme.englishProviders.add((c)->c.add(e.get(),toTitleCase(e.getId().getPath())));
+    }
+    public static <T extends Entity> void add_zh_en(String en,String zh){
+        Rhyme.chineseProviders.add((c)->c.add(en,zh));
+        Rhyme.englishProviders.add((c)->c.add(en,toTitleCase(en)));
     }
     public Rhyme(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(ModRegistry::newRegistry);

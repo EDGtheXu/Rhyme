@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import rhymestudio.rhyme.core.checkpoint.ModCheckPoints;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.IEntityTypeGroup;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.SingleZombie;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.WeightSelectedZombie;
@@ -19,20 +20,26 @@ import java.util.stream.Collectors;
  * <p> <b> Wave</b>: TreeMap&lt;Integer, SingleZombie&gt;</p>
  * @param waves 波次列表
  */
-public record CheckPoint(List<Wave> waves, ResourceLocation lootTable) implements ICheckPoint<CheckPoint> {
+public record CheckPoint(List<Wave> waves, ResourceLocation name, ResourceLocation lootTable) implements ICheckPoint<CheckPoint> {
 
     public static final MapCodec<CheckPoint> MAP_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.list(Wave.CODEC).fieldOf("waves").forGetter(CheckPoint::waves),
-            ResourceLocation.CODEC.fieldOf("lootTable").forGetter(CheckPoint::lootTable)
+            net.minecraft.resources.ResourceLocation.CODEC.fieldOf("name").forGetter(CheckPoint::name),
+            net.minecraft.resources.ResourceLocation.CODEC.fieldOf("lootTable").forGetter(CheckPoint::lootTable)
             ).apply(instance, CheckPoint::new));
-
-    public static CheckPoint.Builder builder() {
-        return new CheckPoint.Builder();
-    }
 
     @Override
     public CheckPointProvider getCodec() {
         return CheckPointProviderTypes.DEFAULT_CHECKPOINT_PROVIDER.get();
+    }
+
+    @Override
+    public ICheckPointType<CheckPoint> getType() {
+        return ModCheckPoints.SIMPLE_CHECKPOINT;
+    }
+
+    public static CheckPoint.Builder builder(ResourceLocation name) {
+        return new CheckPoint.Builder(name);
     }
 
     /**
@@ -41,9 +48,11 @@ public record CheckPoint(List<Wave> waves, ResourceLocation lootTable) implement
     public static class Builder{
         private final List<Wave> waves;
         ResourceLocation lootTable;
+        ResourceLocation name;
 
-        public Builder() {
+        public Builder(ResourceLocation name) {
             this.waves = new ArrayList<>();
+            this.name = name;
         }
 
         public Wave.WaveBuilder addWave(boolean isBlocking) {
@@ -56,7 +65,7 @@ public record CheckPoint(List<Wave> waves, ResourceLocation lootTable) implement
         }
 
         public CheckPoint build() {
-            return new CheckPoint(waves, lootTable);
+            return new CheckPoint(waves, name, lootTable);
         }
     }
 

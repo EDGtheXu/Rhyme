@@ -2,6 +2,7 @@ package rhymestudio.rhyme.datagen;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPoint;
@@ -10,6 +11,9 @@ import rhymestudio.rhyme.core.registry.entities.Zombies;
 import rhymestudio.rhyme.datagen.loot.ModChestLoot;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 生成关卡信息
@@ -20,11 +24,12 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<CheckPoin
         super(output);
     }
 
+    public static ResourceLocation L1_1 = Rhyme.space("simple_checkpoint/lvl_1_1");
+
     @Override
     protected void run() {
 
-        gen(Rhyme.space("lvl_1"), CheckPoint.builder()
-
+        gen(L1_1, check->check
                 .addWave(false)
                 .addZombie(20, EntityType.ZOMBIE, 1)
                 .addZombieList(60, List.of(
@@ -43,7 +48,29 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<CheckPoin
                 .addLootTable(ModChestLoot.daveChest.location())
                 .build());
 
+
+
     }
+
+    protected void gen(ResourceLocation location, CheckPoint checkPoint){
+        super.gen(location, checkPoint);
+        String name = checkPoint.getTranslatedName();
+
+        Pattern pattern = Pattern.compile("lvl_(\\d+_\\d+)");
+        Matcher matcher = pattern.matcher(name);
+        if (matcher.find()){
+            Rhyme.add_zh_en(name,"关卡 " + matcher.group(1).replace("_","-"));
+        }
+        else{
+            Rhyme.add_zh_en(name,"关卡 "+ name);
+        }
+
+    }
+
+    protected void gen(ResourceLocation location, Function<CheckPoint.Builder, CheckPoint> function){
+        gen(location, function.apply(CheckPoint.builder(location)));
+    }
+
 
     @Override
     protected Codec<CheckPoint> getCodec() {
@@ -52,6 +79,6 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<CheckPoin
 
     @Override
     public String getName() {
-        return "checkpoint/simple_checkpoint";
+        return "checkpoint";
     }
 }

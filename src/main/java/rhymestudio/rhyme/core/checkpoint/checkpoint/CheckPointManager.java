@@ -54,7 +54,7 @@ public class CheckPointManager {
                 var checkpoint = CheckPoint.MAP_CODEC.codec().decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst();
                 var type = ModCheckPoints.CHECK_POINTS.getEntries().stream().filter(e->e.get().name().equals(path)).findAny().get().get();
                 BY_TYPE.put(type, checkpoint);
-                BY_NAME.put(Rhyme.space(name), checkpoint);
+                BY_NAME.put(checkpoint.name(), checkpoint);
             } catch (IOException e) {
                 Rhyme.LOGGER.warn("Failed to load checkpoint: " + e.getMessage());
             }

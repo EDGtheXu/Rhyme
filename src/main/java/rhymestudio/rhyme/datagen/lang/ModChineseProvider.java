@@ -28,6 +28,9 @@ public class ModChineseProvider extends LanguageProvider {
         add("plantcard.cannot_put_plant","你不能把植物种在哪里！");
 
         add("tooltip.rhyme.plant_putter.entity_picked","已捡起植物：");
+        add("tooltip.structure_staff.info","'两点确定一个长方体'");
+        add("tooltip.rhyme.open_checkpoint","开启关卡: ");
+
 
 
         add("container.rhyme.sun_creator", "光萃台");

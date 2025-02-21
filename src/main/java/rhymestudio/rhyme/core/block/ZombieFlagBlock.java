@@ -39,6 +39,7 @@ import rhymestudio.rhyme.core.checkpoint.*;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.IEntityTypeGroup;
 import rhymestudio.rhyme.core.checkpoint.spawner.IZombieSpawner;
 import rhymestudio.rhyme.core.registry.ModBlocks;
+import rhymestudio.rhyme.datagen.CheckPointDataProvider;
 
 public class ZombieFlagBlock extends BaseEntityBlock {
     public ZombieFlagBlock(Properties properties) {
@@ -67,11 +68,11 @@ public class ZombieFlagBlock extends BaseEntityBlock {
         if(!level.isClientSide){
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if(blockEntity instanceof ZombieFlagBlockEntity entity) {
-                ResourceLocation location = Rhyme.space("lvl_1");
+                ResourceLocation location = CheckPointDataProvider.L1_1;
                 if(entity.waveManager.isEmpty()) {
 
                     entity.waveManager = WaveManager.loadFromResource(entity, location);
-                    entity.bossEvent = (ServerBossEvent) new ServerBossEvent(Component.translatable(location.toLanguageKey()), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
+                    entity.bossEvent = (ServerBossEvent) new ServerBossEvent(Component.translatable(Rhyme.toLang(location)), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
 
                     return ItemInteractionResult.SUCCESS;
                 }

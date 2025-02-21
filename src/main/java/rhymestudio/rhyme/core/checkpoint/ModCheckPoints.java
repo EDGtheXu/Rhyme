@@ -16,7 +16,7 @@ public class ModCheckPoints {
 
     public static final ModRegistry.CheckPointTypes CHECK_POINTS = ModRegistry.CheckPointTypes.create(Rhyme.MODID);
 
-    public static ICheckPointType<CheckPoint> CHECKPOINT_TYPE = registerSimple("simple_checkpoint");
+    public static ICheckPointType<CheckPoint> SIMPLE_CHECKPOINT = registerSimple("simple_checkpoint");
 
     static <T extends ICheckPoint<?>> ICheckPointType<T> register(String typeName, ICheckPointType<T> supplier){
         CHECK_POINTS.register(typeName, ()->supplier);

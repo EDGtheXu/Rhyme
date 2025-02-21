@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -16,6 +17,8 @@ import rhymestudio.rhyme.core.dataSaver.dataComponent.StructureStaffComponent;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.network.c2s.ClientEventBoundPacket;
 import rhymestudio.rhyme.utils.AdapterUtils;
+
+import java.util.List;
 
 public class StructureStaff extends Item {
 
@@ -65,6 +68,10 @@ public class StructureStaff extends Item {
             }
         }
         return super.use(level, player, usedHand);
+    }
+
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.translatable("tooltip.structure_staff.info"));
     }
 
 }
