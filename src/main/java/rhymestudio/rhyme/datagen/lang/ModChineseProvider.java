@@ -51,10 +51,10 @@ public class ModChineseProvider extends LanguageProvider {
 
         add("rhyme.configuration.dave_drop_rate", "戴夫掉落金币比率");
         add("rhyme.configuration.plant_consume_addition_step", "额外消耗阳光/植物个");
-        add("plant_attributes_multiplier_health", "植物生命值系数");
-        add("plant_attributes_multiplier_damage", "植物伤害系数");
-        add("plant_attributes_multiplier_health_per_level", "植物每级生命值加成系数");
-        add("plant_attributes_multiplier_damage_per_level", "植物每级伤害加成系数");
+        add("rhyme.configuration.plant_attributes_multiplier_health", "植物生命值系数");
+        add("rhyme.configuration.plant_attributes_multiplier_damage", "植物伤害系数");
+        add("rhyme.configuration.plant_attributes_multiplier_health_per_level", "植物每级生命值加成系数");
+        add("rhyme.configuration.plant_attributes_multiplier_damage_per_level", "植物每级伤害加成系数");
 
         // effect
         add("effect.rhyme.slowdown", "寒冷");

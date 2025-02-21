@@ -63,10 +63,10 @@ public class ModEnglishProvider extends LanguageProvider {
 
         add("rhyme.configuration.dave_drop_rate", "Dave Drop Money Rate");
         add("rhyme.configuration.plant_consume_addition_step", "Consume Addition Sun Per Plant");
-        add("plant_attributes_multiplier_health", "Plant Health Multiplier");
-        add("plant_attributes_multiplier_damage", "Plant Damage Multiplier");
-        add("plant_attributes_multiplier_health_per_level", "Plant Speed Multiplier Per Level");
-        add("plant_attributes_multiplier_damage_per_level", "Plant Damage Multiplier Per Level");
+        add("rhyme.configuration.plant_attributes_multiplier_health", "Plant Health Multiplier");
+        add("rhyme.configuration.plant_attributes_multiplier_damage", "Plant Damage Multiplier");
+        add("rhyme.configuration.plant_attributes_multiplier_health_per_level", "Plant Speed Multiplier Per Level");
+        add("rhyme.configuration.plant_attributes_multiplier_damage_per_level", "Plant Damage Multiplier Per Level");
 
 
         // effect
