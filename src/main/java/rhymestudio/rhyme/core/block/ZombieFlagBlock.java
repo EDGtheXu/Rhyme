@@ -110,6 +110,11 @@ public class ZombieFlagBlock extends BaseEntityBlock {
 
                 // 更新怪物列表
                 if(--blockEntity.checkInterval <= 0) {
+                    if (blockEntity.bossEvent != null) {
+                        blockEntity.bossEvent.setProgress((float) (blockEntity.waveManager.waveCount - blockEntity.waveManager.currentWave) /
+                                blockEntity.waveManager.waveCount);
+                    }
+
                     blockEntity.checkInterval = blockEntity._checkInterval;
                     for (Iterator<UUID> iterator = blockEntity.monsters.iterator(); iterator.hasNext(); ) {
                         UUID uuid = iterator.next();
