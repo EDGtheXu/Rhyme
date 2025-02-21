@@ -3,6 +3,7 @@ package rhymestudio.rhyme.core.checkpoint.checkpoint;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.IEntityTypeGroup;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.SingleZombie;
@@ -18,11 +19,12 @@ import java.util.stream.Collectors;
  * <p> <b> Wave</b>: TreeMap&lt;Integer, SingleZombie&gt;</p>
  * @param waves 波次列表
  */
-public record CheckPoint(List<Wave> waves) implements ICheckPoint<CheckPoint> {
+public record CheckPoint(List<Wave> waves, ResourceLocation lootTable) implements ICheckPoint<CheckPoint> {
 
     public static final MapCodec<CheckPoint> MAP_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.list(Wave.CODEC).fieldOf("waves").forGetter(CheckPoint::waves))
-           .apply(instance, CheckPoint::new));
+            Codec.list(Wave.CODEC).fieldOf("waves").forGetter(CheckPoint::waves),
+            ResourceLocation.CODEC.fieldOf("lootTable").forGetter(CheckPoint::lootTable)
+            ).apply(instance, CheckPoint::new));
 
     public static CheckPoint.Builder builder() {
         return new CheckPoint.Builder();
@@ -38,17 +40,23 @@ public record CheckPoint(List<Wave> waves) implements ICheckPoint<CheckPoint> {
      */
     public static class Builder{
         private final List<Wave> waves;
+        ResourceLocation lootTable;
 
         public Builder() {
             this.waves = new ArrayList<>();
         }
 
-        public Wave.WaveBuilder addWave(boolean isBlock) {
-            return new Wave.WaveBuilder(this, isBlock);
+        public Wave.WaveBuilder addWave(boolean isBlocking) {
+            return new Wave.WaveBuilder(this, isBlocking);
+        }
+
+        public Builder addLootTable(ResourceLocation lootTable) {
+            this.lootTable = lootTable;
+            return this;
         }
 
         public CheckPoint build() {
-            return new CheckPoint(waves);
+            return new CheckPoint(waves, lootTable);
         }
     }
 

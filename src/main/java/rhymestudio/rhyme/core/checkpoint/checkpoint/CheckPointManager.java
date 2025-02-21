@@ -32,7 +32,7 @@ public class CheckPointManager {
         try {
             return Optional.of((T) BY_NAME.get(name));
         }
-        catch (ClassCastException e){
+        catch (ClassCastException | NullPointerException e ){
             return Optional.empty();
         }
     }

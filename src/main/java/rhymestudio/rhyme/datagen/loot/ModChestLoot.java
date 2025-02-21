@@ -28,10 +28,12 @@ public record ModChestLoot(HolderLookup.Provider registries) implements LootTabl
         this.registries = registries;
     }
 
+    public static ResourceKey<LootTable> daveChest = ResourceKey.create(Registries.LOOT_TABLE, Rhyme.space("chests/dave_chest"));
+
     public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
 
-        output.accept(ResourceKey.create(Registries.LOOT_TABLE, Rhyme.space("chests/dave_chest")), LootTable.lootTable()
+        output.accept(daveChest, LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(Items.GOLDEN_APPLE).setWeight(1))

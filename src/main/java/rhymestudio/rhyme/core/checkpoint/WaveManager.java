@@ -1,6 +1,10 @@
 package rhymestudio.rhyme.core.checkpoint;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPoint;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPointManager;
 import rhymestudio.rhyme.core.checkpoint.spawner.IZombieSpawner;
 
 import javax.annotation.Nullable;
@@ -15,7 +19,7 @@ public class WaveManager {
 
     public static final int MIN_WAVE_BLOCK_TICKS = 5 * 20;
     public static final int MAX_WAVE_BLOCK_TICKS = 10 * 20;
-    public static final WaveManager EMPTY = new WaveManager(null, null);
+    public static final WaveManager EMPTY = new WaveManager(null, null, null);
 
     // 关卡数值状态
     public State state;
@@ -27,21 +31,34 @@ public class WaveManager {
     public List<CheckPoint.Wave> waves = new ArrayList<>();
     public int waveCount;
     IZombieSpawner spawner;
+    public ResourceLocation checkPointName = Rhyme.space("");
+    public ResourceLocation lootTable = Rhyme.space("");
 
     /**
      * 构造器
      * @param spawner 僵尸生成器
      * @param checkPoint 关卡信息
      */
-    public WaveManager(IZombieSpawner spawner, CheckPoint checkPoint) {
+    protected WaveManager(IZombieSpawner spawner, CheckPoint checkPoint, ResourceLocation checkPointName) {
         if(checkPoint != null) {
             this.waveCount = checkPoint.waves().size();
             this.waves = checkPoint.waves();
+            this.checkPointName = checkPointName;
+            this.lootTable = checkPoint.lootTable();
         }
 
         this.spawner = spawner;
 
         state = State.IN_PROGRESS;
+    }
+
+    public boolean isEmpty() {
+        return this == EMPTY || !CheckPointManager.getCheckPoint(checkPointName).isPresent();
+    }
+
+    public static WaveManager loadFromResource(IZombieSpawner spawner, ResourceLocation location) {
+        var op = CheckPointManager.<CheckPoint>getCheckPoint(location);
+        return op.map(checkPoint -> new WaveManager(spawner, checkPoint, location)).orElse(EMPTY);
     }
 
     public enum State{
@@ -144,6 +161,25 @@ public class WaveManager {
         int c = 1;
         for (CheckPoint.Wave wave : iterable) {
             System.out.println("Wave " + c++ + ": " + wave.zombies() + " " + wave.isBlock());
+        }
+    }
+
+    public void saveState(CompoundTag tag){
+        tag.putInt("time", currentWaveTime);
+        tag.putInt("group", currentGroup);
+        tag.putInt("wave", currentWave);
+        tag.putString("checkpoint", checkPointName.toString());
+    }
+
+    public void loadState(CompoundTag tag){
+        if(tag.contains("time")) {
+            currentWaveTime = tag.getInt("time");
+        }
+        if(tag.contains("group")) {
+            currentGroup = tag.getInt("group");
+        }
+        if(tag.contains("wave")) {
+            currentWave = tag.getInt("wave");
         }
     }
 

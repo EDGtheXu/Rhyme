@@ -7,6 +7,7 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPoint;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.WeightSelectedZombie;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
+import rhymestudio.rhyme.datagen.loot.ModChestLoot;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<CheckPoin
                 .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
                 .buildWave()
 
-
+                .addLootTable(ModChestLoot.daveChest.location())
                 .build());
 
     }

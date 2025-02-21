@@ -261,9 +261,12 @@ public class SunCreatorBlock extends BaseEntityBlock  {
         return pState;
     }
 
+    @Override
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
+
+    @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         return Shapes.or(box(0, 0, 0, 16, 13, 16));
     }
