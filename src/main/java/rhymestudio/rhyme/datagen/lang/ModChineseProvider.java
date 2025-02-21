@@ -30,6 +30,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("tooltip.rhyme.plant_putter.entity_picked","已捡起植物：");
         add("tooltip.structure_staff.info","'两点确定一个长方体'");
         add("tooltip.rhyme.open_checkpoint","开启关卡: ");
+        add("tooltip.rhyme.init_checkpoint","未初始化的钥匙: ");
 
 
 

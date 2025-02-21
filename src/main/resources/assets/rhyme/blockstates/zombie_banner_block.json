@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "rhyme:block/zombie_banner_block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "rhyme:block/zombie_banner_block"
+    },
+    "facing=south": {
+      "model": "rhyme:block/zombie_banner_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "rhyme:block/zombie_banner_block",
+      "y": 270
+    }
+  }
+}

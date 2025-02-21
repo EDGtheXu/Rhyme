@@ -17,9 +17,9 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import rhymestudio.rhyme.core.block.ZombieFlagBlock;
+import rhymestudio.rhyme.core.block.ZombieBannerBlock;
 
-public class ZombieFlagBlockRenderer<E extends ZombieFlagBlock.ZombieFlagBlockEntity> implements BlockEntityRenderer<E> {
+public class ZombieFlagBlockRenderer<E extends ZombieBannerBlock.ZombieFlagBlockEntity> implements BlockEntityRenderer<E> {
 
     public ZombieFlagBlockRenderer(BlockEntityRendererProvider.Context context) {
 
@@ -49,45 +49,46 @@ public class ZombieFlagBlockRenderer<E extends ZombieFlagBlock.ZombieFlagBlockEn
 
     @Override
     public void render(E blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        Level level = blockEntity.getLevel();
-        poseStack.pushPose();
-        if (level != null) {
-            poseStack.translate(0.5, 0, 0.5);
-//            poseStack.mulPose(Axis.YP.rotation((level.getGameTime()%999999999 + partialTick)* 0.2f) );
 
-            poseStack.translate(0, 0.5, 0);
-            ModelPart modelpart = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER);
-            ModelPart flag = modelpart.getChild("flag");
-            var registry = blockEntity.getLevel().registryAccess().lookupOrThrow(Registries.BANNER_PATTERN);
-            BannerRenderer.renderPatterns(poseStack, buffer, packedLight, packedOverlay, flag, ModelBakery.BANNER_BASE, true,
-                    DyeColor.PURPLE, new BannerPatternLayers.Builder()
-//                            .addIfRegistered(registry, BannerPatterns.RHOMBUS_MIDDLE, DyeColor.CYAN)
-                            .addIfRegistered(registry, BannerPatterns.STRIPE_BOTTOM, DyeColor.LIGHT_GRAY)
-                            .addIfRegistered(registry, BannerPatterns.STRIPE_CENTER, DyeColor.GRAY)
-//                            .addIfRegistered(registry, BannerPatterns.BORDER, DyeColor.LIGHT_GRAY)
-                            .addIfRegistered(registry, BannerPatterns.HALF_HORIZONTAL, DyeColor.LIGHT_GRAY)
-
-                            .addIfRegistered(registry, BannerPatterns.CREEPER, DyeColor.GREEN)
-//                            .addIfRegistered(registry, BannerPatterns.STRIPE_MIDDLE, DyeColor.BLACK)
-
-//                            .addIfRegistered(registry, BannerPatterns.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY)
-                            .addIfRegistered(registry, BannerPatterns.BORDER, DyeColor.RED)
-
-                    .build());
-            poseStack.translate(0, -0.5, 0);
-
-
-            poseStack.scale(2,3,1);
-            poseStack.translate(-0.5, 0, -0.5);
-        }
-//        poseStack.translate(-1, 0, -1);
-
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-                Blocks.TORCH.defaultBlockState(), poseStack, buffer, packedLight, packedOverlay
-        );
-
-
-        poseStack.popPose();
+//        Level level = blockEntity.getLevel();
+//        poseStack.pushPose();
+//        if (level != null) {
+//            poseStack.translate(0.5, 0, 0.5);
+////            poseStack.mulPose(Axis.YP.rotation((level.getGameTime()%999999999 + partialTick)* 0.2f) );
+//
+//            poseStack.translate(0, 0.5, 0);
+//            ModelPart modelpart = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER);
+//            ModelPart flag = modelpart.getChild("flag");
+//            var registry = blockEntity.getLevel().registryAccess().lookupOrThrow(Registries.BANNER_PATTERN);
+//            BannerRenderer.renderPatterns(poseStack, buffer, packedLight, packedOverlay, flag, ModelBakery.BANNER_BASE, true,
+//                    DyeColor.PURPLE, new BannerPatternLayers.Builder()
+////                            .addIfRegistered(registry, BannerPatterns.RHOMBUS_MIDDLE, DyeColor.CYAN)
+//                            .addIfRegistered(registry, BannerPatterns.STRIPE_BOTTOM, DyeColor.LIGHT_GRAY)
+//                            .addIfRegistered(registry, BannerPatterns.STRIPE_CENTER, DyeColor.GRAY)
+////                            .addIfRegistered(registry, BannerPatterns.BORDER, DyeColor.LIGHT_GRAY)
+//                            .addIfRegistered(registry, BannerPatterns.HALF_HORIZONTAL, DyeColor.LIGHT_GRAY)
+//
+//                            .addIfRegistered(registry, BannerPatterns.CREEPER, DyeColor.GREEN)
+////                            .addIfRegistered(registry, BannerPatterns.STRIPE_MIDDLE, DyeColor.BLACK)
+//
+////                            .addIfRegistered(registry, BannerPatterns.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY)
+//                            .addIfRegistered(registry, BannerPatterns.BORDER, DyeColor.RED)
+//
+//                    .build());
+//            poseStack.translate(0, -0.5, 0);
+//
+//
+//            poseStack.scale(2,3,1);
+//            poseStack.translate(-0.5, 0, -0.5);
+//        }
+////        poseStack.translate(-1, 0, -1);
+//
+//        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
+//                Blocks.TORCH.defaultBlockState(), poseStack, buffer, packedLight, packedOverlay
+//        );
+//
+//
+//        poseStack.popPose();
 
 
     }

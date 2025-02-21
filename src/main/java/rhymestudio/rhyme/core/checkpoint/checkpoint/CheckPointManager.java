@@ -38,6 +38,9 @@ public class CheckPointManager {
     }
 
 
+    public static Optional<ICheckPoint<?>> getRandom(){
+        return BY_TYPE.values().stream().findAny();
+    }
 
 
     public static void registerFromJson(ResourceManager manager) {

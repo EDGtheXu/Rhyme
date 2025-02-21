@@ -18,16 +18,21 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -39,14 +44,18 @@ import rhymestudio.rhyme.core.checkpoint.*;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.IEntityTypeGroup;
 import rhymestudio.rhyme.core.checkpoint.spawner.IZombieSpawner;
 import rhymestudio.rhyme.core.registry.ModBlocks;
+import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 import rhymestudio.rhyme.datagen.CheckPointDataProvider;
 
-public class ZombieFlagBlock extends BaseEntityBlock {
-    public ZombieFlagBlock(Properties properties) {
+import static net.minecraft.world.level.block.BarrelBlock.FACING;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
+public class ZombieBannerBlock extends BaseEntityBlock {
+    public ZombieBannerBlock(Properties properties) {
         super(properties);
     }
 
-    public static final MapCodec<ZombieFlagBlock> CODEC = simpleCodec(ZombieFlagBlock::new);
+    public static final MapCodec<ZombieBannerBlock> CODEC = simpleCodec(ZombieBannerBlock::new);
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
@@ -56,6 +65,27 @@ public class ZombieFlagBlock extends BaseEntityBlock {
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         return Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {return RenderShape.MODEL;}
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING).add(WATERLOGGED);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext placeContext) {
+        FluidState fluidstate = placeContext.getLevel().getFluidState(placeContext.getClickedPos());
+        return defaultBlockState()
+                .setValue(FACING, placeContext.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState pState) {
+        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
     @Override
@@ -69,12 +99,19 @@ public class ZombieFlagBlock extends BaseEntityBlock {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if(blockEntity instanceof ZombieFlagBlockEntity entity) {
                 ResourceLocation location = CheckPointDataProvider.L1_1;
-                if(entity.waveManager.isEmpty()) {
-
-                    entity.waveManager = WaveManager.loadFromResource(entity, location);
-                    entity.bossEvent = (ServerBossEvent) new ServerBossEvent(Component.translatable(Rhyme.toLang(location)), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
-
-                    return ItemInteractionResult.SUCCESS;
+                var data = stack.get(ModDataComponentTypes.CHECKPOINT_LOCATION);
+                if(data!= null) {
+                    if (entity.waveManager.isEmpty()) {
+                        entity.waveManager = WaveManager.loadFromResource(entity, location);
+                        if(entity.waveManager.isEmpty()){
+                            // nbt不合法
+                            player.sendSystemMessage(Component.literal("invalid nbt data"));
+                        }else {
+                            entity.bossEvent = (ServerBossEvent) new ServerBossEvent(Component.translatable(Rhyme.toLang(location)), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
+                            stack.shrink(1);
+                        }
+                        return ItemInteractionResult.SUCCESS;
+                    }
                 }
             }
         }
@@ -127,6 +164,7 @@ public class ZombieFlagBlock extends BaseEntityBlock {
                     entity.bossEvent.removeAllPlayers();
             }
         }
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     public static final class  ZombieFlagBlockEntity extends BlockEntity implements IZombieSpawner {

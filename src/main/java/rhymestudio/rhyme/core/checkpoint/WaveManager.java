@@ -56,6 +56,12 @@ public class WaveManager {
         return this == EMPTY || !CheckPointManager.getCheckPoint(checkPointName).isPresent();
     }
 
+    /**
+     * 从数据包加载关卡
+     * @param spawner 僵尸生成器
+     * @param location 资源位置
+     * @return 找到资源：关卡管理器，否则：EMPTY
+     */
     public static WaveManager loadFromResource(IZombieSpawner spawner, ResourceLocation location) {
         var op = CheckPointManager.<CheckPoint>getCheckPoint(location);
         return op.map(checkPoint -> new WaveManager(spawner, checkPoint, location)).orElse(EMPTY);

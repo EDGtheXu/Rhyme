@@ -11,6 +11,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Blocks;
@@ -21,7 +22,9 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.registry.items.MaterialItems;
 import rhymestudio.rhyme.core.registry.items.PlantItems;
+import rhymestudio.rhyme.datagen.tag.ModTags;
 
 public record ModChestLoot(HolderLookup.Provider registries) implements LootTableSubProvider {
     public ModChestLoot(HolderLookup.Provider registries) {
@@ -34,20 +37,15 @@ public record ModChestLoot(HolderLookup.Provider registries) implements LootTabl
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
 
         output.accept(daveChest, LootTable.lootTable()
-                .withPool(LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(Items.GOLDEN_APPLE).setWeight(1))
-                        .add(LootItem.lootTableItem(Items.ENCHANTED_GOLDEN_APPLE).setWeight(20)
-                            .apply(SetItemCountFunction.setCount(ConstantValue.exactly(32))))
-//                        .add(LootItem.lootTableItem(Items.NAME_TAG).setWeight(30))
-//                        .add(LootItem.lootTableItem(Items.BOOK).setWeight(10)
-//                                .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries)))
-//                        .add(LootItem.lootTableItem(Items.IRON_PICKAXE).setWeight(5))
-//                        .add(EmptyLootItem.emptyItem().setWeight(5))
-                        )
+
                 .withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(PlantItems.PEA_ITEM.get()))
+                        .add(LootItem.lootTableItem(PlantItems.SUN_FLOWER.get()))
+                )
+                .withPool(LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(MaterialItems.CHECKPOINT_ITEM.get()))
                 )
                 .withPool(LootPool.lootPool()
                         .setRolls(UniformGenerator.between(2.0F, 4.0F))
