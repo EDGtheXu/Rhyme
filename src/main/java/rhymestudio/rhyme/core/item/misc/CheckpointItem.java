@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPointManager;
+import rhymestudio.rhyme.core.checkpoint.CheckPointManager;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CheckpointComponent;
 import rhymestudio.rhyme.core.item.CustomRarityItem;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;

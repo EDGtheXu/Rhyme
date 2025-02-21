@@ -25,7 +25,7 @@ public class ModCheckPoints {
     }
 
     static <T extends ICheckPoint<?>, U extends ICheckPointType<T>> ICheckPointType<T> registerSimple(String typeName){
-        ICheckPointType<T> type = new ICheckPointType.SimpleCheckPointType<T>(typeName);
+        ICheckPointType<T> type = new ICheckPointType.SimpleCheckPointType<T>(Rhyme.fromSpaceAndPath(CHECK_POINTS.getRegistryName().getNamespace(),typeName));
         CHECK_POINTS.register(typeName, ()-> type);
         return type;
     }

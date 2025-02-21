@@ -4,6 +4,7 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import rhymestudio.rhyme.core.dataSaver.attactment.PlantRecorderAttachment;
+import rhymestudio.rhyme.core.dataSaver.attactment.PlayerProgressAttachment;
 import rhymestudio.rhyme.core.dataSaver.attactment.StructureStaffAttachment;
 import rhymestudio.rhyme.core.dataSaver.attactment.SunCountAttachment;
 
@@ -17,6 +18,7 @@ public final class ModAttachments {
     public static final Supplier<AttachmentType<SunCountAttachment>> PLAYER_STORAGE = TYPES.register("player_storage", () -> AttachmentType.serializable(SunCountAttachment::new).copyOnDeath().build());
     public static final Supplier<AttachmentType<PlantRecorderAttachment>> PLANT_RECORDER_STORAGE = TYPES.register("plant_recorder_storage", () -> AttachmentType.serializable(PlantRecorderAttachment::new).copyOnDeath().build());
     public static final Supplier<AttachmentType<StructureStaffAttachment>> STRUCTURE_STAFF_STORAGE = TYPES.register("structure_staff_storage", () -> AttachmentType.serializable(StructureStaffAttachment::new).copyOnDeath().build());
+    public static final Supplier<AttachmentType<PlayerProgressAttachment>> PLAYER_PROGRESS_STORAGE = TYPES.register("player_progress_storage", () -> AttachmentType.serializable(PlayerProgressAttachment::new).copyOnDeath().build());
 
 
 }

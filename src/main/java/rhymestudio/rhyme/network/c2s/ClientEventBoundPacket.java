@@ -5,15 +5,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.core.dataSaver.dataComponent.StructureStaffComponent;
+import rhymestudio.rhyme.core.dataSaver.attactment.PlayerProgressAttachment;
+import rhymestudio.rhyme.core.menu.ChapterMenu;
 import rhymestudio.rhyme.core.menu.StaffMenu;
-import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 
 public record ClientEventBoundPacket(int code) implements CustomPacketPayload {
 
@@ -36,8 +36,12 @@ public record ClientEventBoundPacket(int code) implements CustomPacketPayload {
                         (id, inventory, ignored) -> new StaffMenu(id,inventory),
                         Component.literal("Structure Staff")
                 ));
+            }else if(code == 1){
+                PlayerProgressAttachment.sync((ServerPlayer) player);
+                player.openMenu(new SimpleMenuProvider((id,inventory,player1)->
+                        new ChapterMenu(id,inventory),
+                        Component.translatable("menu.rhyme.chapter_menu.title")));
             }
-
 
         }).exceptionally(e -> null);
     }

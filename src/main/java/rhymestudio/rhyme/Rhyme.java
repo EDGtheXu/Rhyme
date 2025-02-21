@@ -36,6 +36,7 @@ public class Rhyme {
     public static final String MODID = "rhyme";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static ResourceLocation space(String path){return ResourceLocation.fromNamespaceAndPath(MODID, path);}
+    public static ResourceLocation parse(String path){return ResourceLocation.parse(path);}
     public static ResourceLocation fromSpaceAndPath(String space, String path){return ResourceLocation.fromNamespaceAndPath(space, path);}
     public static String toLang(ResourceLocation location){return location.toLanguageKey().replace("/",".");}
     public static <T> ResourceKey<T> createResourceKey(ResourceKey<? extends Registry<T>> registryKey, String path) {

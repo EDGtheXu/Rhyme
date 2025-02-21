@@ -20,17 +20,18 @@ import java.util.stream.Collectors;
  * <p> <b> Wave</b>: TreeMap&lt;Integer, SingleZombie&gt;</p>
  * @param waves 波次列表
  */
-public record CheckPoint(List<Wave> waves, ResourceLocation name, ResourceLocation lootTable) implements ICheckPoint<CheckPoint> {
+public record CheckPoint(List<Wave> waves, ResourceLocation name, ResourceLocation lootTable, int index) implements ICheckPoint<CheckPoint> {
 
     public static final MapCodec<CheckPoint> MAP_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.list(Wave.CODEC).fieldOf("waves").forGetter(CheckPoint::waves),
             net.minecraft.resources.ResourceLocation.CODEC.fieldOf("name").forGetter(CheckPoint::name),
-            net.minecraft.resources.ResourceLocation.CODEC.fieldOf("lootTable").forGetter(CheckPoint::lootTable)
+            net.minecraft.resources.ResourceLocation.CODEC.fieldOf("lootTable").forGetter(CheckPoint::lootTable),
+            Codec.INT.fieldOf("index").forGetter(CheckPoint::index)
             ).apply(instance, CheckPoint::new));
 
     @Override
     public CheckPointProvider getCodec() {
-        return CheckPointProviderTypes.DEFAULT_CHECKPOINT_PROVIDER.get();
+        return CheckPointProviderTypes.SIMPLE_CHECKPOINT_PROVIDER.get();
     }
 
     @Override
@@ -38,8 +39,8 @@ public record CheckPoint(List<Wave> waves, ResourceLocation name, ResourceLocati
         return ModCheckPoints.SIMPLE_CHECKPOINT;
     }
 
-    public static CheckPoint.Builder builder(ResourceLocation name) {
-        return new CheckPoint.Builder(name);
+    public static CheckPoint.Builder builder(ResourceLocation name, int index) {
+        return new CheckPoint.Builder(name, index);
     }
 
     /**
@@ -49,8 +50,9 @@ public record CheckPoint(List<Wave> waves, ResourceLocation name, ResourceLocati
         private final List<Wave> waves;
         ResourceLocation lootTable;
         ResourceLocation name;
+        int index;
 
-        public Builder(ResourceLocation name) {
+        public Builder(ResourceLocation name, int index) {
             this.waves = new ArrayList<>();
             this.name = name;
         }
@@ -65,7 +67,7 @@ public record CheckPoint(List<Wave> waves, ResourceLocation name, ResourceLocati
         }
 
         public CheckPoint build() {
-            return new CheckPoint(waves, name, lootTable);
+            return new CheckPoint(waves, name, lootTable, index);
         }
     }
 

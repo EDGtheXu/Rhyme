@@ -16,20 +16,20 @@ public class ModRegistry {
 
     // Key
 //    public static final ResourceKey<Registry<DaveTrades>> DAVE_SHOP = Rhyme.createResourceKey("dave_shop");
-    public static final ResourceKey<Registry<ICheckPointType<?>>> CHECK_POINT_KEY = createRegistryKey(Rhyme.space("check_point"));
+    public static final ResourceKey<Registry<ICheckPointType<?>>> CHECKPOINT_TYPE_KEY = createRegistryKey(Rhyme.space("checkpoint"));
     public static final ResourceKey<Registry<EntityTypeGroupProvider>> ENTITY_TYPE_GROUP_PROVIDER_KEY = createRegistryKey(Rhyme.space("entity_type_group_provider"));
-    public static final ResourceKey<Registry<CheckPointProvider>> CHECK_POINT_PROVIDER_KEY = createRegistryKey(Rhyme.space("check_point_provider"));
+    public static final ResourceKey<Registry<CheckPointProvider>> CHECKPOINT_PROVIDER_KEY = createRegistryKey(Rhyme.space("checkpoint_provider"));
 
 
     // Registries
-    public static final Registry<ICheckPointType<?>> CHECK_POINT_REGISTRY = new RegistryBuilder<>(CHECK_POINT_KEY).create();
+    public static final Registry<ICheckPointType<?>> CHECKPOINT_TYPE_REGISTRY = new RegistryBuilder<>(CHECKPOINT_TYPE_KEY).create();
     public static final Registry<EntityTypeGroupProvider> ENTITY_TYPE_GROUP_PROVIDER_REGISTRY = new RegistryBuilder<>(ENTITY_TYPE_GROUP_PROVIDER_KEY).create();
-    public static final Registry<CheckPointProvider> CHECK_POINT_PROVIDER_REGISTRY = new RegistryBuilder<>(CHECK_POINT_PROVIDER_KEY).create();
+    public static final Registry<CheckPointProvider> CHECKPOINT_PROVIDER_REGISTRY = new RegistryBuilder<>(CHECKPOINT_PROVIDER_KEY).create();
 
     // Deferred Registers
     public static class CheckPointTypes extends DeferredRegister<ICheckPointType<?>> {
         protected CheckPointTypes(String namespace) {
-            super(CHECK_POINT_KEY, namespace);
+            super(CHECKPOINT_TYPE_KEY, namespace);
         }
 
         public static CheckPointTypes create(String mod_id) {
@@ -49,7 +49,7 @@ public class ModRegistry {
 
     public static class CheckPointProviders extends DeferredRegister<CheckPointProvider> {
         protected CheckPointProviders(String namespace) {
-            super(CHECK_POINT_PROVIDER_KEY, namespace);
+            super(CHECKPOINT_PROVIDER_KEY, namespace);
         }
 
         public static CheckPointProviders create(String mod_id) {
@@ -59,9 +59,9 @@ public class ModRegistry {
 
     // Event Handler
     public static void newRegistry(NewRegistryEvent event) {
-        event.register(ModRegistry.CHECK_POINT_REGISTRY);
+        event.register(ModRegistry.CHECKPOINT_TYPE_REGISTRY);
         event.register(ModRegistry.ENTITY_TYPE_GROUP_PROVIDER_REGISTRY);
-        event.register(ModRegistry.CHECK_POINT_PROVIDER_REGISTRY);
+        event.register(ModRegistry.CHECKPOINT_PROVIDER_REGISTRY);
     }
 
 }

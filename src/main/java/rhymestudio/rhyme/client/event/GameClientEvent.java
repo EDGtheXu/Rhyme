@@ -1,6 +1,5 @@
 package rhymestudio.rhyme.client.event;
 
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.Music;
 import net.neoforged.api.distmarker.Dist;
@@ -14,6 +13,7 @@ import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.client.animate.ExpertColorAnimation;
 import rhymestudio.rhyme.client.animate.MasterColorAnimation;
 import rhymestudio.rhyme.client.render.gui.hud.CardHUD;
+import rhymestudio.rhyme.core.dataSaver.attactment.PlayerProgressAttachment;
 import rhymestudio.rhyme.core.registry.ModSounds;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
@@ -70,6 +70,9 @@ public class GameClientEvent {
     @SubscribeEvent
     public static void keyInput(InputEvent.Key event) {
 //        System.out.println(event.getKey());
+        if(ModKeyBindings.SHOW_MENU.get().isDown() && Minecraft.getInstance().screen == null){
+            PlayerProgressAttachment.openChapterMenu(Minecraft.getInstance().player);
+        }
 
     }
 

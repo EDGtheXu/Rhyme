@@ -11,6 +11,7 @@ import rhymestudio.rhyme.network.c2s.DaveShopPacket;
 import rhymestudio.rhyme.network.c2s.GenerateStructurePacket;
 import rhymestudio.rhyme.network.c2s.SyncStructureStaffComponentPacket;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
+import rhymestudio.rhyme.network.s2c.PlayerChapterPacket;
 import rhymestudio.rhyme.network.s2c.ProjHitPacket;
 import rhymestudio.rhyme.network.s2c.SunCountPacketS2C;
 
@@ -25,6 +26,7 @@ public class ModEvent {
         registrar.playToClient(SunCountPacketS2C.TYPE, SunCountPacketS2C.STREAM_CODEC, SunCountPacketS2C::handle);
         registrar.playToClient(ProjHitPacket.TYPE, ProjHitPacket.STREAM_CODEC, ProjHitPacket::handle);
         registrar.playToClient(PlantRecorderPacket.TYPE, PlantRecorderPacket.STREAM_CODEC, PlantRecorderPacket::handle);
+        registrar.playToClient(PlayerChapterPacket.TYPE, PlayerChapterPacket.STREAM_CODEC, PlayerChapterPacket::handle);
 
 
         registrar.playToServer(DaveShopPacket.TYPE, DaveShopPacket.STREAM_CODEC, DaveShopPacket::handle);
@@ -36,7 +38,7 @@ public class ModEvent {
 
     @SubscribeEvent
     public static void registerEvent(RegisterEvent event) {
-        if(event.getRegistry() == ModRegistry.CHECK_POINT_REGISTRY){
+        if(event.getRegistry() == ModRegistry.CHECKPOINT_TYPE_REGISTRY){
 
 //            Registries.rec
 //            ModCheckPoints.registerFromJson();

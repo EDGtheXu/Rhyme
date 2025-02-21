@@ -12,10 +12,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import rhymestudio.rhyme.Rhyme;
-import rhymestudio.rhyme.client.render.gui.CardUpLevelScreen;
-import rhymestudio.rhyme.client.render.gui.DaveTradeScreen;
-import rhymestudio.rhyme.client.render.gui.StaffScreen;
-import rhymestudio.rhyme.client.render.gui.SunCreatorScreen;
+import rhymestudio.rhyme.client.render.gui.*;
 import rhymestudio.rhyme.client.model.ModelUtils;
 import rhymestudio.rhyme.config.ClientConfig;
 import rhymestudio.rhyme.core.registry.ModMenus;
@@ -73,6 +70,7 @@ public class ModClientEvent {
         event.register(ModMenus.CARD_UP_LEVEL_MENU.get(), CardUpLevelScreen::new);
         event.register(ModMenus.DAVE_TRADES_MENU.get(), DaveTradeScreen::new);
         event.register(ModMenus.STAFF_MENU.get(), StaffScreen::new);
+        event.register(ModMenus.CHAPTER_MENU.get(), ChapterScreen::new);
 
     }
 }

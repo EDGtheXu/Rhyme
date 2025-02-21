@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionHand;
@@ -43,6 +44,7 @@ import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.*;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.IEntityTypeGroup;
 import rhymestudio.rhyme.core.checkpoint.spawner.IZombieSpawner;
+import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.core.registry.ModBlocks;
 import rhymestudio.rhyme.core.registry.ModDataComponentTypes;
 import rhymestudio.rhyme.datagen.CheckPointDataProvider;
@@ -123,7 +125,7 @@ public class ZombieBannerBlock extends BaseEntityBlock {
     public <T extends BlockEntity> BlockEntityTicker getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ModBlocks.ZOMBIE_FLAG_BLOCK_ENTITY.get(), (level, pos, state, blockEntity)->{
 
-            if(!level.isClientSide()) {
+            if(level instanceof ServerLevel serverLevel) {
 
                 blockEntity.time++;
                 if( blockEntity.time < ZombieFlagBlockEntity.TIME_PRE_SPAWN) return;
@@ -140,6 +142,10 @@ public class ZombieBannerBlock extends BaseEntityBlock {
                 if (state1 == WaveManager.State.OVER) {
                     --blockEntity.properties.timeDelay;
                     if (blockEntity.isOver()) {
+                        // 生成战利品，保存玩家进度
+                        serverLevel.getPlayers(p->p.distanceToSqr(Vec3.atCenterOf(blockEntity.getBlockPos())) < blockEntity.properties.maxDistance * blockEntity.properties.maxDistance).forEach(p->{
+                            p.getData(ModAttachments.PLAYER_PROGRESS_STORAGE.get()).markChapter(blockEntity.waveManager.checkPoint);
+                        });
                         level.setBlock(pos, Blocks.CHEST.defaultBlockState(), 2);
                         if(level.getBlockEntity(pos) instanceof ChestBlockEntity entity){
                             CompoundTag tag = new CompoundTag();
@@ -179,10 +185,7 @@ public class ZombieBannerBlock extends BaseEntityBlock {
 
         // server side only
         SpawnerProperties properties;
-
         WaveManager waveManager = WaveManager.EMPTY;
-        WaveManager.State state = WaveManager.State.IN_PROGRESS;
-
 
         public ZombieFlagBlockEntity(BlockPos pos, BlockState blockState) {
             super(ModBlocks.ZOMBIE_FLAG_BLOCK_ENTITY.get(), pos, blockState);

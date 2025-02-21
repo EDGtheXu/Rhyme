@@ -88,7 +88,7 @@ public interface IZombieSpawner {
         public int timeDelay;
         public List<UUID> monsters;
         final Vec3 pos;
-        float maxDistance;
+        public float maxDistance;
 
         public SpawnerProperties(int checkInterval, int timeDelay, Vec3 pos, float maxDistance){
             this.checkInterval = checkInterval;

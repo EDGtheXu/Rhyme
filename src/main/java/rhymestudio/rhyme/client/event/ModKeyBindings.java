@@ -2,7 +2,6 @@ package rhymestudio.rhyme.client.event;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,14 +19,14 @@ public final class ModKeyBindings {
 
     @SubscribeEvent
     public static void keyBinding(RegisterKeyMappingsEvent event) {
-        event.register(SHOW_DETAIL_SPECULAR.get());
+        event.register(SHOW_MENU.get());
     }
 
-    public static final Lazy<KeyMapping> SHOW_DETAIL_SPECULAR = Lazy.of(() -> new KeyMapping(
-            "key.confluence.specular_detail",
+    public static final Lazy<KeyMapping> SHOW_MENU = Lazy.of(() -> new KeyMapping(
+            "key.rhyme.show_menu",
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_TAB,
+            GLFW.GLFW_KEY_Y,
             "key.categories.gameplay"
     ));
 }

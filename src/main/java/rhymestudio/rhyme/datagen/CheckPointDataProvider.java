@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPoint;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.ICheckPoint;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.WeightSelectedZombie;
 import rhymestudio.rhyme.core.registry.entities.Zombies;
 import rhymestudio.rhyme.datagen.loot.ModChestLoot;
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * 生成关卡信息
  */
-public class CheckPointDataProvider extends AbstractExistCodecProvider<CheckPoint> {
+public class CheckPointDataProvider extends AbstractExistCodecProvider<ICheckPoint<?>> {
 
     public CheckPointDataProvider(PackOutput output) {
         super(output);
@@ -29,7 +30,7 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<CheckPoin
     @Override
     protected void run() {
 
-        gen(L1_1, check->check
+        gen(L1_1, 1,  check -> check
                 .addWave(false)
                 .addZombie(20, EntityType.ZOMBIE, 1)
                 .addZombieList(60, List.of(
@@ -67,14 +68,19 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<CheckPoin
 
     }
 
-    protected void gen(ResourceLocation location, Function<CheckPoint.Builder, CheckPoint> function){
-        gen(location, function.apply(CheckPoint.builder(location)));
+    /**
+     * 生成关卡信息
+     * @param location 资源位置，关卡名称
+     * @param index 关卡索引
+     */
+    protected void gen(ResourceLocation location, int index,  Function<CheckPoint.Builder, CheckPoint> function){
+        gen(location, function.apply(CheckPoint.builder(location, index)));
     }
 
 
     @Override
-    protected Codec<CheckPoint> getCodec() {
-        return CheckPoint.MAP_CODEC.codec();
+    protected Codec<ICheckPoint<?>> getCodec() {
+        return ICheckPoint.TYPED_CODEC;
     }
 
     @Override

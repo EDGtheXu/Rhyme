@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPoint;
-import rhymestudio.rhyme.core.checkpoint.checkpoint.CheckPointManager;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.ICheckPoint;
 import rhymestudio.rhyme.core.checkpoint.spawner.IZombieSpawner;
 
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public class WaveManager {
     IZombieSpawner spawner;
     public ResourceLocation checkPointName = Rhyme.space("");
     public ResourceLocation lootTable = Rhyme.space("");
-
+    public ICheckPoint<?> checkPoint;
     /**
      * 构造器
      * @param spawner 僵尸生成器
@@ -45,6 +45,7 @@ public class WaveManager {
             this.waves = checkPoint.waves();
             this.checkPointName = checkPointName;
             this.lootTable = checkPoint.lootTable();
+            this.checkPoint = checkPoint;
         }
 
         this.spawner = spawner;

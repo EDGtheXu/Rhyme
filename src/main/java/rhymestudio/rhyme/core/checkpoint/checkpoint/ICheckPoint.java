@@ -1,9 +1,7 @@
 package rhymestudio.rhyme.core.checkpoint.checkpoint;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.registry.ModRegistry;
 
 /**
@@ -12,17 +10,34 @@ import rhymestudio.rhyme.core.registry.ModRegistry;
  */
 public interface ICheckPoint<T extends ICheckPoint<T>>{
 
+    /**
+     * 编解码器
+     */
     CheckPointProvider getCodec();
 
+    /**
+     * 关卡名称，资源位置
+     */
     ResourceLocation name();
+
+    /**
+     * 关卡的索引
+     */
+    int index();
 
     ICheckPointType<T> getType();
 
+    /**
+     * 翻译键
+     */
     default String getTranslatedName(){
         return name().toLanguageKey().replace("/", ".");
     }
 
-    Codec<ICheckPoint<?>> TYPED_CODEC = ModRegistry.CHECK_POINT_PROVIDER_REGISTRY
+    /**
+     * 编解码器dispatcher
+     */
+    Codec<ICheckPoint<?>> TYPED_CODEC = ModRegistry.CHECKPOINT_PROVIDER_REGISTRY
             .byNameCodec()
             .dispatch(ICheckPoint::getCodec, CheckPointProvider::codec);
 
