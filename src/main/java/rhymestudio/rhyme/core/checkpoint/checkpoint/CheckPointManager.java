@@ -11,9 +11,7 @@ import rhymestudio.rhyme.core.checkpoint.ModCheckPoints;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <h1>关卡管理类</h1>
@@ -39,7 +37,13 @@ public class CheckPointManager {
 
 
     public static Optional<ICheckPoint<?>> getRandom(){
-        return BY_TYPE.values().stream().findAny();
+        List<ICheckPoint<?>> checkPoints = new ArrayList<>(BY_NAME.values());
+        if (checkPoints.isEmpty()) {
+            return Optional.empty();
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(checkPoints.size());
+        return Optional.of(checkPoints.get(randomIndex));
     }
 
 
