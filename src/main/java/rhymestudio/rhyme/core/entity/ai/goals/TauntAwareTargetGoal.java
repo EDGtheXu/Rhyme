@@ -1,4 +1,4 @@
-package rhymestudio.rhyme.core.entity.goal;
+package rhymestudio.rhyme.core.entity.ai.goals;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
@@ -9,29 +9,31 @@ import java.util.List;
 
 public class TauntAwareTargetGoal extends TargetGoal {
     private final AbstractMonster monster;
-    private final int scanInterval;
-    private int lastScanTick = -1000;
     private AbstractPlant cachedTarget;
+    private int range;
 
-    public TauntAwareTargetGoal(AbstractMonster monster) {
+    public TauntAwareTargetGoal(AbstractMonster monster, int range) {
         super(monster, false);
         this.monster = monster;
-        this.scanInterval = 1; // 每1tick扫描一次
+        this.range = range;
     }
 
     @Override
     public boolean canUse() {
-        if (monster.tickCount - lastScanTick >= scanInterval) {
-            updateTarget();
-            lastScanTick = monster.tickCount;
-        }
+        updateTarget();
+        return cachedTarget != null && cachedTarget.isAlive();
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        monster.setTarget(cachedTarget);
         return cachedTarget != null && cachedTarget.isAlive();
     }
 
     private void updateTarget() {
         List<AbstractPlant> plants = monster.level()
             .getEntitiesOfClass(AbstractPlant.class,
-                monster.getBoundingBox().inflate(32),
+                monster.getBoundingBox().inflate(this.range),
                 plant -> plant != null &&
                         plant.isAlive()
             );
