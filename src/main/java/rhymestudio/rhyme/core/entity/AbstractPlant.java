@@ -59,6 +59,10 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     public boolean isUltimating = false;
     public int cardLevel = 0;
     protected boolean dirty = true;
+    private int tauntLevel = 0;
+
+    public static final EntityDataAccessor<Integer> DATA_TAUNT_LEVEL =
+            SynchedEntityData.defineId(AbstractPlant.class, EntityDataSerializers.INT);
 
     public <T extends AbstractPlant> AbstractPlant(EntityType<T> entityType, Level level, Builder builder) {
         super(entityType, level);
@@ -67,6 +71,20 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
         if(level.isClientSide) builder.anim.accept(animState);
         this.ultimate = builder.ultimate;
 
+        setTauntLevel(0);
+    }
+
+    public int getTauntLevel() {
+        return this.tauntLevel;
+    }
+
+    public void setTauntLevel(int level) {
+        this.tauntLevel = level; // 最低等级1
+        this.entityData.set(DATA_TAUNT_LEVEL, this.tauntLevel); // 同步到客户端
+    }
+
+    public int compareTauntLevel(AbstractPlant other) {
+        return Integer.compare(this.tauntLevel, other.tauntLevel);
     }
 
     public void setCardLevel(int level){
@@ -252,11 +270,14 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
         builder.define(DATA_CAFE_POSE_NAME, "idle");
         builder.define(DATA_CARD_LVL, 0);
         builder.define(DATA_OWNERUUID_ID, Optional.empty());
-
+        builder.define(DATA_TAUNT_LEVEL, 0);
     }
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        if (this.level().isClientSide() && DATA_TAUNT_LEVEL.equals(key)) {
+            this.tauntLevel = this.entityData.get(DATA_TAUNT_LEVEL);
+        }
         if (this.level().isClientSide() && DATA_CAFE_POSE_NAME.equals(key)) {
             String name = entityData.get(DATA_CAFE_POSE_NAME);
             this.animState.playAnim(name, this.tickCount);
@@ -269,6 +290,8 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
+        this.tauntLevel = tag.getInt("TauntLevel");
+        this.entityData.set(DATA_TAUNT_LEVEL, this.tauntLevel);
         this.cardLevel = tag.getInt("cardLevel");
         this.skills.index = tag.getInt("skillIndex");
         this.skills.tick = tag.getInt("skillTick");
@@ -304,6 +327,7 @@ public abstract class AbstractPlant<T extends AbstractPlant<T>> extends Pathfind
         tag.putInt("skillIndex",this.skills.index);
         tag.putInt("skillTick",this.skills.tick);
         tag.putBoolean("dirty", dirty);
+        tag.putInt("TauntLevel", this.tauntLevel);
         if(owner!=null) tag.putUUID("ownerUUID",owner.getUUID());
 //        tag.putInt("cachedId",this.cachedId);
         if (this.summon_getOwnerUUID() != null) {

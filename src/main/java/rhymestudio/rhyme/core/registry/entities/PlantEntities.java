@@ -220,6 +220,14 @@ public class PlantEntities {
 
             ));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<Betelnut>> BETELNUT = registerCreature("betelnut","槟榔",(type, level)->
+            new Betelnut(type,level, DEFENSE_PLANT.apply(150).setAnim(s->{
+                        s.addAnimation("idle_test_betelnut", WallNutAnimation.idle1,1);
+            }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
+                    .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
+            )
+    ));
+
 
     //      tip 土豆雷类
     public static final DeferredHolder<EntityType<?>, EntityType<PotatoMine>> POTATO_MINE = registerCreature("potato_mine","土豆雷",(type, level)->

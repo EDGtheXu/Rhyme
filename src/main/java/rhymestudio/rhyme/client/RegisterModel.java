@@ -37,6 +37,7 @@ public class RegisterModel {
         register(evt, PuffShroomModel.class);
         register(evt, WallNutModel.class);
         register(evt, CabbageModel.class);
+        register(evt, BetelnutModel.class);
 
         // 僵尸模型
         register(evt, NormalZombieModel.class);

@@ -7,7 +7,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -16,7 +18,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
-
+import rhymestudio.rhyme.core.entity.goal.TauntAwareTargetGoal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -342,6 +344,12 @@ public class AbstractMonster extends Monster implements ICafeMob{
         public Builder addAnimation(Consumer<CafeAnimationState> state){
             this.animation = state;
             return this;
+        }
+
+        public Builder defaultTauntTarget() {
+            return this.addTarget((selector, monster) ->
+                    selector.addGoal(0, new TauntAwareTargetGoal(monster))
+            );
         }
     }
 

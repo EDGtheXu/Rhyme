@@ -73,6 +73,11 @@ public class SunCreatorRecipeProvider extends AbstractRecipeProvider {
                 .add(MaterialItems.GENERAL_SEED)
                 .add(MaterialItems.NUT_GENE,4).build();
 
+        //槟榔
+        gen(PlantItems.BETELNUT_ITEM)
+                .add(MaterialItems.GENERAL_SEED)
+                .add(MaterialItems.NUT_GENE,6).build();
+
         //卷心菜
         gen(PlantItems.CABBAGE_PULT_ITEM)
                 .add(MaterialItems.GENERAL_SEED)

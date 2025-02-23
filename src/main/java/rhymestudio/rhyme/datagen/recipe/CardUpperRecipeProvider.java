@@ -196,6 +196,24 @@ public class CardUpperRecipeProvider extends AbstractRecipeProvider {
                 .addition1(Items.NETHERITE_INGOT, 1)
                 .build();
 
+        //槟榔
+        gen(PlantItems.BETELNUT_ITEM, 1)
+                .addition(MaterialItems.NUT_GENE, 5)
+                .addition1(MaterialItems.NUT_GENE, 5)
+                .build();
+        gen(PlantItems.BETELNUT_ITEM, 2)
+                .addition(MaterialItems.NUT_GENE, 5)
+                .addition1(MaterialItems.NUT_GENE, 5)
+                .build();
+        gen(PlantItems.BETELNUT_ITEM, 3)
+                .addition(MaterialItems.NUT_GENE, 5)
+                .addition1(MaterialItems.NUT_GENE, 5)
+                .build();
+        gen(PlantItems.BETELNUT_ITEM, 4)
+                .addition(MaterialItems.NUT_GENE, 5)
+                .addition1(MaterialItems.NUT_GENE, 5)
+                .build();
+
         //卷心菜投手
         gen(PlantItems.CABBAGE_PULT_ITEM, 1)
                 .addition(MaterialItems.THROWABLE_GENE, 5)

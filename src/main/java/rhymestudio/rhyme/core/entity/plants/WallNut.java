@@ -31,6 +31,7 @@ public class WallNut<T extends WallNut<T>> extends AbstractPlant<T> {
     public WallNut(EntityType<? extends AbstractPlant> type, Level level,
                    Builder builder) {
         super(type, level,builder);
+        setTauntLevel(1);
     }
 
     @Override

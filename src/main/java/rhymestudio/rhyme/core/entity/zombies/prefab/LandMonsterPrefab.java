@@ -23,6 +23,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AbstractMonster.Builder> SIMPLE_ZOMBIE_PREFAB =
             ()->new LandMonsterPrefab(35,2,4,30,0.5f,0.1f).getPrefab()
+                    .defaultTauntTarget()
                     .setStepHeight(2.4f)
                     .setJumpStrength(0.5f)
                     .setAmbientSound(ModSounds.GROAN)

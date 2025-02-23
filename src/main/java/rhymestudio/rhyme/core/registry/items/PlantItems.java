@@ -34,6 +34,7 @@ public class PlantItems {
 
     // tip 坚果类
     public static final DeferredItem<AbstractCardItem<?>> NUT_WALL_ITEM = registerPlant("nut_wall","坚果墙", ()-> builder(PlantEntities.WALL_NUT,50).cd(30).build());
+    public static final DeferredItem<AbstractCardItem<?>> BETELNUT_ITEM = registerPlant("betelnut","槟榔", ()-> builder(PlantEntities.BETELNUT,50).cd(30).build());
 
     // tip 投手类
     public static final DeferredItem<AbstractCardItem<?>> CABBAGE_PULT_ITEM = registerPlant("cabbage_pult", "卷心菜投手", ()-> builder(PlantEntities.CABBAGE_PULT,100).build());

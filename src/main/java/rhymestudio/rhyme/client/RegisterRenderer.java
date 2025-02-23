@@ -53,6 +53,7 @@ public class RegisterRenderer {
         registerOne(event, REPEATER.get(),getRenderSup(RepeaterModel.class),0.5f,1f,true);
         registerOne(event,WALL_NUT.get(),getRenderSup(WallNutModel.class),0.5f,1f);
         registerOne(event,POTATO_MINE.get(),getRenderSup(PotatoMineModel.class),0,1f);
+        registerOne(event,BETELNUT.get(),getRenderSup(BetelnutModel.class),0.5f,1f);
 
 
         //tip 衍生物

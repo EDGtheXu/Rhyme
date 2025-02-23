@@ -54,6 +54,7 @@ public class ModEntities {
         event.put(WALL_NUT.get(), genericPlant.build());
         event.put(CABBAGE_PULT.get(), genericPlant.build());
         event.put(CHOMPER.get(), genericPlant.build());
+        event.put(BETELNUT.get(), genericPlant.build());
 
         //衍生物
         event.put(BAKED_POTATO.get(), genericPlant.build());
