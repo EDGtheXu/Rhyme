@@ -3,6 +3,7 @@ package rhymestudio.rhyme.datagen.lang;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.checkpoint.ModCheckPoints;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -67,12 +68,21 @@ public class ModEnglishProvider extends LanguageProvider {
         add("rhyme.configuration.plant_attributes_multiplier_damage", "Plant Damage Multiplier");
         add("rhyme.configuration.plant_attributes_multiplier_health_per_level", "Plant Speed Multiplier Per Level");
         add("rhyme.configuration.plant_attributes_multiplier_damage_per_level", "Plant Damage Multiplier Per Level");
+        add("rhyme.configuration.chance_to_drop_money", "Chance To Drop Money");
+        add("rhyme.configuration.chance_to_drop_key", "Chance To Drop Key");
 
+
+
+        // keybind
+        add("key.rhyme.show_menu", "显示Rhyme菜单");
 
         // effect
         add("effect.rhyme.slowdown", "Slow Down");
         add("effect.rhyme.frozen", "Frozen");
         add("effect.rhyme.severe_poison", "Severe Poison");
+
+        // checkpoint
+        add(ModCheckPoints.SIMPLE_CHECKPOINT.getTranslationKey(), "Simple Checkpoint");
 
 
 

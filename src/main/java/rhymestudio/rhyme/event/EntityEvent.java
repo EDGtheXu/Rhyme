@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -25,6 +26,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import rhymestudio.rhyme.config.ServerConfig;
+import rhymestudio.rhyme.core.checkpoint.CheckPointManager;
+import rhymestudio.rhyme.core.checkpoint.ModCheckPoints;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.ICheckPoint;
 import rhymestudio.rhyme.core.dataSaver.attactment.PlantRecorderAttachment;
 import rhymestudio.rhyme.core.dataSaver.dataComponent.CheckpointComponent;
 import rhymestudio.rhyme.core.entity.AbstractPlant;
@@ -37,6 +42,8 @@ import rhymestudio.rhyme.datagen.tag.ModTags;
 import rhymestudio.rhyme.core.registry.ModAttachments;
 import rhymestudio.rhyme.mixinauxiliary.IPlayer;
 import rhymestudio.rhyme.network.s2c.PlantRecorderPacket;
+
+import java.util.Optional;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
 
@@ -92,19 +99,33 @@ public class EntityEvent {
         }
     }
 
-    // 死亡掉落金币
+
     @SubscribeEvent
     public static void livingDead(LivingDeathEvent event) {
+        Entity damageEntity = event.getSource().getEntity();
         if(!event.getEntity().level().isClientSide && event.getEntity() instanceof Monster || event.getEntity() instanceof Slime){
-            if(event.getEntity().getRandom().nextFloat() < 0.2f) {
+            if(event.getSource().getEntity() instanceof ServerPlayer sp && event.getEntity().getRandom().nextFloat() < ServerConfig.CHANCE_TO_DROP_MONEY.get()) {
+                // 死亡掉落金币
                 ItemEntity ite = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), MaterialItems.SILVER_COIN.toStack());
                 event.getEntity().level().addFreshEntity(ite);
             }
-            if(event.getEntity().getRandom().nextFloat() < 1f){
-                ItemStack stack =MaterialItems.CHECKPOINT_ITEM.toStack();
-                stack.set(ModDataComponentTypes.CHECKPOINT_LOCATION.get(), new CheckpointComponent(CheckPointDataProvider.L1_1));
-                ItemEntity key = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), stack);
-                event.getEntity().level().addFreshEntity(key);
+            if(event.getEntity().getRandom().nextFloat() < ServerConfig.CHANCE_TO_DROP_KEY.get()){
+                // 死亡掉落钥匙
+                if(damageEntity instanceof ServerPlayer sp) {
+                    Optional<ICheckPoint<?>> optionalCheckPoint = CheckPointManager.getCheckPoint(
+                            ModCheckPoints.SIMPLE_CHECKPOINT,
+                            sp.getData(ModAttachments.PLAYER_PROGRESS_STORAGE).getMinPassedChapter(ModCheckPoints.SIMPLE_CHECKPOINT)
+                    );
+
+                    ItemStack stack = MaterialItems.CHECKPOINT_ITEM.toStack();
+
+                    // 已通关的话掉落可随机的钥匙
+                    if(optionalCheckPoint.isPresent()) {
+                        stack.set(ModDataComponentTypes.CHECKPOINT_LOCATION.get(), new CheckpointComponent(optionalCheckPoint.get().name()));
+                    }
+                    ItemEntity key = new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), stack);
+                    event.getEntity().level().addFreshEntity(key);
+                }
             }
 
         }

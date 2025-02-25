@@ -30,8 +30,14 @@ public class CheckPointManager {
      * @return 关卡数据
      * @param <T> 关卡类型
      */
-    public static <T extends ICheckPointType<?>> ICheckPoint<?> getCheckPoint(T type, int index) {
-        return BY_TYPE.get(type).get(index);
+    public static <T extends ICheckPointType<?>, U extends ICheckPoint<?>> Optional<U> getCheckPoint(T type, int index) {
+        if (!BY_TYPE.containsKey(type)) {
+            return Optional.empty();
+        }
+        if (!BY_TYPE.get(type).containsKey(index)) {
+            return Optional.empty();
+        }
+        return Optional.of((U) BY_TYPE.get(type).get(index));
     }
 
     /**

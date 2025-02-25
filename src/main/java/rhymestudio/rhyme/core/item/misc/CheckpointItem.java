@@ -3,6 +3,7 @@ package rhymestudio.rhyme.core.item.misc;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -27,7 +28,18 @@ public class CheckpointItem extends CustomRarityItem {
         var data = stack.get(ModDataComponentTypes.CHECKPOINT_LOCATION);
         if(!level.isClientSide && data == null){
             CheckPointManager.getRandom().ifPresent(cp->{
-                stack.set(ModDataComponentTypes.CHECKPOINT_LOCATION.get(), new CheckpointComponent(cp.name()));
+                ItemStack newStack = stack.copy();
+                newStack.setCount(1);
+
+                newStack.set(ModDataComponentTypes.CHECKPOINT_LOCATION.get(), new CheckpointComponent(cp.name()));
+                stack.shrink(1);
+                if(!player.addItem(newStack.copy())){
+                    ItemEntity itementity = player.drop(newStack.copy(), false);
+                    if (itementity != null) {
+                        itementity.setNoPickUpDelay();
+                        itementity.setTarget(player.getUUID());
+                    }
+                }
             });
 
         }
@@ -37,11 +49,16 @@ public class CheckpointItem extends CustomRarityItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         var data = stack.get(ModDataComponentTypes.CHECKPOINT_LOCATION);
-        if(data!= null){
-            tooltipComponents.add(
-                    Component.translatable("tooltip.rhyme.open_checkpoint")
-                            .append(Component.translatable(Rhyme.toLang(data.getLocation()))));
-        }else{
+        if (data != null) {
+            var opt = CheckPointManager.getCheckPoint(data.getLocation());
+            if (opt.isPresent()) {
+                tooltipComponents.add(
+                        Component.translatable("tooltip.rhyme.open_checkpoint")
+                                .append(Component.translatable(opt.get().getTranslatedName())));
+
+
+            }
+        }else {
             tooltipComponents.add(
                     Component.translatable("tooltip.rhyme.init_checkpoint"));
         }

@@ -55,6 +55,7 @@ public record CheckPoint(List<Wave> waves, ResourceLocation name, ResourceLocati
         public Builder(ResourceLocation name, int index) {
             this.waves = new ArrayList<>();
             this.name = name;
+            this.index = index;
         }
 
         public Wave.WaveBuilder addWave(boolean isBlocking) {

@@ -26,6 +26,15 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<ICheckPoi
     }
 
     public static ResourceLocation L1_1 = Rhyme.space("simple_checkpoint/lvl_1_1");
+    public static ResourceLocation L1_2 = Rhyme.space("simple_checkpoint/lvl_1_2");
+    public static ResourceLocation L1_3 = Rhyme.space("simple_checkpoint/lvl_1_3");
+    public static ResourceLocation L1_4 = Rhyme.space("simple_checkpoint/lvl_1_4");
+    public static ResourceLocation L1_5 = Rhyme.space("simple_checkpoint/lvl_1_5");
+    public static ResourceLocation L1_6 = Rhyme.space("simple_checkpoint/lvl_1_6");
+    public static ResourceLocation L1_7 = Rhyme.space("simple_checkpoint/lvl_1_7");
+    public static ResourceLocation L1_8 = Rhyme.space("simple_checkpoint/lvl_1_8");
+    public static ResourceLocation L1_9 = Rhyme.space("simple_checkpoint/lvl_1_9");
+    public static ResourceLocation L1_10 = Rhyme.space("simple_checkpoint/lvl_1_10");
 
     @Override
     protected void run() {
@@ -46,10 +55,59 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<ICheckPoi
                 .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
                 .buildWave()
 
-                .addLootTable(ModChestLoot.daveChest.location())
+                .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_1.location())
                 .build());
 
+        gen(L1_2, 2,  check -> check
+                .addWave(false)
+                .addZombie(20, EntityType.ZOMBIE, 1)
+                .addZombieList(60, List.of(
+                        new WeightSelectedZombie.tuple(Zombies.NORMAL_ZOMBIE.get(), 2),
+                        new WeightSelectedZombie.tuple(Zombies.CONE_ZOMBIE.get(), 2)
+                ), 1)
+                .addZombie(100, Zombies.CONE_ZOMBIE.get(), 2)
+                .buildWave()
 
+                .addWave(false)
+                .addZombie(20, EntityType.ZOMBIE, 2)
+                .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 2)
+                .addZombie(200, Zombies.IRON_BUCKET_ZOMBIE.get(), 1)
+                .buildWave()
+
+                .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_2.location())
+                .build());
+
+        gen(L1_3, 3,  check -> check
+                .addWave(false)
+                .addZombie(20, EntityType.ZOMBIE, 1)
+                .addZombieList(60, List.of(
+                        new WeightSelectedZombie.tuple(Zombies.NORMAL_ZOMBIE.get(), 2),
+                        new WeightSelectedZombie.tuple(Zombies.CONE_ZOMBIE.get(), 2)
+                ), 1)
+                .addZombieList(70, List.of(
+                        new WeightSelectedZombie.tuple(Zombies.NORMAL_ZOMBIE.get(), 2),
+                        new WeightSelectedZombie.tuple(Zombies.CONE_ZOMBIE.get(), 2)
+                ), 1)
+                .addZombie(100, Zombies.CONE_ZOMBIE.get(), 2)
+                .buildWave()
+
+                .addWave(false)
+                .addZombie(20, EntityType.ZOMBIE, 1)
+                .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 2)
+                .addZombie(100, Zombies.CONE_ZOMBIE.get(), 2)
+                .buildWave()
+
+                .addWave(false)
+                .addZombie(20, EntityType.ZOMBIE, 2)
+                .addZombie(100, Zombies.IRON_BUCKET_ZOMBIE.get(), 1)
+                .addZombie(150, Zombies.IRON_BUCKET_ZOMBIE.get(), 2)
+                .addZombie(210, Zombies.POLE_VAULTING_ZOMBIE.get(), 1)
+                .addZombie(220, Zombies.IRON_BUCKET_ZOMBIE.get(), 1)
+
+                .buildWave()
+
+                .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_3.location())
+                .build());
 
     }
 

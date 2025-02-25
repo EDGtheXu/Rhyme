@@ -95,22 +95,19 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
     private final PropertyDispatch.TriFunction<Item,Float,Float, LootPool.Builder> LOOT_POOL_CONDITIONAL = (item, chance, condition)->
             LOOT_POOL.apply(item, chance).when(LootItemRandomChanceCondition.randomChance(condition));
 
-    private final Function<LootTable.Builder, LootTable.Builder> ZOMBIE_COMMON_LOOT_TABLE = (loot)-> loot
-            .withPool(LOOT_POOL.apply(MaterialItems.GENERAL_SEED.get(), 0.75F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.PLANT_GENE.asItem(), 0.5F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.PEA_GENE.get(), 0.3F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.NUT_GENE.get(), 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.SNOW_GENE.get(), 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.MUSHROOM_GENE.get(), 0.3F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.THROWABLE_GENE.get(), 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.HIDDEN_GENE.get(), 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.ANGER_GENE.get(), 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.STRONG_GENE.get(), 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.CHECKPOINT_ITEM.get(), 0.2F, 0.5F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(ModBlocks.BLOCK_ITEMS.getEntries().stream()
-                    .filter(it->it.get() instanceof BlockItem  bi&& bi.getBlock() == ModBlocks.ZOMBIE_FLAG_BLOCK.get())
-                    .findFirst().get().get(), 0.2F, 0.5F))
-
+    public final Function<LootTable.Builder, LootTable.Builder> ZOMBIE_COMMON_LOOT_TABLE = (loot)-> loot
+//            .withPool(LOOT_POOL.apply(MaterialItems.GENERAL_SEED.get(), 0.75F))
+            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.PLANT_GENE.asItem(), 0.1F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.PEA_GENE.get(), 0.3F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.NUT_GENE.get(), 0.2F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.SNOW_GENE.get(), 0.2F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.MUSHROOM_GENE.get(), 0.3F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.THROWABLE_GENE.get(), 0.2F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.HIDDEN_GENE.get(), 0.2F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.ANGER_GENE.get(), 0.2F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.STRONG_GENE.get(), 0.2F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(MaterialItems.CHECKPOINT_ITEM.get(), 0.2F, 0.5F))
+//            .withPool(LOOT_POOL_CONDITIONAL.apply(ModBlocks.ZOMBIE_BANNER_ITEM.get(), 0.2F, 0.5F))
             ;
 
 

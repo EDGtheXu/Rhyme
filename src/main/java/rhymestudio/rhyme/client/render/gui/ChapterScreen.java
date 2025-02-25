@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Inventory;
-import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.CheckPointManager;
 import rhymestudio.rhyme.core.checkpoint.ModCheckPoints;
 import rhymestudio.rhyme.core.menu.ChapterMenu;
@@ -32,11 +31,12 @@ public class ChapterScreen extends AbstractContainerScreen<ChapterMenu> {
         var data = minecraft.player.getData(ModAttachments.PLAYER_PROGRESS_STORAGE);
         List<Integer> chapter = data.getChapter(ModCheckPoints.SIMPLE_CHECKPOINT);
         int count = CheckPointManager.getCount(ModCheckPoints.SIMPLE_CHECKPOINT);
+//        int count = 50;
 
 
         layout.defaultCellSetting().paddingHorizontal(20).paddingBottom(10).alignHorizontallyCenter();
         GridLayout.RowHelper rowHelper = layout.createRowHelper(5);
-        for(int i=0;i<count;i++){
+        for(int i=1;i<=count;i++){
             rowHelper.addChild(new StringWidget(chapter.contains(i) ?
                     Component.literal("√").withStyle(Style.EMPTY.withColor(Color.green.getRGB())) :
                     Component.literal("X"), this.font));
@@ -50,7 +50,7 @@ public class ChapterScreen extends AbstractContainerScreen<ChapterMenu> {
         // 章节
         rowLayout.defaultCellSetting().paddingHorizontal(20).paddingBottom(20).alignVerticallyMiddle().alignHorizontallyCenter();
         GridLayout.RowHelper rowHelper1 = rowLayout.createRowHelper(1);
-        rowHelper1.addChild(new StringWidget(Component.translatable(Rhyme.toLang(ModCheckPoints.SIMPLE_CHECKPOINT.resource())).withStyle(Style.EMPTY.withColor(Color.cyan.getRGB())), this.font));
+        rowHelper1.addChild(new StringWidget(Component.translatable(ModCheckPoints.SIMPLE_CHECKPOINT.getTranslationKey()).withStyle(Style.EMPTY.withColor(Color.cyan.getRGB())), this.font));
 
 
         rowLayout.arrangeElements();

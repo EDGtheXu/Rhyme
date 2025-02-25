@@ -40,13 +40,17 @@ public abstract class AbstractBufferManager {
         lastRefreshTime = System.currentTimeMillis();
     }
 
+    protected BufferBuilder getBufferBuilder(Tesselator tesselator) {
+        return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+    }
+
     public void refresh(PoseStack poseStack) {
 
         if(vertexBuffer!= null)
             vertexBuffer.close();
         vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder buffer = getBufferBuilder(tesselator);
 
         buildBuffer(buffer, poseStack);
 

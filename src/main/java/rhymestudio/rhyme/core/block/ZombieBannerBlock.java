@@ -40,8 +40,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.checkpoint.*;
+import rhymestudio.rhyme.core.checkpoint.checkpoint.ICheckPoint;
 import rhymestudio.rhyme.core.checkpoint.entitygroup.IEntityTypeGroup;
 import rhymestudio.rhyme.core.checkpoint.spawner.IZombieSpawner;
 import rhymestudio.rhyme.core.registry.ModAttachments;
@@ -100,16 +100,18 @@ public class ZombieBannerBlock extends BaseEntityBlock {
         if(!level.isClientSide){
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if(blockEntity instanceof ZombieFlagBlockEntity entity) {
-                ResourceLocation location = CheckPointDataProvider.L1_1;
+
                 var data = stack.get(ModDataComponentTypes.CHECKPOINT_LOCATION);
                 if(data!= null) {
                     if (entity.waveManager.isEmpty()) {
+                        ResourceLocation location = data.getLocation();
                         entity.waveManager = WaveManager.loadFromResource(entity, location);
                         if(entity.waveManager.isEmpty()){
                             // nbt不合法
                             player.sendSystemMessage(Component.literal("invalid nbt data"));
                         }else {
-                            entity.bossEvent = (ServerBossEvent) new ServerBossEvent(Component.translatable(Rhyme.toLang(location)), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
+                            ICheckPoint<?> icp = entity.waveManager.checkPoint;
+                            entity.bossEvent = (ServerBossEvent) new ServerBossEvent(Component.translatable(icp.getTranslatedName()), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
                             stack.shrink(1);
                         }
                         return ItemInteractionResult.SUCCESS;
@@ -137,10 +139,10 @@ public class ZombieBannerBlock extends BaseEntityBlock {
 
                 WaveManager.State state1 = blockEntity.waveManager.update();
 
-                blockEntity.update();
+                blockEntity.updateTick();
                 // 结束
                 if (state1 == WaveManager.State.OVER) {
-                    --blockEntity.properties.timeDelay;
+                    --blockEntity.properties.finishDelay;
                     if (blockEntity.isOver()) {
                         // 生成战利品，保存玩家进度
                         serverLevel.getPlayers(p->p.distanceToSqr(Vec3.atCenterOf(blockEntity.getBlockPos())) < blockEntity.properties.maxDistance * blockEntity.properties.maxDistance).forEach(p->{
@@ -215,7 +217,7 @@ public class ZombieBannerBlock extends BaseEntityBlock {
 
         @Override
         public boolean isOver() {
-            return waveManager.state == WaveManager.State.OVER && properties.timeDelay <= 0 && properties.monsters.isEmpty();
+            return waveManager.state == WaveManager.State.OVER && properties.finishDelay <= 0 && properties.monsters.isEmpty();
         }
 
         @Override
@@ -253,6 +255,13 @@ public class ZombieBannerBlock extends BaseEntityBlock {
             if (bossEvent != null) {
                 bossEvent.setProgress((float) (waveManager.waveCount - waveManager.currentWave) /
                         waveManager.waveCount);
+            }
+        }
+
+        @Override
+        public void remove() {
+            if (this.level != null) {
+                this.level.setBlock(this.worldPosition, Blocks.AIR.defaultBlockState(), 2);
             }
         }
 

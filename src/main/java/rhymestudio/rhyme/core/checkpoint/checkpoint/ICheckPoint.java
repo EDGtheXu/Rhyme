@@ -31,7 +31,7 @@ public interface ICheckPoint<T extends ICheckPoint<T>>{
      * 翻译键
      */
     default String getTranslatedName(){
-        return name().toLanguageKey().replace("/", ".");
+        return "checkpoint."+name().toLanguageKey().replace("/", ".");
     }
 
     /**

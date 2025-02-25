@@ -56,6 +56,29 @@ public class PlayerProgressAttachment implements INBTSerializable<CompoundTag> {
         return chapterMapList.getOrDefault(type, new ArrayList<>());
     }
 
+    /**
+     * 获取最小未完成章节
+     * @param type 章节类型
+     * @return 最小未完成章节
+     */
+    public int getMinPassedChapter(ICheckPointType<?> type) {
+        List<Integer> chapterList = chapterMapList.getOrDefault(type, new ArrayList<>());
+        if (chapterList.isEmpty()) {
+            return 1;
+        }
+        // 排序
+        Collections.sort(chapterList);
+
+        for (int i = 1; i < Integer.MAX_VALUE; i++) {
+            if (!chapterList.contains(i)) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+
     public static void sync(ServerPlayer player){
         AdapterUtils.sendPacketToPlayer(new PlayerChapterPacket(player.getData(ModAttachments.PLAYER_PROGRESS_STORAGE.get())), player);
     }

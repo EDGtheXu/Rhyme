@@ -2,6 +2,7 @@ package rhymestudio.rhyme.datagen.lang;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import rhymestudio.rhyme.Rhyme;
+import rhymestudio.rhyme.core.checkpoint.ModCheckPoints;
 
 import static rhymestudio.rhyme.Rhyme.MODID;
 
@@ -55,11 +56,21 @@ public class ModChineseProvider extends LanguageProvider {
         add("rhyme.configuration.plant_attributes_multiplier_damage", "植物伤害系数");
         add("rhyme.configuration.plant_attributes_multiplier_health_per_level", "植物每级生命值加成系数");
         add("rhyme.configuration.plant_attributes_multiplier_damage_per_level", "植物每级伤害加成系数");
+        add("rhyme.configuration.chance_to_drop_money", "掉落金币的几率");
+        add("rhyme.configuration.chance_to_drop_key", "掉落钥匙的几率");
+
+        // keybind
+        add("key.rhyme.show_menu", "显示Rhyme菜单");
+
 
         // effect
         add("effect.rhyme.slowdown", "寒冷");
         add("effect.rhyme.frozen", "霜冻");
         add("effect.rhyme.severe_poison", "剧毒");
+
+        add(ModCheckPoints.SIMPLE_CHECKPOINT.getTranslationKey(), "简单关卡");
+
+
 
         Rhyme.chineseProviders.forEach(a->a.accept(this));
 

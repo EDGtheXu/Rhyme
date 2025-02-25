@@ -1,3 +1,6 @@
 {
-    "parent": "rhyme:block/zombie_banner_block"
+    "parent": "minecraft:item/handheld",
+    "textures": {
+        "layer0": "rhyme:item/block/zombie_banner_block"
+    }
 }

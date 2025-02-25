@@ -28,6 +28,7 @@ public class ModBlocks {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Rhyme.MODID);
     public static final DeferredRegister.Items BLOCK_ITEMS = DeferredRegister.createItems(Rhyme.MODID);
 
+    public static DeferredItem<Item> ZOMBIE_BANNER_ITEM;
 
 
     public static final Supplier<BaseEntityBlock> SUN_CREATOR_BLOCK = register("sun_creator_block","光萃台", () -> new SunCreatorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).destroyTime(30).noOcclusion()));
@@ -38,7 +39,7 @@ public class ModBlocks {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CardUpLevelBlock.CardUpLevelBlockEntity>> CARD_UP_LEVEL_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("card_up_level_block_entity", () -> BlockEntityType.Builder.of(CardUpLevelBlock.CardUpLevelBlockEntity::new, CARD_UP_LEVEL_BLOCK.get()).build(DSL.remainderType()));
 
-    public static final Supplier<BaseEntityBlock> ZOMBIE_FLAG_BLOCK = register("zombie_banner_block","僵尸旗帜", () -> new ZombieBannerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).destroyTime(10).noCollission().noOcclusion()));
+    public static final Supplier<BaseEntityBlock> ZOMBIE_FLAG_BLOCK = register("zombie_banner_block","僵尸旗帜", () -> new ZombieBannerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).destroyTime(2).noCollission().noOcclusion()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ZombieBannerBlock.ZombieFlagBlockEntity>> ZOMBIE_FLAG_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("zombie_flag_block_entity", () -> BlockEntityType.Builder.of(ZombieBannerBlock.ZombieFlagBlockEntity::new, ZOMBIE_FLAG_BLOCK.get()).build(DSL.remainderType()));
 
@@ -55,9 +56,11 @@ public class ModBlocks {
 
 
 
-    public static <T extends Block>Supplier<T> register(String name,String zh,Supplier<T> blockSupplier) {
+    public static <T extends Block>Supplier<T> register(String name, String zh,Supplier<T> blockSupplier) {
         DeferredBlock<T> block =  BLOCKS.register(name, blockSupplier);
         DeferredItem<Item> item = BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        if(name.equals("zombie_banner_block"))
+            ZOMBIE_BANNER_ITEM = item;
         add_zh_en(item, zh);
         return block ;
     }
