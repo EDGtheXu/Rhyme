@@ -39,45 +39,49 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<ICheckPoi
     @Override
     protected void run() {
 
-        gen(L1_1, 1,  check -> check
-                .addWave(false)
-                .addZombie(20, EntityType.ZOMBIE, 1)
-                .addZombieList(60, List.of(
-                        new WeightSelectedZombie.tuple(Zombies.NORMAL_ZOMBIE.get(), 1),
-                        new WeightSelectedZombie.tuple(Zombies.CONE_ZOMBIE.get(), 5)
-                ), 1)
-                .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
-                .buildWave()
+        gen(L1_1, 1, new genCheckPoint() { @Override public CheckPoint execute(CheckPoint.Builder builder, Void v) { return builder
+            .addWave(false)
+            .addZombie(20, EntityType.ZOMBIE, 1)
+            .addZombieList(60, List.of(
+                    new WeightSelectedZombie.tuple(Zombies.NORMAL_ZOMBIE.get(), 1),
+                    new WeightSelectedZombie.tuple(Zombies.CONE_ZOMBIE.get(), 5)
+            ), 1)
+            .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
+            .buildWave()
 
-                .addWave(false)
-                .addZombie(20, EntityType.ZOMBIE, 1)
-                .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 1)
-                .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
-                .buildWave()
+            .addWave(false)
+            .addZombie(20, EntityType.ZOMBIE, 1)
+            .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 1)
+            .addZombie(100, Zombies.CONE_ZOMBIE.get(), 1)
+            .buildWave()
 
-                .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_1.location())
-                .build());
+            .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_1.location())
+            .build();
+        }});
 
-        gen(L1_2, 2,  check -> check
-                .addWave(false)
-                .addZombie(20, EntityType.ZOMBIE, 1)
-                .addZombieList(60, List.of(
-                        new WeightSelectedZombie.tuple(Zombies.NORMAL_ZOMBIE.get(), 2),
-                        new WeightSelectedZombie.tuple(Zombies.CONE_ZOMBIE.get(), 2)
-                ), 1)
-                .addZombie(100, Zombies.CONE_ZOMBIE.get(), 2)
-                .buildWave()
 
-                .addWave(false)
-                .addZombie(20, EntityType.ZOMBIE, 2)
-                .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 2)
-                .addZombie(200, Zombies.IRON_BUCKET_ZOMBIE.get(), 1)
-                .buildWave()
+        gen(L1_2, 2,  new genCheckPoint() { @Override public CheckPoint execute(CheckPoint.Builder builder, Void v) {return builder
+            .addWave(false)
+            .addZombie(20, EntityType.ZOMBIE, 1)
+            .addZombieList(60, List.of(
+                    new WeightSelectedZombie.tuple(Zombies.NORMAL_ZOMBIE.get(), 2),
+                    new WeightSelectedZombie.tuple(Zombies.CONE_ZOMBIE.get(), 2)
+            ), 1)
+            .addZombie(100, Zombies.CONE_ZOMBIE.get(), 2)
+            .buildWave()
 
-                .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_2.location())
-                .build());
+            .addWave(false)
+            .addZombie(20, EntityType.ZOMBIE, 2)
+            .addZombie(60, Zombies.NORMAL_ZOMBIE.get(), 2)
+            .addZombie(200, Zombies.IRON_BUCKET_ZOMBIE.get(), 1)
+            .buildWave()
 
-        gen(L1_3, 3,  check -> check
+            .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_2.location())
+            .build();
+        }});
+
+
+        gen(L1_3, 3,   new genCheckPoint() { @Override public CheckPoint execute(CheckPoint.Builder builder, Void v) {return builder
                 .addWave(false)
                 .addZombie(20, EntityType.ZOMBIE, 1)
                 .addZombieList(60, List.of(
@@ -107,7 +111,9 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<ICheckPoi
                 .buildWave()
 
                 .addLootTable(ModChestLoot.checkpoint_loot_lvl_1_3.location())
-                .build());
+                .build();
+        }});
+
 
     }
 
@@ -133,6 +139,18 @@ public class CheckPointDataProvider extends AbstractExistCodecProvider<ICheckPoi
      */
     protected void gen(ResourceLocation location, int index,  Function<CheckPoint.Builder, CheckPoint> function){
         gen(location, function.apply(CheckPoint.builder(location, index)));
+    }
+
+    /**
+     * 生成关卡信息，方便折叠
+     */
+    protected void gen(ResourceLocation location, int index,  genCheckPoint generator){
+        gen(location, generator.execute(CheckPoint.builder(location, index), null));
+    }
+
+    @FunctionalInterface
+    protected interface genCheckPoint{
+        CheckPoint execute(CheckPoint.Builder builder, Void v);
     }
 
 
