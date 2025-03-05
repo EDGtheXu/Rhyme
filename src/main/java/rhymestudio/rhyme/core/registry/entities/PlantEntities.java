@@ -221,7 +221,7 @@ public class PlantEntities {
             ));
 
     public static final DeferredHolder<EntityType<?>, EntityType<Betelnut>> BETELNUT = registerCreature("betelnut","槟榔",(type, level)->
-            new Betelnut(type,level, DEFENSE_PLANT.apply(150).setAnim(s->{
+            new Betelnut(type,level, DEFENSE_PLANT.apply(100 * 2).setAnim(s->{
                         s.addAnimation("idle_test_betelnut", WallNutAnimation.idle1,1);
             }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
                     .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
@@ -266,7 +266,8 @@ public class PlantEntities {
                 s.addAnimation("idle", WallNutAnimation.idle1, 1);
             }).setUltimate(new CircleMobSkill<>("ultimate",30, 5)
                     .onInit(e->e.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,500,20)))
-            )));
+            )
+        ));
 
     //      tip 蘑菇类
     public static final DeferredHolder<EntityType<?>, EntityType<PuffShroom>> PUFF_SHROOM = registerCreature("puff_shroom","小喷菇",(type, level)->

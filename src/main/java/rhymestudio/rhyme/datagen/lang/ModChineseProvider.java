@@ -67,6 +67,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("effect.rhyme.slowdown", "寒冷");
         add("effect.rhyme.frozen", "霜冻");
         add("effect.rhyme.severe_poison", "剧毒");
+        add("effect.rhyme.frailty", "又菜瘾又大");
 
         add(ModCheckPoints.SIMPLE_CHECKPOINT.getTranslationKey(), "简单关卡");
 

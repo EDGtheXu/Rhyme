@@ -38,20 +38,22 @@ public class WallNut<T extends WallNut<T>> extends AbstractPlant<T> {
     public void addSkills() {
         CircleMobSkill<T> idle1 = new CircleMobSkill<T>( "idle1",  999999999, 0)
                 .onTick(a-> {
-                    doSmth();
+                    //doSmth();
                     if(this.getHealth() / this.getMaxHealth() < 0.666){
                         skills.forceEnd();
                     }
                 });
         CircleMobSkill<T> idle2 = new CircleMobSkill<T>( "idle2",  999999999, 0)
                 .onTick(a-> {
-                    doSmth();
+                    //doSmth();
                     if(this.getHealth() / this.getMaxHealth() < 0.333){
                         skills.forceEnd();
                     }
                 });
         CircleMobSkill<T> idle3 = new CircleMobSkill<T>( "idle3",  999999999, 0)
-                .onTick(a-> doSmth());
+                .onTick(a-> {
+                    //doSmth();
+                });
         this.addSkill(idle1);
         this.addSkill(idle2);
         this.addSkill(idle3);

@@ -17,10 +17,8 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import rhymestudio.rhyme.Rhyme;
 import rhymestudio.rhyme.core.entity.anim.CafeAnimationState;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -36,40 +34,40 @@ public class AbstractMonster extends Monster implements ICafeMob{
     public Builder builder;
     public CafeAnimationState animState = new CafeAnimationState(this);
 
-    // 在AbstractMonster.java中添加以下方法
-    @Override
-    public void setTarget(@Nullable LivingEntity target) {
-        LivingEntity prevTarget = getTarget();
-        super.setTarget(target);
-
-        if (prevTarget != target && !level().isClientSide()) {
-            // 获取调用堆栈信息
-            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-            String callerInfo = "unknown";
-
-            // 从堆栈中查找调用者（跳过当前方法和setTarget的父类方法）
-            for (int i = 2; i < stackTrace.length; i++) {
-                StackTraceElement element = stackTrace[i];
-                if (!element.getClassName().equals(this.getClass().getName())
-                        && !element.getMethodName().equals("setTarget")) {
-                    callerInfo = String.format("%s.%s",
-                            element.getClassName().replaceAll(".*\\.", ""), // 简化类名
-                            element.getMethodName());
-                    break;
-                }
-            }
-
-            String targetInfo = (target != null) ?
-                    target.getType().getDescription().getString() + " at " + target.blockPosition()
-                    : "null";
-
-            Rhyme.LOGGER.info("[{}] {} changed target from {} to {}",
-                    callerInfo,
-                    this.getName().getString(),
-                    (prevTarget != null) ? prevTarget.getType().getDescription().getString() : "null",
-                    targetInfo);
-        }
-    }
+    // 记录怪物目标变化的调试信息
+//    @Override
+//    public void setTarget(@Nullable LivingEntity target) {
+//        LivingEntity prevTarget = getTarget();
+//        super.setTarget(target);
+//
+//        if (prevTarget != target && !level().isClientSide()) {
+//            // 获取调用堆栈信息
+//            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+//            String callerInfo = "unknown";
+//
+//            // 从堆栈中查找调用者（跳过当前方法和setTarget的父类方法）
+//            for (int i = 2; i < stackTrace.length; i++) {
+//                StackTraceElement element = stackTrace[i];
+//                if (!element.getClassName().equals(this.getClass().getName())
+//                        && !element.getMethodName().equals("setTarget")) {
+//                    callerInfo = String.format("%s.%s",
+//                            element.getClassName().replaceAll(".*\\.", ""), // 简化类名
+//                            element.getMethodName());
+//                    break;
+//                }
+//            }
+//
+//            String targetInfo = (target != null) ?
+//                    target.getType().getDescription().getString() + " at " + target.blockPosition()
+//                    : "null";
+//
+//            Rhyme.LOGGER.info("[{}] {} changed target from {} to {}",
+//                    callerInfo,
+//                    this.getName().getString(),
+//                    (prevTarget != null) ? prevTarget.getType().getDescription().getString() : "null",
+//                    targetInfo);
+//        }
+//    }
 
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level, Builder builder) {
